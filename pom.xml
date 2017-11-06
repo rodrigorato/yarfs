@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>a16</groupId>
+  <artifactId>yarfs</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>yarfs</name>
+  <modules>
+    <module>server</module>
+    <module>client</module>
+  </modules>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>1.6.0</version>
+
+          <executions>
+            <!-- Execution for the server class: mvn clean install exec:java@server -->
+            <execution>
+              <id>server</id>
+              <goals>
+                <goal>java</goal>
+              </goals>
+              <configuration>
+                  <additionalClasspathElements>
+                      <additionalClasspathElement>${user.dir}/server/target/classes</additionalClasspathElement>
+                  </additionalClasspathElements>
+                <mainClass>a16.yarfs.server.App</mainClass>
+              </configuration>
+            </execution>
+
+
+            <!-- Execution for the client class: mvn clean install exec:java@client -->
+            <execution>
+                <id>client</id>
+                <goals>
+                    <goal>java</goal>
+                </goals>
+                <configuration>
+                    <additionalClasspathElements>
+                        <additionalClasspathElement>${user.dir}/client/target/classes</additionalClasspathElement>
+                    </additionalClasspathElements>
+                    <mainClass>a16.yarfs.client.App</mainClass>
+                </configuration>
+            </execution>
+          </executions>
+
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>

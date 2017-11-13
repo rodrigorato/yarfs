@@ -17,6 +17,12 @@ public final class ServerConstants {
     public final static String SERVER_DIRECTORY = "/var/yarfs/server";
 
     /**
+     * Digest algorithm used to hash user passwords.
+     * @see https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html#MessageDigest
+     */
+    public static final String USER_PASSWD_DIGEST = "SHA-256";
+
+    /**
      * Constants for the usage of the file system.
      * This means all directories should be declared here.
      */

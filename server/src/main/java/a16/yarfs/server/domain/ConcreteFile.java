@@ -15,12 +15,13 @@ public class ConcreteFile extends File{
      * Constructor of all the parameters of the class
      *
      * @param id           Id for the file.
+     * @param ownerId Owner of the file.
      * @param name         Name for the file.
      * @param content      Content of the file.
      * @param creationDate Creation date of the file.
      * @param signature    Cryptographic signature of the file.
      */
-    public ConcreteFile(long id, String name, byte[] content, Date creationDate, byte[] signature) {
-        super(id, name, content, creationDate, signature);
+    public ConcreteFile(long id,long ownerId, String name, byte[] content, Date creationDate, byte[] signature) {
+        super(id, ownerId, name, content, creationDate, signature);
     }
 }

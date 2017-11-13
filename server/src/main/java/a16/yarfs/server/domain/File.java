@@ -18,22 +18,25 @@ public abstract class File implements Serializable {
     private byte[] content;
     private Date creationDate;
     private byte[] signature;
+    private long ownerId;
 
     /**
      * General method for objection initialization in this class.
      * @param id id for the file.
+     * @param ownerId Owner of the file.
      * @param name name for the file.
      * @param content content of the file.
      * @param creationDate creation date of the file.
      * @param signature cryptographic signature of the file.
      */
-    protected void init(long id, String name, byte[] content, Date creationDate, byte[] signature){
+    protected void init(long id, long ownerId, String name, byte[] content, Date creationDate, byte[] signature){
         log.info("Starting new File");
         this.id = id;
         this.name = name;
         this.content = content;
         this.creationDate = creationDate;
         this.signature = signature;
+        this.ownerId = ownerId;
         log.debug("File attributes are: \n"+this.toString());
         log.info("File successfully created!");
     }
@@ -41,13 +44,14 @@ public abstract class File implements Serializable {
     /**
      * Constructor of all the parameters of the class
      * @param id Id for the file.
+     * @param ownerId Owner of the file.
      * @param name Name for the file.
      * @param content Content of the file.
      * @param creationDate Creation date of the file.
      * @param signature Cryptographic signature of the file.
      */
-    public File(long id, String name, byte [] content, Date creationDate, byte[] signature){
-        init(id, name, content, creationDate, signature);
+    public File(long id,long ownerId, String name, byte [] content, Date creationDate, byte[] signature){
+        init(id, ownerId, name, content, creationDate, signature);
     }
 
     /**
@@ -56,7 +60,7 @@ public abstract class File implements Serializable {
      * @return Instance as a string.
      */
     public String toString(){
-        return "id: "+this.id+"\nname: "+this.name+"\ncontent: "+this.content.toString()+"\ncreation date: "+
+        return "id: "+this.id+"\nowner id: "+this.ownerId+"\nname: "+this.name+"\ncontent: "+this.content.toString()+"\ncreation date: "+
                 creationDate.toString()+"signature: "+this.signature.toString();
     }
 

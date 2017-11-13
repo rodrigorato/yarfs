@@ -22,6 +22,15 @@ public final class ServerConstants {
      */
     public static final class FileSystem {
         public final static String FILES_DIRECTORY = ServerConstants.SERVER_DIRECTORY + "/files";
+
+        /**
+         * Builds the path where a certain file with fileName should be stored
+         * @param fileName is the name of the file to store
+         * @return the path where the file should be stored
+         */
+        public final static String buildFileStoragePath(String fileName) {
+            return FileSystem.FILES_DIRECTORY + "/" + fileName;
+        }
     }
 
 

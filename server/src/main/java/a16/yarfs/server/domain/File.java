@@ -27,7 +27,7 @@ public abstract class File implements Serializable {
      * @param creationDate creation date of the file.
      * @param signature cryptographic signature of the file.
      */
-    private void init(long id, String name, byte[] content, Date creationDate, byte[] signature){
+    protected void init(long id, String name, byte[] content, Date creationDate, byte[] signature){
         log.info("Starting new File");
         this.id = id;
         this.name = name;

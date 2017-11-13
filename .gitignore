@@ -180,3 +180,6 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/vim,linux,emacs,windows,intellij
+
+# mvn compile results
+*/target/*

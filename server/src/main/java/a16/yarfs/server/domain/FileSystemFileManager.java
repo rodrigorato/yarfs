@@ -74,6 +74,8 @@ public class FileSystemFileManager implements FileManager {
             ois.close();
             fis.close();
 
+            logger.info("File '" + retrievedFile.getName() + "' has been retrieved from '" + pathToFile + "'.");
+
         } catch(ClassNotFoundException ex) {
             logger.warn("Couldn't un-serialize an object because it's" +
                     " class couldn't be found. Check those paths again!", ex);

@@ -4,6 +4,7 @@
 package a16.yarfs.server.domain;
 
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  *  Class ConcreteFile
@@ -11,6 +12,9 @@ import java.util.Date;
  *  @see File
  */
 public class ConcreteFile extends File{
+
+    private HashMap<String,SnapshotKey> userKeys;
+
     /**
      * Constructor of all the parameters of the class
      *
@@ -21,7 +25,36 @@ public class ConcreteFile extends File{
      * @param creationDate Creation date of the file.
      * @param signature    Cryptographic signature of the file.
      */
-    public ConcreteFile(long id,long ownerId, String name, byte[] content, Date creationDate, byte[] signature) {
+    public ConcreteFile(long id,String ownerId, String name, byte[] content, Date creationDate, byte[] signature) {
         super(id, ownerId, name, content, creationDate, signature);
     }
+
+    /**
+     * Getter for the key
+     * @param username Username which key is to retrieve.
+     * @return The snapshot key of the user.
+     */
+    public SnapshotKey getKey(String username){
+        return userKeys.get(username);
+    }
+
+    /**
+     * Adds a key to the given username.
+     * @param username The username which the key will be added.
+     * @param key The key to be added.
+     */
+    public void addKey(String username, SnapshotKey key){
+        userKeys.put(username,key);
+    }
+
+    /**
+     * Returns object as a readable string.
+     * @return Object as a readable string.
+     * @see File#toString()
+     * @see SnapshotKey#toString()
+     */
+    public String toString(){
+        return super.toString()+"\nkey: "+userKeys.toString();
+    }
+
 }

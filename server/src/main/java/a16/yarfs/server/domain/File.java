@@ -18,7 +18,7 @@ public abstract class File implements Serializable {
     private byte[] content;
     private Date creationDate;
     private byte[] signature;
-    private long ownerId;
+    private String ownerId;
 
     /**
      * General method for objection initialization in this class.
@@ -29,7 +29,7 @@ public abstract class File implements Serializable {
      * @param creationDate creation date of the file.
      * @param signature cryptographic signature of the file.
      */
-    protected void init(long id, long ownerId, String name, byte[] content, Date creationDate, byte[] signature){
+    protected void init(long id, String ownerId, String name, byte[] content, Date creationDate, byte[] signature){
         log.info("Starting new File");
         this.id = id;
         this.name = name;
@@ -50,7 +50,7 @@ public abstract class File implements Serializable {
      * @param creationDate Creation date of the file.
      * @param signature Cryptographic signature of the file.
      */
-    public File(long id,long ownerId, String name, byte [] content, Date creationDate, byte[] signature){
+    public File(long id,String ownerId, String name, byte [] content, Date creationDate, byte[] signature){
         init(id, ownerId, name, content, creationDate, signature);
     }
 
@@ -102,6 +102,10 @@ public abstract class File implements Serializable {
      */
     public byte[] getSignature() {
         return signature;
+    }
+
+    public String getOwnerId(){
+        return ownerId;
     }
 }
 

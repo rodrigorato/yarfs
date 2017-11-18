@@ -7,6 +7,13 @@ package a16.yarfs.server.domain;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
@@ -38,7 +45,7 @@ public class UserTest {
     {
         assertFalse( u1.authenticate(USER1_CORRECT_PASSWORD + "aaa") );
     }
-    
+
     @Test
     public void changePasswordTest()
     {
@@ -47,5 +54,26 @@ public class UserTest {
         u2.setPassword(USER2_NEW_PASSWORD);
         assertFalse( u2.authenticate(USER2_INITIAL_PASSWORD) );
         assertTrue( u2.authenticate(USER2_NEW_PASSWORD) );
+    }
+
+    @Test
+    public void serializationTest() throws IOException, ClassNotFoundException {
+        File tmpFile = File.createTempFile("user", "bin");
+        tmpFile.deleteOnExit();
+
+        FileOutputStream fos = new FileOutputStream(tmpFile);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+
+        oos.writeObject(u1);
+        oos.close();
+
+        FileInputStream fis = new FileInputStream(tmpFile);
+        ObjectInputStream ois = new ObjectInputStream(fis);
+
+        User us = (User) ois.readObject();
+        ois.close();
+
+        assertTrue( us.authenticate(USER1_CORRECT_PASSWORD) );
+        assertFalse( us.authenticate(USER1_CORRECT_PASSWORD+"bbb") );
     }
 }

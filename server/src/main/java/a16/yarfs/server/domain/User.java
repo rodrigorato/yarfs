@@ -7,6 +7,7 @@ import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.text.RandomStringGenerator;
 import org.apache.log4j.Logger;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -15,8 +16,9 @@ import java.util.Arrays;
 /**
  *  Class User
  */
-public class User {
+public class User implements Serializable {
     private static Logger logger = Logger.getLogger(User.class);
+    private static final long serialVersionUID = 20171118182720L;
 
     /** unique username that identifies the User */
     private String username;

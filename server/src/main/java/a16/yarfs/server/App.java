@@ -51,7 +51,7 @@ public class App
         server.createContext(ServerConstants.Endpoints.ADD_FILE, new AddFileHandler());
         server.createContext(ServerConstants.Endpoints.LIST_FILES, new ListFilesHandler());
         server.createContext(ServerConstants.Endpoints.LIST_USERS, new ListUsersHandler());
-        server.createContext(ServerConstants.Endpoints.LOGIN, new UserLoginHandler());
+        server.createContext(ServerConstants.Endpoints.LOGIN, new UserLoginHandler("POST"));
         server.createContext(ServerConstants.Endpoints.LOGOUT, new UserLogoutHandler());
         server.createContext(ServerConstants.Endpoints.REGISTER, new UserRegisterHandler("POST"));
         server.createContext(ServerConstants.Endpoints.REMOVE_FILE, new RemoveFileHandler());
@@ -173,9 +173,34 @@ public class App
         }
     }
 
-    private final class UserLoginHandler implements HttpHandler{
+    private final class UserLoginHandler extends AbstractHttpHandler {
 
-        public void handle(HttpExchange httpExchange) throws IOException {
+        public UserLoginHandler(String ... methods) {
+            super(methods);
+        }
+
+        public void handle(HttpExchange httpExchange) {
+            super.handle(httpExchange);
+
+            JSONObject user = null;
+            try {
+                user = super.getBodyAsJson(httpExchange);
+                String sessid = Manager.getInstance().loginUser(user.getString("username"),user.getString("password"));
+                JSONObject response = new JSONObject();
+                response.put("sessid",sessid);
+                super.sendResponse(200,response.toString(),httpExchange);
+            } catch (IOException e) {
+//                e.printStackTrace();
+                InternalServerErrorException ex = new InternalServerErrorException();
+                sendResponse(ex.getCode(), ex.getMessage(), httpExchange);
+            } catch (JSONException e) {
+                //e.printStackTrace();
+                BadRequestException ex = new BadRequestException();
+                sendResponse(ex.getCode(), ex.getMessage(), httpExchange);
+            } catch (HttpException e){
+                super.sendResponse(e.getCode(), e.getMessage(), httpExchange);
+            }
+
             //TODO
         }
     }

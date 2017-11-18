@@ -38,6 +38,7 @@ public class User {
                 hash = md.digest(realSalt.getBytes("UTF-8"));
             } catch (UnsupportedEncodingException e) {
                 logger.warn("UTF-8 encoding not available lol", e);
+                logger.warn("Common really, who puts a warning message with lol?\n\t -The condescended project manager");
                 System.exit(-1);
             }
         } catch (NoSuchAlgorithmException e) {

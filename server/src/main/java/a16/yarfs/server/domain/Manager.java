@@ -4,9 +4,12 @@
 package a16.yarfs.server.domain;
 
 import a16.yarfs.server.exception.DuplicatedUsernameException;
+import a16.yarfs.server.exception.api.LoginException;
+import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  *  Class Manager
@@ -16,6 +19,7 @@ public class Manager {
 
     private static Manager manager = null;
     private Map<String,User> users = new HashMap<String, User>();
+    private static Logger logger = Logger.getLogger(Manager.class);
 
     public static Manager getInstance() {
         if (manager == null) {
@@ -30,6 +34,20 @@ public class Manager {
             throw new DuplicatedUsernameException("Username "+username+" already exists");
         }
         users.put(username, new User(username,password));
+    }
+
+    public String loginUser(String username, String hashpass){
+        logger.debug("Logging in user with username " + username);
+        try {
+            if (!users.get(username).authenticate(hashpass)) {
+                logger.warn("Error logging in username " + username);
+                throw new LoginException();
+            }
+        } catch( RuntimeException e){
+            logger.warn("Something bad happened?");
+            throw new LoginException();
+        }
+        return UUID.randomUUID().toString();
     }
 
 }

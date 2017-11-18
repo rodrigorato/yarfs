@@ -3,6 +3,7 @@
  */
 package a16.yarfs.server.domain;
 
+import a16.yarfs.server.exception.BadPasswordException;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.text.RandomStringGenerator;
 import org.apache.log4j.Logger;
@@ -79,6 +80,9 @@ public class User implements Serializable {
      * @param password the new password for the user
      */
     public void setPassword(String password) {
+        if(password.isEmpty()) {
+            throw new BadPasswordException("empty passwords are not allowed");
+        }
         this.salt = generateRandomString();
         this.passwordHash = getPasswordHash(password);
     }

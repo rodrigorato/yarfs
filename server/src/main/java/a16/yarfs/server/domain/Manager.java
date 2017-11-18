@@ -7,9 +7,7 @@ import a16.yarfs.server.exception.DuplicatedUsernameException;
 import a16.yarfs.server.exception.api.LoginException;
 import org.apache.log4j.Logger;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  *  Class Manager
@@ -48,6 +46,13 @@ public class Manager {
             throw new LoginException();
         }
         return UUID.randomUUID().toString();
+    }
+
+    public List<String> listUsers(){ // FIXME:  Should this require a sessid?
+        List<String> usernameList = new ArrayList<String>();
+        usernameList.addAll(users.keySet());
+        return usernameList;
+
     }
 
 }

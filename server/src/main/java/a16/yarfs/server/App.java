@@ -50,7 +50,7 @@ public class App
     private void configure(HttpServer server){
         server.createContext(ServerConstants.Endpoints.ADD_FILE, new AddFileHandler());
         server.createContext(ServerConstants.Endpoints.LIST_FILES, new ListFilesHandler());
-        server.createContext(ServerConstants.Endpoints.LIST_USERS, new ListUsersHandler());
+        server.createContext(ServerConstants.Endpoints.LIST_USERS, new ListUsersHandler("GET","POST"));
         server.createContext(ServerConstants.Endpoints.LOGIN, new UserLoginHandler("POST"));
         server.createContext(ServerConstants.Endpoints.LOGOUT, new UserLogoutHandler());
         server.createContext(ServerConstants.Endpoints.REGISTER, new UserRegisterHandler("POST"));
@@ -212,9 +212,34 @@ public class App
         }
     }
 
-    private final class ListUsersHandler implements HttpHandler{
+    private final class ListUsersHandler extends AbstractHttpHandler {
 
-        public void handle(HttpExchange httpExchange) throws IOException {
+        public ListUsersHandler(String ... methods){
+            super(methods);
+        }
+
+        public void handle(HttpExchange httpExchange) {
+            super.handle(httpExchange);
+            JSONObject jsonObject = null;
+
+            try {
+                jsonObject = super.getBodyAsJson(httpExchange);
+                JSONObject response = new JSONObject();
+                response.put("users", Manager.getInstance().listUsers());
+                sendResponse(200, response.toString(), httpExchange);
+
+            } catch (IOException e) {
+                //e.printStackTrace();
+                BadRequestException ex = new BadRequestException();
+                super.sendResponse(ex.getCode(), ex.getMessage(), httpExchange);
+
+            } catch (JSONException e) {
+                //e.printStackTrace();
+                InternalServerErrorException ex = new InternalServerErrorException();
+                super.sendResponse(ex.getCode(), ex.getMessage(), httpExchange);
+            }
+
+
             //TODO
         }
     }

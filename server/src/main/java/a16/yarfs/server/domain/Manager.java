@@ -4,6 +4,7 @@
 package a16.yarfs.server.domain;
 
 import a16.yarfs.server.exception.DuplicatedUsernameException;
+import a16.yarfs.server.exception.WrongPasswordException;
 import a16.yarfs.server.exception.api.LoginException;
 import org.apache.log4j.Logger;
 
@@ -17,6 +18,7 @@ public class Manager {
 
     private static Manager manager = null;
     private Map<String,User> users = new HashMap<String, User>();
+    private Map<Long,Session> sessions = new HashMap<>();
     private static Logger logger = Logger.getLogger(Manager.class);
 
     public static Manager getInstance() {
@@ -27,6 +29,30 @@ public class Manager {
         return manager;
     }
 
+    /** check if a session exists
+     * @param token the token that identifies the session
+     * @returns true if a session exists with the given token
+     */
+    public boolean hasSession(long token) {
+        Session s = sessions.get(token);
+        if(s == null) {
+            return false;
+        }
+        if(s.isExpired()) {
+            sessions.remove(token);
+            return false;
+        }
+        return true;
+    }
+
+    /** check if a session exists
+     * @param token the token that identifies the session
+     * @returns true if a session exists with the given token
+     */
+    public boolean hasSession(String token) {
+        return hasSession(Session.stringToToken(token));
+    }
+
     public void registerUser(String username, String password){
         if (users.containsKey(username)){
             throw new DuplicatedUsernameException("Username "+username+" already exists");
@@ -34,18 +60,23 @@ public class Manager {
         users.put(username, new User(username,password));
     }
 
-    public String loginUser(String username, String hashpass){
+    public String loginUser(String username, String password) throws LoginException {
         logger.debug("Logging in user with username " + username);
-        try {
-            if (!users.get(username).authenticate(hashpass)) {
-                logger.warn("Error logging in username " + username);
-                throw new LoginException();
-            }
-        } catch( RuntimeException e){
-            logger.warn("Something bad happened?");
+
+        User user = users.get(username);
+        if(user == null) {
+            logger.warn("Can not login: user '" + username+"' does not exist");
             throw new LoginException();
         }
-        return UUID.randomUUID().toString();
+        try {
+            Session session = new Session(this, user, password);
+            long token = session.getToken();
+            sessions.put(token, session);
+            return Session.tokenToString(token);
+        } catch (WrongPasswordException e) {
+            logger.warn("Can not login: wrong password for user '" + username+"'");
+            throw new LoginException();
+        }
     }
 
     public List<String> listUsers(){ // FIXME:  Should this require a sessid?
@@ -55,4 +86,19 @@ public class Manager {
 
     }
 
+    /** invalidates a Session
+     *
+     * @param token that identifies the Session
+     */
+    public void logout(long token) {
+        sessions.remove(token);
+    }
+
+    /** invalidates a Session
+     *
+     * @param token that identifies the Session
+     */
+    public void logout(String token) {
+        logout(Session.stringToToken(token));
+    }
 }

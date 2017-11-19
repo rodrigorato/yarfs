@@ -22,6 +22,9 @@ public final class ServerConstants {
      */
     public static final String USER_PASSWD_DIGEST = "SHA-256";
 
+    /** how long should a Session be valid for */
+    public static final long SESSION_DURATION_HOURS = 3;
+
     /**
      * Constants for the usage of the file system.
      * This means all directories should be declared here.

@@ -29,6 +29,8 @@ public class App
     private static final int defaultPort = 31000;
     public static void main( String[] args )
     {
+
+        System.out.println( "Starting yarfs server..." );
         if( args.length > 0){
             (new App()).start(Integer.parseInt(args[0]));
         }else{

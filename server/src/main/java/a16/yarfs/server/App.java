@@ -11,12 +11,10 @@ import java.net.InetSocketAddress;
  * Hello world!
  *
  */
-public class App 
-{
+public class App {
    // private final Logger log = Logger.getLogger(App.class);
     private static final int defaultPort = 31000;
-    public static void main( String[] args )
-    {
+    public static void main( String[] args ) {
 
         System.out.println( "Starting yarfs server..." );
         if( args.length > 0){
@@ -26,7 +24,7 @@ public class App
         }
     }
 
-    public void start(int port){
+    public void start(int port) {
      //   log.info("Starting server...");
         try {
             HttpServer server = HttpServer.create(new InetSocketAddress(port),0);

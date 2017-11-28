@@ -3,14 +3,14 @@
  */
 package a16.yarfs.server.exception.http;
 
-import a16.yarfs.server.exception.YarfsServerException;
-
 /**
- *  Class HttpException
- *  jorge is an IDIOT because it hasn't made documentation for this class.
+ * Class HttpException
+ * jorge is an IDIOT because it hasn't made documentation for this class.
  */
-public abstract class HttpException extends YarfsServerException{
+public abstract class HttpException extends RuntimeException {
 
     public abstract int getCode();
+
+    @Override
     public abstract String getMessage();
 }

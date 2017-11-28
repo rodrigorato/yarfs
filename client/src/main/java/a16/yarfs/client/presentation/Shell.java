@@ -33,6 +33,10 @@ public abstract class Shell {
 
     private String prompt;
 
+    public static Logger getLogger() {
+        return logger;
+    }
+
     /**
      * called when the "quit" command is invoked
      */
@@ -85,11 +89,11 @@ public abstract class Shell {
         return cmd.getName() + " -\t" + cmd.getHelp();
     }
 
-    private void println(String s) {
+    public void println(String s) {
         out.println(s);
     }
 
-    private void print(String s) {
+    public void print(String s) {
         out.print(s);
     }
 

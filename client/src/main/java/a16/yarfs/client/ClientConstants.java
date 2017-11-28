@@ -9,6 +9,9 @@ package a16.yarfs.client;
  */
 public class ClientConstants {
 
+    // FIXME: put this somewhere else, e.g. config file or app argument
+    public static String baseUrl = "http://127.0.0.1:31000";
+
     public static final class Endpoints{
         public final static String REGISTER = "/register";
         public final static String LOGIN = "/login";

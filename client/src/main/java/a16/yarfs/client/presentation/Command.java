@@ -36,4 +36,8 @@ public abstract class Command {
     public Shell getShell() {
         return sh;
     }
+
+    public String getUsage() {
+        return getHelp() + ": nothing appropriate.";
+    }
 }

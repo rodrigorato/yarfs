@@ -34,7 +34,7 @@ public final class UserLoginHandler extends AbstractHttpHandler {
             response.put("sessid",sessid);
             super.sendResponse(200,response.toString(),httpExchange);
         } catch (IOException e) {
-//                e.printStackTrace();
+            //e.printStackTrace();
             InternalServerErrorException ex = new InternalServerErrorException();
             sendResponse(ex.getCode(), ex.getMessage(), httpExchange);
         } catch (JSONException e) {

@@ -101,4 +101,20 @@ public class Manager {
     public void logout(String token) {
         logout(Session.stringToToken(token));
     }
+
+    /**
+     * Checks if a user exists.
+     * @param username username to check existence
+     * @return if the user exists or no
+     */
+    public boolean hasUser(String username){
+        return users.containsKey(username);
+    }
+
+    /**
+     * Destroys the manager static
+     */
+    public static void selfDestruct() {
+        manager = null;
+    }
 }

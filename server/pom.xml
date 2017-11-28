@@ -42,11 +42,11 @@
       <artifactId>commons-codec</artifactId>
       <version>1.9</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.json/json -->
     <dependency>
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
-      <version>20090211</version>
-      <scope>provided</scope>
+      <version>20160810</version>
     </dependency>
 
 

@@ -4,7 +4,7 @@
 package a16.yarfs.server.handlers;
 
 import a16.yarfs.server.domain.Manager;
-import a16.yarfs.server.domain.ServerConstants;
+import a16.yarfs.server.ServerConstants;
 import a16.yarfs.server.exception.DuplicatedUsernameException;
 import a16.yarfs.server.exception.http.BadRequestException;
 import a16.yarfs.server.exception.http.HttpException;

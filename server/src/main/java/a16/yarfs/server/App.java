@@ -1,6 +1,5 @@
 package a16.yarfs.server;
 
-import a16.yarfs.server.domain.ServerConstants;
 import a16.yarfs.server.handlers.*;
 import com.sun.net.httpserver.HttpServer;
 

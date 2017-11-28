@@ -1,4 +1,4 @@
-package a16.yarfs.server.domain;
+package a16.yarfs.server;
 
 import java.util.AbstractMap;
 import java.util.Map;

@@ -3,11 +3,19 @@
  **/
 package a16.yarfs.client.command;
 
+import java.net.MalformedURLException;
+
 /**
  Class ListFilesCommand
 
  **/
-public class ListFilesCommand implements AbstractCommand{
+public class ListFilesCommand extends AbstractHttpCommand {
+
+
+    protected ListFilesCommand(String baseUrl, String endpoint) throws MalformedURLException {
+        super(baseUrl, endpoint);
+    }
+
     /*FIXME*/
     public void execute(){
 

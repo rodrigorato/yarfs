@@ -50,14 +50,34 @@ public final class ServerConstants {
      * Class used for endpoints of the http server.
      */
     public static final class Endpoints {
+        /// register (username, password) : OK | NOK
         public final static String REGISTER = "/register";
+
+        /// login (username, password) : SESSID | NOK
         public final static String LOGIN = "/login";
+
+        /// logout (SESSID) : OK | NOK (doesnt matter)
         public final static String LOGOUT = "/logout";
-        public final static String LIST_USERS = "/user";
-        public final static String ADD_FILE = "/addFile";
-        public final static String DELETE_FILE = "/deleteFile";
-        public final static String LIST_FILES = "/listFiles";
-        public final static String SHARE_FILE = "/shareFile";
+
+        /// users (SESSID) : {'users': [username...]}
+        public final static String LIST_USERS = "/users";
+
+        /// add_file (SESSID, filename, filecontent, filesignature, ciphered_simmetric_key) : file_id
+        public final static String ADD_FILE = "/add_file";
+
+        /// delete_file (SESSID, file_id) : OK | NOK
+        public final static String DELETE_FILE = "/delete_file";
+
+        /// list_files (SESSID, username) : {filenames... : fileids..., size, whatever}
+        public final static String LIST_FILES = "/list_files";
+
+        /// share_file (SESSID, fileid, target_user, target_user_key) : OK | NOK
+        public final static String SHARE_FILE = "/share_file";
+
+        /// unshare_file (SESSID, fileid, targeuser) : OK | NOK
+        public final static String UNSHARE_FILE = "/unshare_file";
+
+        /// echo (stuff) : stuff
         public final static String ECHO = "/echo"; //echo endpoint for tests
     }
 

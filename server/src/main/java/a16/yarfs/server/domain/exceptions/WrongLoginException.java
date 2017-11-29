@@ -4,11 +4,11 @@
 package a16.yarfs.server.domain.exceptions;
 
 /**
- * Class WrongPasswordException
+ * Class WrongLoginException
  * means that the given password did not match the correct password
  */
-public class WrongPasswordException extends AbstractYarfsDomainException {
-    public WrongPasswordException(String msg) {
+public class WrongLoginException extends AbstractYarfsDomainException {
+    public WrongLoginException(String msg) {
         super(msg);
     }
 }

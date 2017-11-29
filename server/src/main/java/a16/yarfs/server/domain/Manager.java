@@ -4,7 +4,7 @@
 package a16.yarfs.server.domain;
 
 import a16.yarfs.server.domain.exceptions.DuplicatedUsernameException;
-import a16.yarfs.server.domain.exceptions.WrongPasswordException;
+import a16.yarfs.server.domain.exceptions.WrongLoginException;
 import a16.yarfs.server.exception.api.LoginException;
 import org.apache.log4j.Logger;
 
@@ -80,7 +80,7 @@ public class Manager {
             long token = session.getToken();
             sessions.put(token, session);
             return Session.tokenToString(token);
-        } catch (WrongPasswordException e) {
+        } catch (WrongLoginException e) {
             logger.warn("Can not login: wrong password for user '" + username + "'");
             throw new LoginException();
         }

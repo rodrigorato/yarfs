@@ -4,7 +4,7 @@
 package a16.yarfs.server.domain;
 
 import a16.yarfs.server.ServerConstants;
-import a16.yarfs.server.domain.exceptions.WrongPasswordException;
+import a16.yarfs.server.domain.exceptions.WrongLoginException;
 import org.apache.log4j.Logger;
 
 import java.io.Serializable;
@@ -44,9 +44,9 @@ public class Session implements Serializable {
      * @param u        The owner of the session
      * @param password used to authenticate the User
      */
-    public Session(Manager manager, User u, String password) throws WrongPasswordException {
+    public Session(Manager manager, User u, String password) throws WrongLoginException {
         if (!u.authenticate(password)) {
-            throw new WrongPasswordException("password does not match");
+            throw new WrongLoginException("password does not match");
         }
         owner = u;
         token = generateToken(manager);

@@ -1,6 +1,6 @@
 package a16.yarfs.server.domain;
 
-import a16.yarfs.server.domain.exceptions.WrongPasswordException;
+import a16.yarfs.server.domain.exceptions.WrongLoginException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +28,7 @@ public class SessionTest {
     public void tearDown() throws Exception {
     }
 
-    @Test (expected = WrongPasswordException.class)
+    @Test (expected = WrongLoginException.class)
     public void wrongPasswordTest() throws Exception {
         new Session(manager, u1, USER1_CORRECT_PASSWORD + "aaa");
     }

@@ -5,6 +5,7 @@ package a16.yarfs.client.presentation;
 
 
 import a16.yarfs.client.ClientConstants;
+import a16.yarfs.client.service.user.LoginService;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -15,7 +16,7 @@ import java.net.MalformedURLException;
  */
 public class LoginCommand extends Command {
 
-    private a16.yarfs.client.command.user.LoginCommand command;
+    private LoginService command;
 
 
     public LoginCommand(YarfsShell sh, String name) {
@@ -39,7 +40,7 @@ public class LoginCommand extends Command {
         String password = args[1];
 
         try {
-            command = new a16.yarfs.client.command.user.LoginCommand(ClientConstants.baseUrl, username, password);
+            command = new LoginService(ClientConstants.baseUrl, username, password);
             command.execute();
             String sessionid = command.getSessionId();
             shell.getLogger().info("logged in using token " + sessionid);

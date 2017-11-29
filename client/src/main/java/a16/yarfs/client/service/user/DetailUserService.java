@@ -1,23 +1,18 @@
 /**
  * Created by jorge at 11/11/17
  **/
-package a16.yarfs.client.command.user;
+package a16.yarfs.client.service.user;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.net.MalformedURLException;
-import java.security.PublicKey;
 
 /**
- Class RegisterCommand
+ Class DetailUserService
 
  **/
-public class RegisterCommand extends AbstractUserCommand {
-    private String username;
-    private String password;
-    private PublicKey key;
-
-    protected RegisterCommand(String baseUrl) throws MalformedURLException {
+public class DetailUserService extends AbstractUserService {
+    protected DetailUserService(String baseUrl) throws MalformedURLException {
         super(baseUrl, null);
         throw new NotImplementedException();
     }

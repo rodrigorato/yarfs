@@ -1,22 +1,20 @@
 /**
  * Created by jorge at 11/11/17
  **/
-package a16.yarfs.client.command.file;
+package a16.yarfs.client.service.file;
 
 import a16.yarfs.client.ClientConstants;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.net.MalformedURLException;
 
-
 /**
- Class DeleteFileCommand
+ Class FileDetailsService
 
  **/
-public class DeleteFileCommand extends FileCommand{
-
-    protected DeleteFileCommand(String baseUrl) throws MalformedURLException {
-        super(baseUrl, ClientConstants.Endpoints.REMOVE_FILE);
+public class FileDetailsService extends FileService {
+    protected FileDetailsService(String baseUrl) throws MalformedURLException {
+        super(baseUrl, ClientConstants.Endpoints.FILE_DETAILS);
         throw new NotImplementedException();
     }
 

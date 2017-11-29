@@ -1,10 +1,10 @@
 /**
  * Created by jorge at 11/11/17
  **/
-package a16.yarfs.client.command.user;
+package a16.yarfs.client.service.user;
 
 import a16.yarfs.client.ClientConstants;
-import a16.yarfs.client.command.exception.CommandResultException;
+import a16.yarfs.client.service.exception.ServiceResultException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,13 +12,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 /**
- Class LoginCommand
+ Class LoginService
  **/
-public class LoginCommand extends AbstractUserCommand {
+public class LoginService extends AbstractUserService {
     private String username;
     private String password;
 
-    public LoginCommand(String baseUrl, String username, String password) throws MalformedURLException {
+    public LoginService(String baseUrl, String username, String password) throws MalformedURLException {
         super(baseUrl, ClientConstants.Endpoints.LOGIN);
         this.username = username;
         this.password = password;
@@ -44,7 +44,7 @@ public class LoginCommand extends AbstractUserCommand {
             JSONObject js = getResponse();
             return js.getString("sessid");
         } catch (JSONException e) {
-            throw new CommandResultException("invalid server response");
+            throw new ServiceResultException("invalid server response");
         }
     }
 }

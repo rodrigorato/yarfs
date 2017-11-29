@@ -1,23 +1,23 @@
 /**
  * Created by jorge at 11/11/17
  **/
-package a16.yarfs.client.command.file;
+package a16.yarfs.client.service.file;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.net.MalformedURLException;
 
 /**
- Class PutFileCommand
+ Class ShareFileService
 
  **/
-public class PutFileCommand extends FileCommand{
-    protected PutFileCommand(String baseUrl) throws MalformedURLException {
+public class ShareFileService extends FileService {
+    protected ShareFileService(String baseUrl) throws MalformedURLException {
         super(baseUrl, null);
         throw new NotImplementedException();
     }
 
-    /*TODO*/
+    /*FIXME*/
     public void execute() {
         throw new NotImplementedException();
     }

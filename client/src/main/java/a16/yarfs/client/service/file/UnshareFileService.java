@@ -1,18 +1,18 @@
 /**
  * Created by jorge at 11/11/17
  **/
-package a16.yarfs.client.command.file;
+package a16.yarfs.client.service.file;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.net.MalformedURLException;
 
 /**
- Class ShareFileCommand
+ Class UnshareFileService
 
  **/
-public class ShareFileCommand extends FileCommand{
-    protected ShareFileCommand(String baseUrl) throws MalformedURLException {
+public class UnshareFileService extends FileService {
+    protected UnshareFileService(String baseUrl) throws MalformedURLException {
         super(baseUrl, null);
         throw new NotImplementedException();
     }

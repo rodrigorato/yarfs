@@ -1,11 +1,11 @@
 /**
  * Created by jorge at 11/11/17
  **/
-package a16.yarfs.client.command;
+package a16.yarfs.client.service;
 
 
-import a16.yarfs.client.command.exception.AlreadyExecutedException;
-import a16.yarfs.client.command.exception.NotExecutedException;
+import a16.yarfs.client.service.exception.AlreadyExecutedException;
+import a16.yarfs.client.service.exception.NotExecutedException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,10 +15,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Class AbstractHttpCommand
+ * Class AbstractHttpService
  * abstracts an http connection to be used by other HttpCommands
  **/
-public abstract class AbstractHttpCommand {
+public abstract class AbstractHttpService {
     private URL url;
     private HttpURLConnection conn = null;
     private boolean connected = false;
@@ -26,7 +26,7 @@ public abstract class AbstractHttpCommand {
     /** set to true after the execute() method finishes */
     private boolean _executed = false;
 
-    protected AbstractHttpCommand(String baseUrl, String endpoint) throws MalformedURLException {
+    protected AbstractHttpService(String baseUrl, String endpoint) throws MalformedURLException {
         String fullUrl = baseUrl + endpoint;
         // FIXME should we check for stuff like "//" in fullUrl?
         this.url = new URL(fullUrl);

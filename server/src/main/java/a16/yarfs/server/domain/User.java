@@ -4,7 +4,7 @@
 package a16.yarfs.server.domain;
 
 import a16.yarfs.server.ServerConstants;
-import a16.yarfs.server.exception.BadPasswordException;
+import a16.yarfs.server.domain.exceptions.MalformedPasswordException;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.text.RandomStringGenerator;
 import org.apache.log4j.Logger;
@@ -16,13 +16,15 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 /**
- *  Class User
+ * Class User
  */
 public class User implements Serializable {
     private static Logger logger = Logger.getLogger(User.class);
     private static final long serialVersionUID = 20171118182720L;
 
-    /** unique username that identifies the User */
+    /**
+     * unique username that identifies the User
+     */
     private String username;
 
     private String salt;
@@ -30,6 +32,7 @@ public class User implements Serializable {
 
     /**
      * computes the hash of a given password using the user's own salt and username
+     *
      * @param password the password
      * @return salted hash of the password
      */
@@ -56,6 +59,7 @@ public class User implements Serializable {
 
     /**
      * generates a random string
+     *
      * @return the newly generated random string
      */
     protected String generateRandomString() {
@@ -64,11 +68,13 @@ public class User implements Serializable {
                 .withinRange('0', 'z')
                 .build();
         String rand = generator.generate(30);
-        logger.debug("random string: '"+rand+'"');
+        logger.debug("random string: '" + rand + '"');
         return rand;
     }
 
-    /** creates a new User
+    /**
+     * creates a new User
+     *
      * @param username that identifies the user
      * @param password its password
      */
@@ -77,12 +83,14 @@ public class User implements Serializable {
         setPassword(password);
     }
 
-    /** updates the user's password
+    /**
+     * updates the user's password
+     *
      * @param password the new password for the user
      */
     public void setPassword(String password) {
-        if(password.isEmpty()) {
-            throw new BadPasswordException("empty passwords are not allowed");
+        if (password.isEmpty()) {
+            throw new MalformedPasswordException("empty passwords are not allowed");
         }
         this.salt = generateRandomString();
         this.passwordHash = getPasswordHash(password);
@@ -90,15 +98,18 @@ public class User implements Serializable {
 
     /**
      * Authenticate this user using the given password
+     *
      * @param password to try
      * @returns true if the password matches the user's
      */
     public boolean authenticate(String password) {
-        logger.debug("trying password '" + password+"'");
+        logger.debug("trying password '" + password + "'");
         return Arrays.equals(passwordHash, getPasswordHash(password));
     }
 
-    /** get the user's username */
+    /**
+     * get the user's username
+     */
     public String getUsername() {
         return username;
     }

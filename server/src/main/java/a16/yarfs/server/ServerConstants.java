@@ -1,8 +1,5 @@
 package a16.yarfs.server;
 
-import java.util.AbstractMap;
-import java.util.Map;
-
 /**
  * This class is meant to be used to store
  * constants used on the Server application.
@@ -68,10 +65,21 @@ public final class ServerConstants {
      * Class used for http response codes.
      */
     public static final class ResponseCodes {
-        public final static int SUCCESS = 200;
-        public final static int ChangeMyName = 600;
-        public final static Map.Entry<Integer, String> DUPLICATE_USER =
-                new AbstractMap.SimpleEntry<>(601, "Duplicate user");
+        public final static int SUCCESS_CODE = 200;
+        public final static String SUCCESS_MESSAGE = "Success";
+
+        public final static int POORLY_FORMED_REQUEST_CODE = 400;
+        public final static String POORLY_FORMED_REQUEST_MESSAGE = "Poorly formed request";
+
+        public final static int INTERNAL_SERVER_ERROR_CODE = 500;
+        public final static String INTERNAL_SERVER_ERROR_MESSAGE = "Internal Server Error";
+
+        public final static int DUPLICATE_USER_CODE = 601;
+        public final static String DUPLICATE_USER_MESSAGE = "Duplicate user";
+
+        public final static int INVALID_USER_CODE = 602;
+        public final static String INVALID_USER_MESSAGE = "Invalid user/password";
+
 
     }
 

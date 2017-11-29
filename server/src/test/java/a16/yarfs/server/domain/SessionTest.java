@@ -1,6 +1,6 @@
 package a16.yarfs.server.domain;
 
-import a16.yarfs.server.exception.WrongPasswordException;
+import a16.yarfs.server.domain.exceptions.WrongPasswordException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

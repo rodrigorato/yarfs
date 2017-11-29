@@ -3,9 +3,9 @@
  */
 package a16.yarfs.server.handlers;
 
-import a16.yarfs.server.domain.Manager;
 import a16.yarfs.server.ServerConstants;
-import a16.yarfs.server.exception.DuplicatedUsernameException;
+import a16.yarfs.server.domain.Manager;
+import a16.yarfs.server.domain.exceptions.DuplicatedUsernameException;
 import a16.yarfs.server.exception.http.BadRequestException;
 import a16.yarfs.server.exception.http.HttpException;
 import com.sun.net.httpserver.HttpExchange;
@@ -32,13 +32,13 @@ public final class UserRegisterHandler extends AbstractHttpHandler {
             super.handle(httpExchange);
             body = super.getBodyAsJson(httpExchange);
             Manager.getInstance().registerUser(body.getString("username"), body.getString("password"));
-            sendResponse(ServerConstants.ResponseCodes.SUCCESS, "This is test " + body, httpExchange);
+            sendResponse(ServerConstants.ResponseCodes.SUCCESS_CODE, "This is test " + body, httpExchange);
         } catch (DuplicatedUsernameException e) {
 
-            sendResponse(ServerConstants.ResponseCodes.DUPLICATE_USER.getKey(),
-                    ServerConstants.ResponseCodes.DUPLICATE_USER.getValue(),
+            sendResponse(ServerConstants.ResponseCodes.DUPLICATE_USER_CODE,
+                    ServerConstants.ResponseCodes.DUPLICATE_USER_MESSAGE,
                     httpExchange);
-            
+
         } catch (IOException e) {
 
             e.printStackTrace(); // FIXME: Do something useful here

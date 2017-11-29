@@ -1,6 +1,6 @@
 package a16.yarfs.server.domain;
 
-import a16.yarfs.server.exception.DuplicatedUsernameException;
+import a16.yarfs.server.domain.exceptions.DuplicatedUsernameException;
 import a16.yarfs.server.exception.api.LoginException;
 import org.junit.After;
 import org.junit.Before;

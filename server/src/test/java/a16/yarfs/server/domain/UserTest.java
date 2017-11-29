@@ -4,7 +4,7 @@
 package a16.yarfs.server.domain;
 
 
-import a16.yarfs.server.exception.BadPasswordException;
+import a16.yarfs.server.domain.exceptions.MalformedPasswordException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -57,10 +57,10 @@ public class UserTest {
         assertTrue( u2.authenticate(USER2_NEW_PASSWORD) );
     }
 
-    @Test (expected=BadPasswordException.class)
+    @Test (expected=MalformedPasswordException.class)
     public void emptyPasswordTest()
     {
-        u2.setPassword(""); // should throw BadPasswordException
+        u2.setPassword(""); // should throw MalformedPasswordException
         u2.authenticate("");
     }
 

@@ -8,6 +8,7 @@ import a16.yarfs.server.exception.http.InternalServerErrorException;
 import a16.yarfs.server.exception.http.MethodNotAllowedException;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,12 +27,14 @@ import java.util.List;
 public abstract class AbstractHttpHandler implements HttpHandler {
 
     private List<String> supportedMethods;
+    protected static Logger logger = Logger.getLogger(AbstractHttpHandler.class);
 
     protected AbstractHttpHandler(String... methods) {
         supportedMethods = new ArrayList<String>();
         supportedMethods.addAll(Arrays.asList(methods));
     }
 
+    @Override
     public void handle(HttpExchange httpExchange) {
         for (String supportedMethod : supportedMethods) { //Could be done with iterator but small method list
             if (httpExchange.getRequestMethod().equalsIgnoreCase(supportedMethod)) {

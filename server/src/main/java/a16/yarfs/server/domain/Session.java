@@ -4,7 +4,7 @@
 package a16.yarfs.server.domain;
 
 import a16.yarfs.server.ServerConstants;
-import a16.yarfs.server.exception.WrongPasswordException;
+import a16.yarfs.server.domain.exceptions.WrongPasswordException;
 import org.apache.log4j.Logger;
 
 import java.io.Serializable;
@@ -13,32 +13,39 @@ import java.time.LocalDateTime;
 import java.util.Random;
 
 /**
- *  Class Session
- *  Stores information about an existing session on the server.
+ * Class Session
+ * Stores information about an existing session on the server.
  */
 public class Session implements Serializable {
     private static Logger logger = Logger.getLogger(Session.class);
     private static final long serialVersionUID = 20171118230155L;
 
-    /** token that identifies the session */
+    /**
+     * token that identifies the session
+     */
     private long token;
 
-    /** date after which the session is no longer valid
+    /**
+     * date after which the session is no longer valid
      * Note: LocalDateTime is easier to manipulate than Date
-     * */
+     */
     private LocalDateTime expirationDate;
 
-    /** user that created the session */
+    /**
+     * user that created the session
+     */
     private User owner;
 
 
-    /** create a new session for the given user if properly authenticated
-     * @param manager The Manager that is creating the session
-     * @param u The owner of the session
+    /**
+     * create a new session for the given user if properly authenticated
+     *
+     * @param manager  The Manager that is creating the session
+     * @param u        The owner of the session
      * @param password used to authenticate the User
      */
     public Session(Manager manager, User u, String password) throws WrongPasswordException {
-        if(!u.authenticate(password)) {
+        if (!u.authenticate(password)) {
             throw new WrongPasswordException("password does not match");
         }
         owner = u;
@@ -48,7 +55,9 @@ public class Session implements Serializable {
                 + Session.tokenToString(token) + " expires at " + expirationDate.toString());
     }
 
-    /** generates a new token that is unique for the given Manager
+    /**
+     * generates a new token that is unique for the given Manager
+     *
      * @param manager the manager that is creating the session
      * @return the new random token
      */
@@ -56,12 +65,13 @@ public class Session implements Serializable {
         long token;
         do {
             token = (new BigInteger(64, new Random())).longValue();
-        } while(token == 0 || manager.hasSession(token));
+        } while (token == 0 || manager.hasSession(token));
         return token;
     }
 
     /**
      * Check if the session has expired and should no longer be used
+     *
      * @returns true if the session is expired
      */
     public boolean isExpired() {
@@ -76,12 +86,16 @@ public class Session implements Serializable {
         return Long.parseLong(token, 16);
     }
 
-    /** get the token that identifies this session */
+    /**
+     * get the token that identifies this session
+     */
     public long getToken() {
         return token;
     }
 
-    /** get the user that owns this session */
+    /**
+     * get the user that owns this session
+     */
     public User getUser() {
         return owner;
     }

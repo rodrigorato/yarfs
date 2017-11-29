@@ -3,8 +3,6 @@
  */
 package a16.yarfs.server.exception.http;
 
-import a16.yarfs.server.exception.YarfsServerException;
-
 /**
  *  Class MethodNotAllowed
  *  jorge is an IDIOT because it hasn't made documentation for this class.

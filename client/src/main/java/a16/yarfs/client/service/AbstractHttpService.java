@@ -5,7 +5,6 @@ package a16.yarfs.client.service;
 
 
 import a16.yarfs.client.ClientConstants;
-import a16.yarfs.client.presentation.Shell;
 import a16.yarfs.client.service.exception.AlreadyExecutedException;
 import a16.yarfs.client.service.exception.NotExecutedException;
 import a16.yarfs.client.service.exception.ServiceResultException;
@@ -28,7 +27,9 @@ public abstract class AbstractHttpService {
     private HttpURLConnection conn = null;
     private boolean connected = false;
 
-    /** set to true after the execute() method finishes */
+    /**
+     * set to true after the execute() method finishes
+     */
     private boolean _executed = false;
 
     protected AbstractHttpService(String baseUrl, String endpoint) throws MalformedURLException {
@@ -40,10 +41,11 @@ public abstract class AbstractHttpService {
     /**
      * connect to the remote endpoint. Must be called by the subclass after
      * setting the request parameters and before getting a result.
+     *
      * @throws IOException
      */
     public void execute() throws IOException {
-        if(conn == null)
+        if (conn == null)
             conn = (HttpURLConnection) this.url.openConnection();
         conn.setConnectTimeout(ClientConstants.connectTimeout);
         conn.connect();
@@ -53,10 +55,10 @@ public abstract class AbstractHttpService {
 
 
     private OutputStream getOutputStream() throws IOException, AlreadyExecutedException {
-        if(connected) {
+        if (connected) {
             throw new AlreadyExecutedException("Already connected. Can only get output stream before connecting");
         }
-        if(conn == null)
+        if (conn == null)
             conn = (HttpURLConnection) this.url.openConnection();
         conn.setDoOutput(true);
         return conn.getOutputStream();
@@ -78,7 +80,7 @@ public abstract class AbstractHttpService {
     }
 
     protected JSONObject getResponse() throws IOException, NotExecutedException, ServiceResultException {
-        if(!connected) {
+        if (!connected) {
             throw new NotExecutedException("Not connected. Can only get response after connecting");
         }
 
@@ -87,7 +89,7 @@ public abstract class AbstractHttpService {
         logger.debug(conn.getResponseMessage());
         logger.debug("response code: " + code);
         logger.debug("getErrorStream: " + error);
-        if(error != null) {
+        if (error != null) {
             InputStreamReader errorReader = new InputStreamReader(error);
             ByteArrayOutputStream buf = new ByteArrayOutputStream();
 
@@ -128,8 +130,12 @@ public abstract class AbstractHttpService {
      * should be called by subclasses on their getResult methods
      */
     protected void assertExecuted() {
-        if(!_executed) {
+        if (!_executed) {
             throw new RuntimeException("Command was NOT executed!");
         }
+    }
+
+    protected static Logger getLogger() {
+        return AbstractHttpService.logger;
     }
 }

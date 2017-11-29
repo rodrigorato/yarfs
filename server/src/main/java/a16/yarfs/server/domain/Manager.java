@@ -59,7 +59,7 @@ public class Manager {
         return hasSession(Session.stringToToken(token));
     }
 
-    public void registerUser(String username, String password) {
+    public void registerUser(String username, String password) throws DuplicatedUsernameException {
         if (users.containsKey(username)) {
             throw new DuplicatedUsernameException("Username " + username + " already exists");
         }

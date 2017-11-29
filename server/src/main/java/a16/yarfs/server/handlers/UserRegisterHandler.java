@@ -1,22 +1,16 @@
-/**
- * Created by nuno at 28/11/17
- */
 package a16.yarfs.server.handlers;
 
 import a16.yarfs.server.ServerConstants;
 import a16.yarfs.server.domain.Manager;
 import a16.yarfs.server.domain.exceptions.DuplicatedUsernameException;
-import a16.yarfs.server.exception.http.BadRequestException;
-import a16.yarfs.server.exception.http.HttpException;
 import com.sun.net.httpserver.HttpExchange;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-
 /**
- * Class UserRegisterHandler
- * nuno is an IDIOT because it hasn't made documentation for this class.
+ * Class UserRegisterHandles
+ * <p>
+ * Used when a register request is being handled
  */
 public final class UserRegisterHandler extends AbstractHttpHandler {
 
@@ -26,31 +20,47 @@ public final class UserRegisterHandler extends AbstractHttpHandler {
 
     @Override
     public void handle(HttpExchange httpExchange) {
-        JSONObject body = null;
+        super.handle(httpExchange);
 
+        JSONObject request = null;
         try {
-            super.handle(httpExchange);
-            body = super.getBodyAsJson(httpExchange);
-            Manager.getInstance().registerUser(body.getString("username"), body.getString("password"));
-            sendResponse(ServerConstants.ResponseCodes.SUCCESS_CODE, "This is test " + body, httpExchange);
-        } catch (DuplicatedUsernameException e) {
+            // Get the request to read the username and password parameters
+            request = super.getBodyAsJson(httpExchange);
 
-            sendResponse(ServerConstants.ResponseCodes.DUPLICATE_USER_CODE,
+            // Use those parameters to register (or not) a user with the Manager
+            Manager.getInstance().registerUser(request.getString("username"),
+                    request.getString("password"));
+
+            // Create the request's response with the right session id
+            /* FIXME should depend on manager */
+            JSONObject response = ServerConstants.DefaultResponses.getOkResponse();
+
+            // And send said response
+            super.sendResponse(ServerConstants.ResponseCodes.SUCCESS_CODE, response.toString(), httpExchange);
+
+        } catch (DuplicatedUsernameException e) {
+            // Firstly catch the domain exception
+
+            // just send a invalid user response
+            super.sendResponse(ServerConstants.ResponseCodes.DUPLICATE_USER_CODE,
                     ServerConstants.ResponseCodes.DUPLICATE_USER_MESSAGE,
                     httpExchange);
 
-        } catch (IOException e) {
-
-            e.printStackTrace(); // FIXME: Do something useful here
-            //System.out.println("Body is "+body);
-        } catch (HttpException e) {
-
-            sendResponse(e.getCode(), e.getMessage(), httpExchange);
+            // Then handle whatever exception happens
         } catch (JSONException e) {
+            // This happens on a poorly formed request
 
-            //e.printStackTrace();
-            BadRequestException bre = new BadRequestException();
-            sendResponse(bre.getCode(), bre.getMessage(), httpExchange);
+            super.sendResponse(ServerConstants.ResponseCodes.POORLY_FORMED_REQUEST_CODE,
+                    ServerConstants.ResponseCodes.POORLY_FORMED_REQUEST_MESSAGE,
+                    httpExchange);
+
+        } catch (Exception e) {
+            // Something *bad* happened
+
+            AbstractHttpHandler.logger.error("Something bad happened on login!\n" + e.getMessage());
+            sendResponse(ServerConstants.ResponseCodes.INTERNAL_SERVER_ERROR_CODE,
+                    ServerConstants.ResponseCodes.INTERNAL_SERVER_ERROR_MESSAGE,
+                    httpExchange);
         }
     }
 }

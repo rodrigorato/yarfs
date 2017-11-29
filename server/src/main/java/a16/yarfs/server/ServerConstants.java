@@ -1,5 +1,7 @@
 package a16.yarfs.server;
 
+import org.json.JSONObject;
+
 /**
  * This class is meant to be used to store
  * constants used on the Server application.
@@ -102,10 +104,26 @@ public final class ServerConstants {
 
         public final static int INVALID_USER_CODE = 602;
         public final static String INVALID_USER_MESSAGE = "Invalid user/password";
-
-
     }
 
+    /**
+     *
+     */
+    public static final class DefaultResponses {
+        public static JSONObject getOkResponse() {
+            JSONObject response = new JSONObject();
+            response.put("response", "OK");
+
+            return response;
+        }
+
+        public static JSONObject getNokResponse() {
+            JSONObject response = new JSONObject();
+            response.put("response", "NOK");
+
+            return response;
+        }
+    }
 
     /**
      * This class shouldn't be instantiated

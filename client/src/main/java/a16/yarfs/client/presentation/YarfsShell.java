@@ -14,6 +14,7 @@ import java.io.PrintStream;
  */
 public class YarfsShell extends Shell {
     private String activeSessionid = null;
+    private String activeUser = "";
 
     private static Logger logger = Logger.getLogger(Shell.class);
     public YarfsShell(InputStream is, PrintStream w, boolean flush) {
@@ -23,6 +24,16 @@ public class YarfsShell extends Shell {
         // TODO add commands
     }
 
+
+    @Override
+    protected String getPrompt() {
+        String prompt = super.getPrompt();
+        String user = getActiveUser();
+        if(!user.trim().equals("")) {
+            prompt = user + "@" + prompt;
+        }
+        return prompt;
+    }
 
     public void setActiveSessionid(String sessionid) {
         activeSessionid = sessionid;
@@ -34,5 +45,13 @@ public class YarfsShell extends Shell {
 
     public boolean isLoggedIn() {
         return activeSessionid != null;
+    }
+
+    public String getActiveUser() {
+        return activeUser;
+    }
+
+    public void setActiveUser(String activeUser) {
+        this.activeUser = activeUser;
     }
 }

@@ -44,8 +44,12 @@ public abstract class Shell {
         System.exit(0);
     }
 
+    protected String getPrompt() {
+        return prompt;
+    }
+
     protected void printPrompt() {
-        print(prompt);
+        print(getPrompt());
         out.flush();
     }
 

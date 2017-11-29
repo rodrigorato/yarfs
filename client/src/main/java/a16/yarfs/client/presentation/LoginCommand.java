@@ -5,7 +5,6 @@ package a16.yarfs.client.presentation;
 
 
 import a16.yarfs.client.ClientConstants;
-import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -45,6 +44,7 @@ public class LoginCommand extends Command {
             String sessionid = command.getSessionId();
             shell.getLogger().info("logged in using token " + sessionid);
             shell.setActiveSessionid(sessionid);
+            shell.setActiveUser(username);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {

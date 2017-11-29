@@ -39,7 +39,7 @@ public class App {
         server.createContext(ServerConstants.Endpoints.LIST_FILES, new ListFilesHandler());
         server.createContext(ServerConstants.Endpoints.LIST_USERS, new ListUsersHandler("GET", "POST"));
         server.createContext(ServerConstants.Endpoints.LOGIN, new UserLoginHandler("POST"));
-        server.createContext(ServerConstants.Endpoints.LOGOUT, new UserLogoutHandler());
+        server.createContext(ServerConstants.Endpoints.LOGOUT, new UserLogoutHandler("POST"));
         server.createContext(ServerConstants.Endpoints.REGISTER, new UserRegisterHandler("POST"));
         server.createContext(ServerConstants.Endpoints.DELETE_FILE, new DeleteFileHandler());
         server.createContext(ServerConstants.Endpoints.SHARE_FILE, new ShareFileHandler());

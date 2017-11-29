@@ -37,7 +37,6 @@ public abstract class File implements Serializable {
         this.creationDate = creationDate;
         this.signature = signature;
         this.ownerId = ownerId;
-        log.debug("File attributes are: \n"+this.toString());
         log.info("File successfully created!");
     }
 

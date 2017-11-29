@@ -27,6 +27,7 @@ public class ConcreteFile extends File{
      */
     public ConcreteFile(long id,String ownerId, String name, byte[] content, Date creationDate, byte[] signature) {
         super(id, ownerId, name, content, creationDate, signature);
+        userKeys = new HashMap<>();
     }
 
     /**

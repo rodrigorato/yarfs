@@ -28,7 +28,7 @@ public class SessionTest {
     public void tearDown() throws Exception {
     }
 
-    @Test (expected = WrongLoginException.class)
+    @Test(expected = WrongLoginException.class)
     public void wrongPasswordTest() throws Exception {
         new Session(manager, u1, USER1_CORRECT_PASSWORD + "aaa");
     }

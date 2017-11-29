@@ -5,7 +5,6 @@ package a16.yarfs.server.domain;
 
 import a16.yarfs.server.domain.exceptions.DuplicatedUsernameException;
 import a16.yarfs.server.domain.exceptions.WrongLoginException;
-import a16.yarfs.server.exception.api.LoginException;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -67,13 +66,13 @@ public class Manager {
         users.put(username, new User(username, password));
     }
 
-    public String loginUser(String username, String password) throws LoginException {
+    public String loginUser(String username, String password) throws WrongLoginException {
         logger.debug("Logging in user with username " + username);
 
         User user = users.get(username);
         if (user == null) {
             logger.warn("Can not login: user '" + username + "' does not exist");
-            throw new LoginException();
+            throw new WrongLoginException(username + " does not exist.");
         }
         try {
             Session session = new Session(this, user, password);
@@ -82,7 +81,7 @@ public class Manager {
             return Session.tokenToString(token);
         } catch (WrongLoginException e) {
             logger.warn("Can not login: wrong password for user '" + username + "'");
-            throw new LoginException();
+            throw new WrongLoginException("Wrong password for user " + username);
         }
     }
 

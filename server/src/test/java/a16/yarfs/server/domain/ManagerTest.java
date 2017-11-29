@@ -1,7 +1,7 @@
 package a16.yarfs.server.domain;
 
 import a16.yarfs.server.domain.exceptions.DuplicatedUsernameException;
-import a16.yarfs.server.exception.api.LoginException;
+import a16.yarfs.server.domain.exceptions.WrongLoginException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,13 +48,13 @@ public class ManagerTest {
 
     @Test
     public void registerUser() throws Exception {
-        manager.registerUser("bla","bla");
+        manager.registerUser("bla", "bla");
         assertTrue("Error in registering", manager.hasUser("bla"));
     }
 
     @Test(expected = DuplicatedUsernameException.class)
     public void registerSameUser() throws Exception {
-        manager.registerUser("Testoesterona","password2");
+        manager.registerUser("Testoesterona", "password2");
     }
 
     @Test
@@ -63,7 +63,7 @@ public class ManagerTest {
         assertNotNull("Error in login", token);
     }
 
-    @Test(expected = LoginException.class)
+    @Test(expected = WrongLoginException.class)
     public void loginFailPassword() throws Exception {
         String token = manager.loginUser("Testoesterona", "password2");
     }

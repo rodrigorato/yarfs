@@ -5,8 +5,7 @@ package a16.yarfs.server.handlers;
 
 import a16.yarfs.server.ServerConstants;
 import a16.yarfs.server.domain.Manager;
-import a16.yarfs.server.exception.api.LoginException;
-import a16.yarfs.server.exception.http.InternalServerErrorException;
+import a16.yarfs.server.domain.exceptions.WrongLoginException;
 import com.sun.net.httpserver.HttpExchange;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,7 +41,7 @@ public final class UserLoginHandler extends AbstractHttpHandler {
             // And send said response
             super.sendResponse(ServerConstants.ResponseCodes.SUCCESS_CODE, response.toString(), httpExchange);
 
-        } catch (LoginException e) {
+        } catch (WrongLoginException e) {
             // Firstly catch the domain exception
 
             // just send a invalid user response
@@ -58,13 +57,10 @@ public final class UserLoginHandler extends AbstractHttpHandler {
                     ServerConstants.ResponseCodes.POORLY_FORMED_REQUEST_MESSAGE,
                     httpExchange);
 
-            InternalServerErrorException ex = new InternalServerErrorException();
-            sendResponse(ex.getCode(), ex.getMessage(), httpExchange);
-
         } catch (Exception e) {
             // Something *bad* happened
-            
-            AbstractHttpHandler.logger.warn("Something bad happened on login!\n" + e.getMessage());
+
+            AbstractHttpHandler.logger.error("Something bad happened on login!\n" + e.getMessage());
             sendResponse(ServerConstants.ResponseCodes.INTERNAL_SERVER_ERROR_CODE,
                     ServerConstants.ResponseCodes.INTERNAL_SERVER_ERROR_MESSAGE,
                     httpExchange);

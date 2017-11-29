@@ -64,6 +64,10 @@ public abstract class Shell {
             void execute(String[] args) {
                 onQuitCommand();
             }
+            @Override
+            public String getUsage() {
+                return "Usage: " + getName();
+            }
         };
 
         new CommandAlias("exit", quit);
@@ -91,11 +95,16 @@ public abstract class Shell {
                     }
                 }
             }
+
+            @Override
+            public String getUsage() {
+                return "Usage: " + this.getName() + " [command]";
+            }
         };
     }
 
     protected String whatIs(Command cmd) {
-        return cmd.getName() + " -\t" + cmd.getHelp();
+        return cmd.getName() + "\t\t" + cmd.getHelp();
     }
 
     public void println(String s) {

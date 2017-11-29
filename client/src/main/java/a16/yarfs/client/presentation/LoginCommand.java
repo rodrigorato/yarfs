@@ -54,7 +54,7 @@ public class LoginCommand extends Command {
 
     @Override
     public String getUsage() {
-        return "Usage: login <username> <password>";
+        return "Usage: "+ getName() + " <username> <password>";
     }
 
 }

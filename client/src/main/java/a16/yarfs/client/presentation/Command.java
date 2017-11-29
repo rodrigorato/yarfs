@@ -38,6 +38,6 @@ public abstract class Command {
     }
 
     public String getUsage() {
-        return getName() + ": nothing appropriate.";
+        return "Usage: " + getName() + " ???";
     }
 }

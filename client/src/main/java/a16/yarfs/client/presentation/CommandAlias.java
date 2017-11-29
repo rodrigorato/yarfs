@@ -19,4 +19,9 @@ public class CommandAlias extends Command {
     void execute(String[] args) {
         target.execute(args);
     }
+
+    @Override
+    public String getUsage() {
+        return target.getUsage();
+    }
 }

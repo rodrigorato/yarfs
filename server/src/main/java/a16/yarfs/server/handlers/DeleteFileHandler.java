@@ -9,10 +9,10 @@ import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 
 /**
- * Class RemoveFileHandler
+ * Class DeleteFileHandler
  * nuno is an IDIOT because it hasn't made documentation for this class.
  */
-public final class RemoveFileHandler implements HttpHandler {
+public final class DeleteFileHandler implements HttpHandler {
     // FIXME: should it inherit our abstract handler instead?
 
     public void handle(HttpExchange httpExchange) throws IOException {

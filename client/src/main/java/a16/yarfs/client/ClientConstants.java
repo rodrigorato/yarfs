@@ -18,7 +18,7 @@ public class ClientConstants {
         public final static String LOGOUT = "/logout";
         public final static String LIST_USERS = "/user";
         public final static String ADD_FILE = "/addFile";
-        public final static String REMOVE_FILE = "/removeFile";
+        public final static String DELETE_FILE = "/deleteFile";
         public final static String LIST_FILES = "/listFiles";
         public final static String FILE_DETAILS = "/fileDetails";
         public final static String SHARE_FILE = "/shareFile";

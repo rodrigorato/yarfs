@@ -16,7 +16,7 @@ import java.net.MalformedURLException;
 public class DeleteFileService extends FileService {
 
     protected DeleteFileService(String baseUrl) throws MalformedURLException {
-        super(baseUrl, ClientConstants.Endpoints.REMOVE_FILE);
+        super(baseUrl, ClientConstants.Endpoints.DELETE_FILE);
         throw new NotImplementedException();
     }
 

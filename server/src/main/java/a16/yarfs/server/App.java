@@ -2,6 +2,7 @@ package a16.yarfs.server;
 
 import a16.yarfs.server.handlers.*;
 import com.sun.net.httpserver.HttpServer;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -14,17 +15,20 @@ public class App {
     private static final int defaultPort = 31000;
 
     public static void main(String[] args) {
-
-        System.out.println("Starting yarfs server...");
-        if (args.length > 0) {
-            (new App()).start(Integer.parseInt(args[0]));
-        } else {
-            (new App()).start(defaultPort);
+        Logger logger = Logger.getLogger(App.class);
+        try {
+            logger.info("Starting yarfs server...");
+            if (args.length > 0) {
+                (new App()).start(Integer.parseInt(args[0]));
+            } else {
+                (new App()).start(defaultPort);
+            }
+        } catch (Exception e){
+            logger.error("SERVER CRASH. The crash message is " + e.getMessage(), e);
         }
     }
 
     public void start(int port) {
-        //   log.info("Starting server...");
         try {
             HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
             configure(server);
@@ -35,7 +39,7 @@ public class App {
     }
 
     private void configure(HttpServer server) {
-        server.createContext(ServerConstants.Endpoints.ADD_FILE, new AddFileHandler());
+        server.createContext(ServerConstants.Endpoints.ADD_FILE, new AddFileHandler("POST"));
         server.createContext(ServerConstants.Endpoints.LIST_FILES, new ListFilesHandler());
         server.createContext(ServerConstants.Endpoints.LIST_USERS, new ListUsersHandler("GET", "POST"));
         server.createContext(ServerConstants.Endpoints.LOGIN, new UserLoginHandler("POST"));

@@ -11,4 +11,8 @@ public class ServiceResultException extends ServiceException {
     public ServiceResultException(String msg) {
         super(msg);
     }
+
+    public ServiceResultException(int code, String msg) {
+        super(code + ": " + msg);
+    }
 }

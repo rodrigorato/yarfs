@@ -4,6 +4,8 @@
 package a16.yarfs.client.service.user;
 
 import a16.yarfs.client.ClientConstants;
+import a16.yarfs.client.service.exception.AlreadyExecutedException;
+import a16.yarfs.client.service.exception.NotExecutedException;
 import a16.yarfs.client.service.exception.ServiceResultException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,17 +36,20 @@ public class LoginService extends AbstractUserService {
             super.execute();
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (AlreadyExecutedException e) {
+            e.printStackTrace();
         }
     }
 
-    public String getSessionId() throws IOException {
+    public String getSessionId() throws IOException, ServiceResultException, NotExecutedException {
         assertExecuted();
 
         try {
             JSONObject js = getResponse();
             return js.getString("sessid");
         } catch (JSONException e) {
-            throw new ServiceResultException("invalid server response");
+            e.printStackTrace();
+            throw new ServiceResultException("no sessionid included in the response");
         }
     }
 }

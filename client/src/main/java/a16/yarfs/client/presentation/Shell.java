@@ -84,6 +84,7 @@ public abstract class Shell {
                     String cmdName = args[0];
                     Command c = getShell().getCommand(cmdName);
                     println(whatIs(c));
+                    println(c.getUsage());
                 }
             }
         };

@@ -77,6 +77,9 @@ public final class ServerConstants {
         /// unshare_file (SESSID, fileid, targeuser) : OK | NOK
         public final static String UNSHARE_FILE = "/unshare_file";
 
+        /// get_file (SESSID, fileid) : (filename, filecontent, filesignature, user_ciphered_simmetric_key)
+        public final static String GET_FILE = "/get_file";
+
         /// echo (stuff) : stuff
         public final static String ECHO = "/echo"; //echo endpoint for tests
     }

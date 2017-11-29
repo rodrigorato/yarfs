@@ -31,7 +31,11 @@ public class FileSystemFileManager implements FileManager {
             String pathToStoreFile = ServerConstants.
                     FileSystem.buildFileStoragePath(Long.toString(file.getId()));
 
-            FileOutputStream fos = new FileOutputStream(pathToStoreFile);
+            logger.debug("File path is " + pathToStoreFile);
+            java.io.File outputFile = new java.io.File(pathToStoreFile);
+            outputFile.getParentFile().mkdirs();  // FIXME take care of return
+            outputFile.createNewFile(); // FIXME take care of return
+            FileOutputStream fos = new FileOutputStream(outputFile, false); //False to disable append
 
             ObjectOutputStream oos = new ObjectOutputStream(fos);
 
@@ -48,7 +52,7 @@ public class FileSystemFileManager implements FileManager {
             System.exit(-1);
 
         } catch (IOException ex) {
-            logger.warn("Some kind of I/O error occurred while trying to write to disk.", ex);
+            logger.warn("Some kind of I/O error occurred while trying to write to disk." + ex.getMessage(), ex);
             System.exit(-1);
         }
     }

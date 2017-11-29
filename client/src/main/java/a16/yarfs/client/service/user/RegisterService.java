@@ -34,7 +34,7 @@ public class RegisterService extends AbstractUserService {
      *                                  should be caught later and eventually presented to the user
      */
     @Override
-    public void execute() throws RegisterServiceException {
+    public void execute() throws RegisterServiceException, AlreadyExecutedException {
         JSONObject js = new JSONObject();
 
         try {
@@ -55,10 +55,6 @@ public class RegisterService extends AbstractUserService {
             getLogger().error("Couldn't do the server register request: " + e.getMessage());
             throw new RegisterServiceException(e.getMessage());
 
-        } catch (NotExecutedException | AlreadyExecutedException e) {
-            /* Do nothing, it's fine */
-            getLogger().error("This is supposed to never happen. Cosmic rays!");
-
         } catch (JSONException e) {
             // Error on JSON reads/writes, probably the response is malformed
             getLogger().error("Malformed response from the server: ", e);
@@ -66,6 +62,8 @@ public class RegisterService extends AbstractUserService {
         } catch (IOException e) {
             // Worst Case Scenario
             getLogger().error("Something really bad happened: ", e);
+        } catch (NotExecutedException e) {
+            e.printStackTrace();
         }
 
     }

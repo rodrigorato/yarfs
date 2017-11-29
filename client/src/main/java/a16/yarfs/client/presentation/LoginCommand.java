@@ -5,6 +5,7 @@ package a16.yarfs.client.presentation;
 
 
 import a16.yarfs.client.ClientConstants;
+import a16.yarfs.client.service.exception.AlreadyExecutedException;
 import a16.yarfs.client.service.exception.NotExecutedException;
 import a16.yarfs.client.service.exception.ServiceResultException;
 import a16.yarfs.client.service.user.LoginService;
@@ -63,6 +64,8 @@ public class LoginCommand extends Command {
             e.printStackTrace();
         } catch (NotExecutedException e) {
             e.printStackTrace();
+        } catch (AlreadyExecutedException e) {
+            e.printStackTrace(); // should never happen, the service was just instantiated
         }
     }
 

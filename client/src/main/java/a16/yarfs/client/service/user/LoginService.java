@@ -27,7 +27,7 @@ public class LoginService extends AbstractUserService {
     }
 
     @Override
-    public void execute() throws IOException {
+    public void execute() throws IOException, AlreadyExecutedException {
         JSONObject js = new JSONObject();
         try {
             js.put("username", username);
@@ -35,8 +35,6 @@ public class LoginService extends AbstractUserService {
             setRequestParameters(js);
             super.execute();
         } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (AlreadyExecutedException e) {
             e.printStackTrace();
         }
     }

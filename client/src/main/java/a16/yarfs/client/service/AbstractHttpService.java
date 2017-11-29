@@ -44,7 +44,7 @@ public abstract class AbstractHttpService {
      *
      * @throws IOException
      */
-    public void execute() throws IOException {
+    public void execute() throws IOException, AlreadyExecutedException {
         if (conn == null)
             conn = (HttpURLConnection) this.url.openConnection();
         conn.setConnectTimeout(ClientConstants.connectTimeout);

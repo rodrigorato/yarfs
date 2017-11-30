@@ -3,6 +3,7 @@
  */
 package a16.yarfs.client.presentation;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -91,6 +92,7 @@ public abstract class Shell {
                         println(cmdName + ": nothing appropriate.");
                     } else {
                         println(whatIs(c));
+                        println("");
                         println(c.getUsage());
                     }
                 }
@@ -149,19 +151,26 @@ public abstract class Shell {
         printPrompt();
         String line;
         while((line = input.readLine()) != null) {
-            String args[] = line.split(" ");
-            String cmdName = args[0];
-            Command c = getCommand(cmdName);
-            if(c == null) {
-                if(!cmdName.isEmpty()) {
-                    println(getName() + ": " + cmdName + ": command not found");
-                }
-            } else {
-                try {
-                    c.execute(Arrays.copyOfRange(args, 1, args.length));
-                } catch (RuntimeException e) {
-                    System.err.print(cmdName + " error: " + e);
-                    e.printStackTrace();
+            String args[] = line.trim().split(" ");
+            {   // remove empty arguments, e.g. "a  b     c" -> "a b c"
+                List<String> list = new ArrayList<String>(Arrays.asList(args));
+                list.removeIf(StringUtils::isEmpty);
+                args = (String[]) list.toArray(new String[0]);
+            }
+            if(args.length > 0) {
+                String cmdName = args[0];
+                Command c = getCommand(cmdName);
+                if(c == null) {
+                    if(!cmdName.isEmpty()) {
+                        println(getName() + ": " + cmdName + ": command not found");
+                    }
+                } else {
+                    try {
+                        c.execute(Arrays.copyOfRange(args, 1, args.length));
+                    } catch (RuntimeException e) {
+                        System.err.print(cmdName + " error: " + e);
+                        e.printStackTrace();
+                    }
                 }
             }
             printPrompt();

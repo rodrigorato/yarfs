@@ -80,7 +80,9 @@ public abstract class AbstractHttpHandler implements HttpHandler {
             httpExchange.sendResponseHeaders(code, response.length());
             OutputStream os = httpExchange.getResponseBody();
             os.write(response.getBytes());
+            os.flush();
             os.close();
+            httpExchange.close();
         } catch (IOException e) {
             //e.printStackTrace();
             throw new InternalServerErrorException();

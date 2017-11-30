@@ -105,8 +105,11 @@ public final class ServerConstants {
         public final static int INVALID_USER_CODE = 602;
         public final static String INVALID_USER_MESSAGE = "Invalid user/password";
 
-        public final static int INVALID_SESSION_ID = 603;
-        public final static String INVALID_SESSION_MESSAGE = "Invalid session";
+        public final static int INVALID_SESSION_ID_CODE = 603;
+        public final static String INVALID_SESSION_MESSAGE_MESSAGE = "Invalid session";
+
+        public final static int ACCESS_DENIED_CODE = 604;
+        public final static String ACCESS_DENIED_MESSAGE = "Access denied";
     }
 
     /**

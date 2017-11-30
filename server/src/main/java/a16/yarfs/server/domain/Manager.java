@@ -3,6 +3,8 @@
  */
 package a16.yarfs.server.domain;
 
+import a16.yarfs.server.domain.dto.ConcreteFileDto;
+import a16.yarfs.server.domain.exceptions.AccessDeniedException;
 import a16.yarfs.server.domain.exceptions.DuplicatedUsernameException;
 import a16.yarfs.server.domain.exceptions.InvalidSessionException;
 import a16.yarfs.server.domain.exceptions.WrongLoginException;
@@ -140,6 +142,27 @@ public class Manager {
     }
 
     /**
+     * Method for getting files based on their ids.
+     * @param sessid session id of the user which is trying to access.
+     * @param fileId id of the file to be accessed.
+     * @return file dto containing only the relevant data for the user.
+     * @throws InvalidSessionException happens if the session id is invalid or expired.
+     * @throws AccessDeniedException happens if the user doesn't have access to the requested file.
+     */
+    public ConcreteFileDto getFile(String sessid, String fileId) throws InvalidSessionException, AccessDeniedException {
+        Session usersession = getSession(Session.stringToToken(sessid));
+        logger.info("User "+usersession.getUser().getUsername()+" asking access to "+fileId);
+        if( ! userFiles.get(usersession.getUser()).contains(Long.parseLong(fileId))){
+            logger.info("Access denied of user "+usersession.getUser().getUsername()+" to file "+fileId);
+            throw new AccessDeniedException();
+        }
+        logger.info("Access granted to user "+usersession.getUser().getUsername()+" on "+fileId);
+        ConcreteFile file = (ConcreteFile) fileManager.readFile(Long.parseLong(fileId));
+        return new ConcreteFileDto(file.getId(), file.getName(), file.getContent(), file.getCreationDate(),
+                file.getSignature(), file.getOwnerId(), file.getKey(usersession.getUser().getUsername()));
+    }
+
+    /**
      * invalidates a Session
      *
      * @param token that identifies the Session
@@ -180,6 +203,19 @@ public class Manager {
      */
     private static long getNextId(){
         return fileIdCounter++;
+    }
+
+    /**
+     * Getter for the session object based on the id.
+     * @param sessid id of the session.
+     * @return session object with the sessionid described.
+     * @throws InvalidSessionException happens if the session id is invalid or expired.
+     */
+    private Session getSession(long sessid) throws InvalidSessionException {
+        if( ! sessions.keySet().contains(sessid)){
+            throw new InvalidSessionException();
+        }
+        return sessions.get(sessid);
     }
 
 }

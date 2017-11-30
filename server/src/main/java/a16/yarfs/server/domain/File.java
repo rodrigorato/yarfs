@@ -106,5 +106,17 @@ public abstract class File implements Serializable {
     public String getOwnerId(){
         return ownerId;
     }
+
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public void setContent(byte[] content){
+        this.content = content;
+    }
+
+    public void setSignature(byte[] signature){
+        this.signature = signature;
+    }
 }
 

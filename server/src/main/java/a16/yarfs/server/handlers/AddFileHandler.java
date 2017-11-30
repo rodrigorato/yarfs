@@ -7,12 +7,9 @@ import a16.yarfs.server.ServerConstants;
 import a16.yarfs.server.domain.Manager;
 import a16.yarfs.server.domain.exceptions.InvalidSessionException;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
 
 /**
  * Class AddFileHandler
@@ -45,7 +42,7 @@ public final class AddFileHandler extends AbstractHttpHandler {
             response.put("id", fileId);
             super.sendResponse(ServerConstants.ResponseCodes.SUCCESS_CODE, response.toString(), httpExchange);
         } catch (InvalidSessionException e) {
-            super.sendResponse(ServerConstants.ResponseCodes.INVALID_SESSION_ID, ServerConstants.ResponseCodes.INVALID_SESSION_MESSAGE, httpExchange);
+            super.sendResponse(ServerConstants.ResponseCodes.INVALID_SESSION_ID_CODE, ServerConstants.ResponseCodes.INVALID_SESSION_MESSAGE_MESSAGE, httpExchange);
         } catch (JSONException e) {
             super.sendResponse(ServerConstants.ResponseCodes.POORLY_FORMED_REQUEST_CODE, ServerConstants.ResponseCodes.POORLY_FORMED_REQUEST_MESSAGE, httpExchange);
         } catch (Exception e) {

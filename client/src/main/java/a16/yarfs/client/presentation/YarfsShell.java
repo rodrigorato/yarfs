@@ -25,6 +25,7 @@ public class YarfsShell extends Shell {
         new RegisterCommand(this, "register");
         new LogoutCommand(this, "logout");
         new AddFileCommand(this, "add");
+        new GetFileCommand(this, "get");
         // TODO add more commands
     }
 

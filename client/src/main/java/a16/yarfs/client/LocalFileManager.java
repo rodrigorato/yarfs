@@ -30,14 +30,12 @@ public class LocalFileManager {
      * @param content the content to write
      * @throws FileAlreadyExistsException
      */
-    public static void putFileContents(String fileName, byte[] content) throws FileAlreadyExistsException {
+    public static void putFileContents(String fileName, byte[] content) throws FileAlreadyExistsException, IOException {
         Path path = Paths.get(fileName);
         try {
             Files.write(path, content, StandardOpenOption.CREATE_NEW); // don't override existing files
         } catch (FileAlreadyExistsException e) {
             throw e;
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

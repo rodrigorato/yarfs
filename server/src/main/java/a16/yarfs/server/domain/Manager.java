@@ -4,13 +4,11 @@
 package a16.yarfs.server.domain;
 
 import a16.yarfs.server.domain.exceptions.DuplicatedUsernameException;
+import a16.yarfs.server.domain.exceptions.InvalidSessionException;
 import a16.yarfs.server.domain.exceptions.WrongLoginException;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Class Manager
@@ -22,6 +20,9 @@ public class Manager {
     private Map<String, User> users = new HashMap<String, User>();
     private Map<Long, Session> sessions = new HashMap<>();
     private static Logger logger = Logger.getLogger(Manager.class);
+    private static long fileIdCounter = 0;
+    private Map<User, List<Long>> userFiles = new HashMap<>();
+    private final FileManager fileManager = new FileSystemFileManager();
 
     public static Manager getInstance() {
         if (manager == null) {
@@ -59,13 +60,28 @@ public class Manager {
         return hasSession(Session.stringToToken(token));
     }
 
+    /**
+     * Registers a new user in the system.
+     * @param username username of the user to register.
+     * @param password plain text password for the user.
+     * @throws DuplicatedUsernameException happens if the given username already exists.
+     */
     public void registerUser(String username, String password) throws DuplicatedUsernameException {
         if (users.containsKey(username)) {
             throw new DuplicatedUsernameException("Username " + username + " already exists");
         }
-        users.put(username, new User(username, password));
+        User newuser = new User(username, password);
+        users.put(username, newuser);
+        userFiles.put(newuser, new ArrayList<>());
     }
 
+    /**
+     * Logs in a user into the system.
+     * @param username username of the user to login.
+     * @param password plain text password of the user to login.
+     * @return token on successful login.
+     * @throws WrongLoginException on wrong password/username
+     */
     public String loginUser(String username, String password) throws WrongLoginException {
         logger.debug("Logging in user with username " + username);
 
@@ -89,6 +105,37 @@ public class Manager {
         List<String> usernameList = new ArrayList<String>();
         usernameList.addAll(users.keySet());
         return usernameList;
+
+    }
+
+    /**
+     * Adds a new file to the system.
+     * @param filename filename of the file to add.
+     * @param sessid session id of the user which wants to create a file.
+     * @param fileContent contents of the file to add.
+     * @param signature signed hash of the file.
+     * @param cipheredKey cyphered symmetric key used to cypher the file
+     *                    Kpub{K} being Kpub the public key of the owner and K the key in question.
+     * @return id of the new file.
+     * @throws InvalidSessionException session id is invalid or expired.
+     */
+    public long addFile(String filename, String sessid, byte[] fileContent,
+                        byte[] signature, byte[] cipheredKey) throws  InvalidSessionException{
+        if ( ! hasSession(sessid)){
+            logger.warn("Invalid session " + sessid);
+            throw new InvalidSessionException();
+        }
+        logger.debug("Creating a file " + filename);
+        User owner = sessions.get(Session.stringToToken(sessid)).getUser();
+        long fileId = Manager.getNextId();
+        ConcreteFile cf = new ConcreteFile(fileId, owner.getUsername(), filename, fileContent, new Date(), signature);
+        cf.addKey(owner.getUsername(), new SnapshotKey(cipheredKey));
+        userFiles.get(owner).add(fileId);
+        logger.info("Successfully added");
+        logger.debug("User " + owner.getUsername() + " now has " + userFiles.get(owner).size() + " files.");
+        logger.info("Witting file " + fileId + " to persistent storage");
+        fileManager.writeFile(cf);
+        return fileId;
 
     }
 
@@ -126,4 +173,13 @@ public class Manager {
     public static void selfDestruct() {
         manager = null;
     }
+
+    /**
+     * Returns the id for the new file and increments the global counter.
+     * @return id for the new file.
+     */
+    private static long getNextId(){
+        return fileIdCounter++;
+    }
+
 }

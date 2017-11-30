@@ -22,5 +22,4 @@ public abstract class FileService extends AbstractHttpService {
     }
 
 
-    public abstract void execute();
 }

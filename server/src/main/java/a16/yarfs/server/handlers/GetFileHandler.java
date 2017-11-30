@@ -15,17 +15,17 @@ import org.json.JSONObject;
 
 /**
  * Class GetFileHandler
- *         Handler that takes care of the get_file endpoint, responsible for delivering files
- *         to the clients.
+ * Handler that takes care of the get_file endpoint, responsible for delivering files
+ * to the clients.
  */
-public class GetFileHandler extends AbstractHttpHandler{
+public class GetFileHandler extends AbstractHttpHandler {
 
-    public GetFileHandler(String ... methods){
+    public GetFileHandler(String... methods) {
         super(methods);
     }
 
     @Override
-   public void handle(HttpExchange httpExchange){
+    public void handle(HttpExchange httpExchange) {
         super.handle(httpExchange);
 
         JSONObject request = null;
@@ -37,9 +37,9 @@ public class GetFileHandler extends AbstractHttpHandler{
             String fileId = request.getString("fileid");
             ConcreteFileDto dto = Manager.getInstance().getFile(sessid, fileId);
             JSONObject response = new JSONObject();
-            response.put("contents", Base64.encodeBase64(dto.getContent()));
-            response.put("signature", Base64.encodeBase64(dto.getSignature()));
-            response.put("key", Base64.encodeBase64(dto.getUserKey().getCipheredKey()));
+            response.put("contents", new String(Base64.encodeBase64(dto.getContent())));
+            response.put("signature", new String(Base64.encodeBase64(dto.getSignature())));
+            response.put("key", new String(Base64.encodeBase64(dto.getUserKey().getCipheredKey())));
             response.put("filename", dto.getName());
             response.put("owner", dto.getOwnerId());
             response.put("fileid", dto.getId());
@@ -66,7 +66,7 @@ public class GetFileHandler extends AbstractHttpHandler{
                     ServerConstants.ResponseCodes.POORLY_FORMED_REQUEST_MESSAGE,
                     httpExchange);
         } catch (Exception e) {
-            AbstractHttpHandler.logger.error("Something bad happened on login!"+System.lineSeparator() + e.getMessage());
+            AbstractHttpHandler.logger.error("Something bad happened on login!" + System.lineSeparator() + e.getMessage());
             sendResponse(ServerConstants.ResponseCodes.INTERNAL_SERVER_ERROR_CODE,
                     ServerConstants.ResponseCodes.INTERNAL_SERVER_ERROR_MESSAGE,
                     httpExchange);

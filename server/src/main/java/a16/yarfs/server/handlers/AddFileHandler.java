@@ -9,6 +9,7 @@ import a16.yarfs.server.domain.exceptions.InvalidSessionException;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.apache.commons.codec.binary.Base64;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -43,8 +44,10 @@ public final class AddFileHandler extends AbstractHttpHandler {
             JSONObject response = new JSONObject();
             response.put("id", fileId);
             super.sendResponse(ServerConstants.ResponseCodes.SUCCESS_CODE, response.toString(), httpExchange);
-        } catch (InvalidSessionException e){
-             super.sendResponse(ServerConstants.ResponseCodes.INVALID_SESSION_ID, ServerConstants.ResponseCodes.INVALID_SESSION_MESSAGE, httpExchange);
+        } catch (InvalidSessionException e) {
+            super.sendResponse(ServerConstants.ResponseCodes.INVALID_SESSION_ID, ServerConstants.ResponseCodes.INVALID_SESSION_MESSAGE, httpExchange);
+        } catch (JSONException e) {
+            super.sendResponse(ServerConstants.ResponseCodes.POORLY_FORMED_REQUEST_CODE, ServerConstants.ResponseCodes.POORLY_FORMED_REQUEST_MESSAGE, httpExchange);
         } catch (Exception e) {
             AbstractHttpHandler.logger.error("Something bad happened on addFile with exception " +e.getClass().toString()+ "!\n" + e.getMessage());
             e.printStackTrace();

@@ -16,8 +16,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 /**
- Class GetFileService
-
+ * Class GetFileService
  **/
 public class GetFileService extends FileService {
 
@@ -52,13 +51,13 @@ public class GetFileService extends FileService {
         try {
             JSONObject res = getResponse();
 
-            long id           = Long.parseLong(res.getString("fileid"));
-            String filename   = res.getString("filename");
-            String owner      = res.getString("owner");
+            long id = Long.parseLong(res.getString("fileid"));
+            String filename = res.getString("filename");
+            String owner = res.getString("owner");
 
-            byte [] contents  = Base64.decodeBase64(res.getString("contents"));
-            byte [] signature = Base64.decodeBase64(res.getString("signature"));
-            byte [] key       = Base64.decodeBase64(res.getString("key"));
+            byte[] contents = Base64.decodeBase64(res.getString("contents"));
+            byte[] signature = Base64.decodeBase64(res.getString("signature"));
+            byte[] key = Base64.decodeBase64(res.getString("key"));
 
             return new FileDto(id, filename, owner, contents, signature, key);
         } catch (JSONException e) {

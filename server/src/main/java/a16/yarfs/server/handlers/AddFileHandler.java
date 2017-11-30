@@ -13,15 +13,16 @@ import org.json.JSONObject;
 
 /**
  * Class AddFileHandler
- *         This handler will handle the endpoint to add files to the server.
+ * This handler will handle the endpoint to add files to the server.
  */
 // FIXME put the strings into constants like all the others ffs
 public final class AddFileHandler extends AbstractHttpHandler {
-    public AddFileHandler(String ... methods) {
+    public AddFileHandler(String... methods) {
         super(methods);
     }
 
-    public void handle(HttpExchange httpExchange)  {
+    @Override
+    public void handle(HttpExchange httpExchange) {
         super.handle(httpExchange);
 
         JSONObject request = null;
@@ -46,7 +47,7 @@ public final class AddFileHandler extends AbstractHttpHandler {
         } catch (JSONException e) {
             super.sendResponse(ServerConstants.ResponseCodes.POORLY_FORMED_REQUEST_CODE, ServerConstants.ResponseCodes.POORLY_FORMED_REQUEST_MESSAGE, httpExchange);
         } catch (Exception e) {
-            AbstractHttpHandler.logger.error("Something bad happened on addFile with exception " +e.getClass().toString()+ "!\n" + e.getMessage());
+            AbstractHttpHandler.logger.error("Something bad happened on addFile with exception " + e.getClass().toString() + "!\n" + e.getMessage());
             e.printStackTrace();
             sendResponse(ServerConstants.ResponseCodes.INTERNAL_SERVER_ERROR_CODE,
                     ServerConstants.ResponseCodes.INTERNAL_SERVER_ERROR_MESSAGE,

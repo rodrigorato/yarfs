@@ -37,6 +37,11 @@ public final class ServerConstants {
     public static final class FileSystem {
         public final static String FILES_DIRECTORY = ServerConstants.SERVER_DIRECTORY + "/files";
 
+        // Suffix for all metadata files
+        public final static String FILE_METADATA_SUFFIX = ".metadata";
+        // Prefix for all metadata files
+        public final static String FILE_METADATA_PREFIX = "";
+
         /**
          * Builds the path where a certain file with fileName should be stored
          *
@@ -84,6 +89,9 @@ public final class ServerConstants {
 
         /// echo (stuff) : stuff
         public final static String ECHO = "/echo"; //echo endpoint for tests
+
+        // Endpoint for refresh which is supposed to refresh the client metadata of files
+        public static final String REFRESH = "/refresh";
     }
 
     /**

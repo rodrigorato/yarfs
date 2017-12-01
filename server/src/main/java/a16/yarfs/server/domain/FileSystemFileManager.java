@@ -2,9 +2,14 @@ package a16.yarfs.server.domain;
 
 import a16.yarfs.server.ServerConstants;
 import a16.yarfs.server.domain.exceptions.FileAccessException;
+import a16.yarfs.server.exception.AbstractYarfsRuntimeException;
 import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 /**
  * This is a possible FileManager implementation that
@@ -28,23 +33,12 @@ public class FileSystemFileManager implements FileManager {
             // Getting started on the "onion" layered thing
             // we need to store files. Ew.
 
-            String pathToStoreFile = ServerConstants.
-                    FileSystem.buildFileStoragePath(Long.toString(file.getId()));
 
-            logger.debug("File path is " + pathToStoreFile);
-            java.io.File outputFile = new java.io.File(pathToStoreFile);
-            outputFile.getParentFile().mkdirs();  // FIXME take care of return
-            outputFile.createNewFile(); // FIXME take care of return
-            FileOutputStream fos = new FileOutputStream(outputFile, false); //False to disable append
+            logger.debug("Writing file contents");
+            writeFileContents(String.valueOf(file.getId()), file.getContent());
+            logger.debug("Writing file metadata");
+            writeFileMetadata(String.valueOf(file.getId()), file.getFileMetadata());
 
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-
-            oos.writeObject(file);
-
-            oos.close();
-            fos.close();
-
-            logger.info("File '" + file.getName() + "' has been stored under '" + pathToStoreFile + "'.");
 
         } catch (FileNotFoundException ex) {
             logger.warn("The file either exists as a directory," +
@@ -66,21 +60,11 @@ public class FileSystemFileManager implements FileManager {
      */
     @Override
     public File readFile(long fileId) {
-        String pathToFile = ServerConstants.
-                FileSystem.buildFileStoragePath(Long.toString(fileId));
 
-        File retrievedFile = null;
 
         try {
-            FileInputStream fis = new FileInputStream(pathToFile);
-            ObjectInputStream ois = new ObjectInputStream(fis);
+            return new ConcreteFile(readFileContents(String.valueOf(fileId)), readFileMetadata(String.valueOf(fileId)));
 
-            retrievedFile = (File) ois.readObject();
-
-            ois.close();
-            fis.close();
-
-            logger.info("File '" + retrievedFile.getName() + "' has been retrieved from '" + pathToFile + "'.");
 
         } catch (ClassNotFoundException ex) {
             logger.warn("Couldn't un-serialize an object because it's" +
@@ -93,12 +77,79 @@ public class FileSystemFileManager implements FileManager {
 
         } catch (IOException ex) {
             logger.warn("Some kind of I/O error occurred while trying to read from disk.", ex);
+            throw new FileAccessException("Couldn't read from '" + fileId + "'."); // FIXME wrong message
         }
 
-        if (retrievedFile != null)
-            return retrievedFile;
-        else
-            throw new FileAccessException("Couldn't read from '" + pathToFile + "'.");
+        throw new AbstractYarfsRuntimeException(){  /// This should NEVER happen
+
+        };
+    }
+
+    /**
+     * Writes a file metadata to disk.
+     * @param filename name of the file.
+     * @param metadata metadata to write.
+     * @throws IOException whenever an IO error happens.
+     */
+    @Override
+    public void writeFileMetadata(String filename, FileMetadata metadata) throws IOException {
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ServerConstants.FileSystem.buildFileStoragePath(
+                ServerConstants.FileSystem.FILE_METADATA_PREFIX + filename +
+                ServerConstants.FileSystem.FILE_METADATA_SUFFIX)));
+        oos.writeObject(metadata);
+        oos.close();
+
+    }
+
+    /**
+     * Writes a file's contents to disk.
+     * @param filename name of the file.
+     * @param contents contents to write.
+     * @throws IOException whenever an IO error occurs.
+     */
+    @Override
+    public void writeFileContents(String filename, byte[] contents) throws IOException {
+        String pathToStoreFile = ServerConstants.
+                FileSystem.buildFileStoragePath(filename);
+        logger.debug("File path is " + pathToStoreFile);
+        java.io.File outputFile = new java.io.File(pathToStoreFile);
+        outputFile.getParentFile().mkdirs();  // FIXME take care of return
+        Files.write(Paths.get(pathToStoreFile), contents, StandardOpenOption.CREATE);
+
+        logger.info("File '" + filename + "' has been stored under '" + pathToStoreFile + "'.");
+
+    }
+
+    /**
+     * Reads a file metadata from disk.
+     * @param filename name of the file
+     * @return Metadata of the file in the form of domain class FileMetadata.
+     * @throws IOException whenever an IO error occurs.
+     * @throws ClassNotFoundException whenever the metadata file gets corrupted.
+     */
+    @Override
+    public FileMetadata readFileMetadata(String filename) throws IOException, ClassNotFoundException {
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ServerConstants.FileSystem.buildFileStoragePath(
+                ServerConstants.FileSystem.FILE_METADATA_PREFIX + filename +
+                ServerConstants.FileSystem.FILE_METADATA_SUFFIX)));
+        FileMetadata fm = (FileMetadata) ois.readObject();
+        ois.close();
+        return fm;
+    }
+
+    /**
+     * Reads the file contents from disk.
+     * @param filename name of the file.
+     * @return byte array with the file contents
+     * @throws IOException whenever an IO error occurs.
+     */
+    @Override
+    public byte[] readFileContents(String filename) throws IOException {
+        String pathToFile = ServerConstants.
+                FileSystem.buildFileStoragePath(filename);
+        Path path = Paths.get(pathToFile);
+
+        return Files.readAllBytes(path);
     }
 
 }

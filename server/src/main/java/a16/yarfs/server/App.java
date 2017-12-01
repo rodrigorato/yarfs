@@ -48,6 +48,7 @@ public class App {
         server.createContext(ServerConstants.Endpoints.DELETE_FILE, new DeleteFileHandler());
         server.createContext(ServerConstants.Endpoints.SHARE_FILE, new ShareFileHandler());
         server.createContext(ServerConstants.Endpoints.GET_FILE, new GetFileHandler("POST"));
+        server.createContext(ServerConstants.Endpoints.REFRESH, new RefreshHandler("POST"));
         server.createContext(ServerConstants.Endpoints.ECHO, new EchoHandler("GET", "POST"));
     }
 

@@ -21,20 +21,20 @@ import java.net.MalformedURLException;
 public class GetFileService extends FileService {
 
     private final String sessId;
-    private final long fileId;
+    private final String fileName;
 
-    public GetFileService(String baseUrl, String sessId, long fileId) throws MalformedURLException {
+    public GetFileService(String baseUrl, String sessId, String fileName) throws MalformedURLException {
         super(baseUrl, ClientConstants.Endpoints.GET_FILE);
         this.sessId = sessId;
-        this.fileId = fileId;
+        this.fileName = fileName;
     }
 
     @Override
     public void execute() throws IOException, AlreadyExecutedException {
         JSONObject req = new JSONObject();
         try {
+
             req.put("sessid", sessId);
-            req.put("fileid", String.valueOf(fileId));
 
             setRequestParameters(req);
 

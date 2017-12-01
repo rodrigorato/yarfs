@@ -59,7 +59,7 @@ public class GetFileCommand extends Command {
             // FIXME remoteFilename is being converted to file id; don't forget to update getUsage()
             getLogger().warn("FIXME remoteFilename is being converted to file id");
             GetFileService service = new GetFileService(ClientConstants.baseUrl,
-                    shell.getActiveSessionid(), Long.parseLong(remoteFilename));
+                    shell.getActiveSessionid(), remoteFilename);
 
             service.execute();
 

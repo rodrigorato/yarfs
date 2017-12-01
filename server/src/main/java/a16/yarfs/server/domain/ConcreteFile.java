@@ -30,6 +30,11 @@ public class ConcreteFile extends File{
         userKeys = new HashMap<>();
     }
 
+    public ConcreteFile(byte[] content, FileMetadata metadata){
+        super(content, metadata);
+        userKeys = new HashMap<>();
+    }
+
     /**
      * Getter for the key
      * @param username Username which key is to retrieve.

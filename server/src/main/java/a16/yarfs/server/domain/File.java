@@ -13,12 +13,8 @@ import java.util.Date;
 public abstract class File implements Serializable {
 
     private static Logger log = Logger.getLogger(File.class);
-    private long id;
-    private String name;
+    private FileMetadata fileMetadata;
     private byte[] content;
-    private Date creationDate;
-    private byte[] signature;
-    private String ownerId;
 
     /**
      * General method for objection initialization in this class.
@@ -31,12 +27,8 @@ public abstract class File implements Serializable {
      */
     protected void init(long id, String ownerId, String name, byte[] content, Date creationDate, byte[] signature){
         log.info("Starting new File");
-        this.id = id;
-        this.name = name;
         this.content = content;
-        this.creationDate = creationDate;
-        this.signature = signature;
-        this.ownerId = ownerId;
+        fileMetadata = new FileMetadata(id, name, creationDate, signature, ownerId);
         log.info("File successfully created!");
     }
 
@@ -53,14 +45,21 @@ public abstract class File implements Serializable {
         init(id, ownerId, name, content, creationDate, signature);
     }
 
+    public File(byte[] content, FileMetadata metadata){
+        this.content = content;
+        this.fileMetadata = metadata;
+    }
+
     /**
      * Returns object as a readable string.
      * @see Object#toString()
      * @return Instance as a string.
      */
+    @Deprecated
     public String toString(){
-        return "id: "+this.id+"\nowner id: "+this.ownerId+"\nname: "+this.name+"\ncontent: "+this.content.toString()+"\ncreation date: "+
-                creationDate.toString()+"signature: "+this.signature.toString();
+        //return "id: "+this.id+"\nowner id: "+this.ownerId+"\nname: "+this.name+"\ncontent: "+this.content.toString()+"\ncreation date: "+
+//                creationDate.toString()+"signature: "+this.signature.toString();
+        return "Content: " + content.toString();
     }
 
     /**
@@ -68,7 +67,7 @@ public abstract class File implements Serializable {
      * @return The id of the file
      */
     public long getId() {
-        return id;
+        return fileMetadata.getId();
     }
 
     /**
@@ -76,7 +75,7 @@ public abstract class File implements Serializable {
      * @return Name of the file.
      */
     public String getName() {
-        return name;
+        return fileMetadata.getName();
     }
 
     /**
@@ -92,7 +91,7 @@ public abstract class File implements Serializable {
      * @return Creation date of the file.
      */
     public Date getCreationDate() {
-        return creationDate;
+        return fileMetadata.getCreationDate();
     }
 
     /**
@@ -100,15 +99,19 @@ public abstract class File implements Serializable {
      * @return Cryptographic signature of the file.
      */
     public byte[] getSignature() {
-        return signature;
+        return fileMetadata.getSignature();
     }
 
     public String getOwnerId(){
-        return ownerId;
+        return fileMetadata.getOwnerId();
+    }
+
+    public FileMetadata getFileMetadata() {
+        return fileMetadata;
     }
 
     public void setName(String name){
-        this.name = name;
+        fileMetadata.setName(name);
     }
 
     public void setContent(byte[] content){
@@ -116,7 +119,7 @@ public abstract class File implements Serializable {
     }
 
     public void setSignature(byte[] signature){
-        this.signature = signature;
+        fileMetadata.setSignature(signature);
     }
 }
 

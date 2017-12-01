@@ -4,12 +4,15 @@
 package a16.yarfs.server.domain;
 
 import a16.yarfs.server.domain.dto.ConcreteFileDto;
+import a16.yarfs.server.domain.dto.FileMetadataDto;
 import a16.yarfs.server.domain.exceptions.AccessDeniedException;
 import a16.yarfs.server.domain.exceptions.DuplicatedUsernameException;
 import a16.yarfs.server.domain.exceptions.InvalidSessionException;
 import a16.yarfs.server.domain.exceptions.WrongLoginException;
+import a16.yarfs.server.exception.http.InternalServerErrorException;
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -216,6 +219,56 @@ public class Manager {
             throw new InvalidSessionException();
         }
         return sessions.get(sessid);
+    }
+
+    /**
+     * Method used to get a metadata of a single file.
+     * @param sessid session id of the user trying to access.
+     * @param fileId file id of the file the user is trying to access.
+     * @return FileMetadataDto of the file with requested fileId
+     * @see FileManager#readFileMetadata(String)
+     */
+    public FileMetadataDto getFileMetadata(String sessid, Long fileId){
+        if( ! hasSession(sessid)){ // basic check of valid session id
+            logger.warn("Unauthorized access attempt to file " + fileId);
+            throw new AccessDeniedException();
+        }
+        try {
+            User requester = sessions.get(Session.stringToToken(sessid)).getUser();
+            if (userFiles.containsKey(requester)) {
+                FileMetadata fm = fileManager.readFileMetadata(String.valueOf(fileId)); //read the file metadata
+                return new FileMetadataDto(fm.getId(), fm.getName(), fm.getCreationDate(),
+                        fm.getSignature(), fm.getOwnerId());
+            }
+            else{
+                throw new AccessDeniedException();
+            }
+
+            // From here on out just exceptions....java stuff
+        } catch (IOException e) {
+            logger.error("Some bad IO exception happened", e);
+            throw new InternalServerErrorException();
+        } catch (ClassNotFoundException e) {
+            logger.error("Class not found? Maybe error in file format?", e);
+            throw new InternalServerErrorException();
+        }
+    }
+
+    /**
+     * Method user to get the metadata of the files for all files of the user.
+     * @param sessid session id of the user requesting access.
+     * @return List of FileMetadataDto of all the files of the user with session sessid.
+     */
+    public List<FileMetadataDto> getFilesMetadata(String sessid){
+        if( ! hasSession(sessid)){ // basic validation for session id
+            throw new InvalidSessionException();
+        }
+        List<FileMetadataDto> fileMetadataList = new ArrayList<>();
+        for (Long fileid : userFiles.get(sessions.get(Session.stringToToken(sessid)).getUser())){ // For all fileIds belonging to sessid
+            logger.debug("Adding file read on " + fileid);
+            fileMetadataList.add(getFileMetadata(sessid, fileid));
+        }
+        return fileMetadataList;
     }
 
 }

@@ -29,6 +29,9 @@ public final class AddFileHandler extends AbstractHttpHandler {
 
         try {
             request = super.getBodyAsJson(httpExchange);
+            logger.debug("Received request " + request);
+
+            // Get json arguments
             String sessid = request.getString("sessid");
             String filename = request.getString("filename");
 
@@ -38,6 +41,7 @@ public final class AddFileHandler extends AbstractHttpHandler {
 
             AbstractHttpHandler.logger.debug("Received " + request);
 
+            // Add the file and retrieve id to return to the user.
             long fileId = Manager.getInstance().addFile(filename, sessid, fileContent, signature, cipheredKey);
             JSONObject response = new JSONObject();
             response.put("id", fileId);

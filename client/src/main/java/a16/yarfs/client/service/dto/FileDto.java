@@ -8,30 +8,21 @@ package a16.yarfs.client.service.dto;
  *  data type object to be used by the file services
  */
 public class FileDto {
-    private long id;
-    private String name;
-    private String owner;
+
+
 
     private byte [] contents;
-    private byte [] signature;
-    private byte [] key;
+    private FileMetadata fileMetadata;
 
 
     public FileDto(long id, String name, String owner, byte[] contents, byte[] signature, byte[] key) {
-        this.id = id;
-        this.name = name;
-        this.owner = owner;
         this.contents = contents;
-        this.signature = signature;
-        this.key = key;
+        this.fileMetadata = new FileMetadata(id, name, owner, signature, key);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getOwner() {
-        return owner;
+    public FileDto(byte[] contents, FileMetadata fileMetadata){
+        this.contents = contents;
+        this.fileMetadata = fileMetadata;
     }
 
     public byte[] getContents() {
@@ -39,14 +30,26 @@ public class FileDto {
     }
 
     public byte[] getKey() {
-        return key;
+        return fileMetadata.getKey();
     }
 
     public byte[] getSignature() {
-        return signature;
+        return fileMetadata.getSignature();
     }
 
     public long getId() {
-        return id;
+        return fileMetadata.getId();
+    }
+
+    public String getName() {
+        return fileMetadata.getName();
+    }
+
+    public String getOwner() {
+        return fileMetadata.getOwner();
+    }
+
+    public FileMetadata getFileMetadata() {
+        return fileMetadata;
     }
 }

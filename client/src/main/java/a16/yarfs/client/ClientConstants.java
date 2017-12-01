@@ -47,4 +47,17 @@ public class ClientConstants {
         /// echo (stuff) : stuff
         public final static String ECHO = "/echo"; //echo endpoint for tests
     }
+
+    public static final class StorageStandards{
+        // Folder which is the base for all the subfolders of the client
+        public final static String BASE_FOLDER = "/var/yarfs/client/";
+        // Folder for files
+        public final static String FILE_FOLDER = BASE_FOLDER + "/files/";
+        //Folder for keys
+        public final static String KEY_FOLDER = BASE_FOLDER + "/.keys/";
+        // Suffix for all metadata files
+        public final static String FILE_METADATA_SUFFIX = ".metadata";
+        // Prefix for all metadata files
+        public final static String FILE_METADATA_PREFIX = "";
+    }
 }

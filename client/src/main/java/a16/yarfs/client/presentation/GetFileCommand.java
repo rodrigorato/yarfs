@@ -72,12 +72,26 @@ public class GetFileCommand extends Command {
 
             // write the file to local storage
             try {
-                LocalFileManager.putFileContents(localFilename, file.getContents());
-                shell.println("written to '" + localFilename +"'");
+                /*try {
+                    FileDto localFile = LocalFileManager.getManager().getFile(localFilename); This line was causing an error FIXME later
+
+                    if (localFile.equals(file)) {
+                        shell.println("Local file is up to date, no changes were made");
+                        return;
+                    }
+                } catch (IOException e){
+                    shell.println("Downloading new file " + localFilename);
+                }*/
+
+                //LocalFileManager.getManager().putFileContents(localFilename, file.getContents());
+                LocalFileManager.getManager().putFile(new FileDto(file.getId(), file.getName(),
+                        file.getOwner(), file.getContents(), file.getSignature(), file.getKey()));
+                shell.println("written to '" + localFilename + "'");
             } catch ( FileAlreadyExistsException e) {
                 shell.println(localFilename + ": File exists");
                 return;
             } catch (IOException e) {
+                getLogger().error("IO error", e);
                 shell.println(localFilename + ": IO error: " + e.getMessage());
                 return;
             }

@@ -4,6 +4,7 @@
 package a16.yarfs.client.service.file;
 
 import a16.yarfs.client.ClientConstants;
+import a16.yarfs.client.LocalFileManager;
 import a16.yarfs.client.service.dto.FileDto;
 import a16.yarfs.client.service.exception.AlreadyExecutedException;
 import a16.yarfs.client.service.exception.NotExecutedException;
@@ -36,9 +37,18 @@ public class GetFileService extends FileService {
 
             req.put("sessid", sessId);
 
-            setRequestParameters(req);
+            try {
+                req.put("fileid", String.valueOf(LocalFileManager.getManager().getFileMetadata(fileName).getId()));
 
-            super.execute();
+                getLogger().debug("Sending request " + req);
+                setRequestParameters(req);
+
+                super.execute();
+            } catch (IOException e) {
+                getLogger().warn("File not found. What now?");
+            }
+
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -55,9 +65,9 @@ public class GetFileService extends FileService {
             String filename = res.getString("filename");
             String owner = res.getString("owner");
 
-            byte[] contents = Base64.decodeBase64(res.getString("contents"));
-            byte[] signature = Base64.decodeBase64(res.getString("signature"));
-            byte[] key = Base64.decodeBase64(res.getString("key"));
+            byte [] contents  = Base64.decodeBase64(res.getString("contents"));
+            byte [] signature = Base64.decodeBase64(res.getString("signature"));
+            byte [] key       = new byte[0];//Base64.decodeBase64(res.getString("key")); FIXME
 
             return new FileDto(id, filename, owner, contents, signature, key);
         } catch (JSONException e) {

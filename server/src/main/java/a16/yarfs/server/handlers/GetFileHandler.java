@@ -38,8 +38,9 @@ public class GetFileHandler extends AbstractHttpHandler {
             ConcreteFileDto dto = Manager.getInstance().getFile(sessid, fileId);
             JSONObject response = new JSONObject();
             response.put("contents", Base64.encodeBase64String(dto.getContent()));
+            logger.debug("Sending contents "+Base64.encodeBase64String(dto.getContent()));
             response.put("signature", Base64.encodeBase64String(dto.getSignature()));
-            response.put("key", Base64.encodeBase64String(dto.getUserKey().getCipheredKey()));
+//            response.put("key", Base64.encodeBase64String(dto.getUserKey().getCipheredKey()));  FIXME, this should be temporary
             response.put("filename", dto.getName());
             response.put("owner", dto.getOwnerId());
             response.put("fileid", dto.getId());
@@ -66,7 +67,7 @@ public class GetFileHandler extends AbstractHttpHandler {
                     ServerConstants.ResponseCodes.POORLY_FORMED_REQUEST_MESSAGE,
                     httpExchange);
         } catch (Exception e) {
-            AbstractHttpHandler.logger.error("Something bad happened on login!" + System.lineSeparator() + e.getMessage());
+            AbstractHttpHandler.logger.error("Something bad happened on get file!"+System.lineSeparator() + e.getMessage());            e.printStackTrace();
             sendResponse(ServerConstants.ResponseCodes.INTERNAL_SERVER_ERROR_CODE,
                     ServerConstants.ResponseCodes.INTERNAL_SERVER_ERROR_MESSAGE,
                     httpExchange);

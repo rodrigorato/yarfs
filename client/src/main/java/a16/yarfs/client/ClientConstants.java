@@ -44,6 +44,9 @@ public class ClientConstants {
         /// get_file (SESSID, fileid) : (filename, filecontent, filesignature, user_ciphered_simmetric_key)
         public final static String GET_FILE = "/get_file";
 
+        /// refresh local database of metadata files
+        public final static String REFRESH = "/refresh";
+
         /// echo (stuff) : stuff
         public final static String ECHO = "/echo"; //echo endpoint for tests
     }

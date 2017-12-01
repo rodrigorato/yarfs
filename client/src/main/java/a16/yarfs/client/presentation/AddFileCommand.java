@@ -5,6 +5,7 @@ package a16.yarfs.client.presentation;
 
 import a16.yarfs.client.ClientConstants;
 import a16.yarfs.client.LocalFileManager;
+import a16.yarfs.client.service.dto.FileDto;
 import a16.yarfs.client.service.exception.AlreadyExecutedException;
 import a16.yarfs.client.service.exception.NotExecutedException;
 import a16.yarfs.client.service.exception.ServiceResultException;
@@ -53,7 +54,7 @@ public class AddFileCommand extends Command {
         // read the file from local storage
         byte[] content;
         try {
-            content = LocalFileManager.getFileContents(localFilename);
+            content = LocalFileManager.getManager().getFileContents(localFilename);
             shell.println("read '" + localFilename + "' ("+ FileUtils.byteCountToDisplaySize(content.length)+")");
         } catch (FileNotFoundException e) {
             shell.println(localFilename + ": No such file");
@@ -77,7 +78,11 @@ public class AddFileCommand extends Command {
 
             // check the result
             long fileId = service.getFileId();
+
+            // create a file with all the info we have so we can write properly to disk
+            FileDto fileDto = new FileDto(fileId, localFilename, shell.getActiveUser(), content, signature,key);
             shell.println("added file '"+remoteFilename+"' with id " + fileId);
+            LocalFileManager.getManager().putFileMetaData(fileDto.getName(), fileDto.getFileMetadata());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (ServiceResultException e) {

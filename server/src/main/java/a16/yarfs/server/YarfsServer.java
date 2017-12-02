@@ -3,7 +3,6 @@ package a16.yarfs.server;
 import a16.yarfs.server.handlers.*;
 import com.sun.net.httpserver.HttpServer;
 import org.apache.log4j.Logger;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -12,27 +11,20 @@ import java.net.InetSocketAddress;
  * YarfsServer
  */
 public class YarfsServer {
-    private final Logger logger = Logger.getLogger(YarfsServer.class);
+    private static final Logger logger = Logger.getLogger(YarfsServer.class);
 
-    public YarfsServer(int port) throws IOException {
-        this(port, false);
-    }
-
-    public YarfsServer(int port, boolean ssl) throws IOException {
-        InetSocketAddress address = new InetSocketAddress(port);
+    public YarfsServer(InetSocketAddress address) throws IOException {
         HttpServer server;
-        if(ssl) {
-            // TODO SSL
-            throw new NotImplementedException();
-        } else {
-            server = HttpServer.create(address, 0);
-        }
+
+        server = createHttpServer(address, 0);
+
         configure(server);
         server.start();
 
         address = server.getAddress();
         logger.info("listening on " + address.toString());
     }
+
 
     private void configure(HttpServer server) {
         server.createContext(ServerConstants.Endpoints.ADD_FILE, new AddFileHandler("POST"));
@@ -48,4 +40,8 @@ public class YarfsServer {
         server.createContext(ServerConstants.Endpoints.ECHO, new EchoHandler("GET", "POST"));
     }
 
+    protected HttpServer createHttpServer(InetSocketAddress address, int backlog) throws IOException {
+        logger.debug("Using HttpServer from " + this.getClass().getCanonicalName());
+        return HttpServer.create(address, backlog);
+    }
 }

@@ -21,6 +21,7 @@ public class App {
     public static void main(String[] args) {
         try {
             if(!parseArgs(args)) {
+                System.out.print(getUsage());
                 return;
             }
             logger.info("Starting yarfs server...");
@@ -52,6 +53,9 @@ public class App {
                 ssl_on = true;
             } else if(arg.equals("--ssl-off")){
                 ssl_on = false;
+            } else if(arg.equals("--help")){
+                System.out.print(getUsage());
+                System.exit(0);
             } else if(arg.equals("--list-sec-providers")){
                 System.out.println("Available Security providers and protocols:");
                 for(String line : SSLYarfsServer.getSecurityPoviders()) {
@@ -68,6 +72,22 @@ public class App {
             }
         }
         return true;
+    }
+
+    public static String getUsage() {
+        String EOL = System.lineSeparator();
+        String TAB = "\t";
+        return "Usage: " + App.class.getSimpleName() + " [OPTIONS] <PORT>" + EOL +
+                EOL +
+                TAB + "PORT"     + TAB + "accept HTTP(S) connections on PORT port" + EOL +
+                EOL +
+                "OPTIONS:" + EOL +
+                TAB + "--help              " + TAB + "print usage information and exit" + EOL +
+                TAB + "--ssl,--ssl-on      " + TAB + "enable HTTP over SSL/TLS using " + ServerConstants.SSL_PROTOCOL + EOL +
+                TAB + "--ssl-off           " + TAB + "use plain HTTP without SSL" + EOL +
+                TAB + "--listen=<ADDR>     " + TAB + "accept HTTP(S) connections only on ADDR" + EOL +
+                TAB + "--list-sec-providers" + TAB + "list available Java security providers" + EOL +
+                TAB + EOL;
     }
 
     /**

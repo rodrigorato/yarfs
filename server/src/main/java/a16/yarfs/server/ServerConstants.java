@@ -31,6 +31,24 @@ public final class ServerConstants {
     public static final long SESSION_DURATION_HOURS = 3;
 
     /**
+     * SSL protocol that is used by the SecureYarfsServer. A list of valid protocols may be retrieved using
+     * Security.getProviders() or passing --ssl-list-providers to our app.
+     */
+    public static final String SSL_PROTOCOL = "TLSv1.2";
+
+    /** alias that identifies the certificate of the server in the keystore
+     */
+    public static final String SERVER_CERT_ALIAS = "yarfs";
+
+    /** keystore file where the server certificate and keys are stored
+     */
+    public static final String SERVER_KEYSTORE = "yarfs.keystore";
+
+    /** password for the keystore file
+     */
+    public static final String SERVER_KEYSTORE_PASSWORD = "password";
+
+    /**
      * Constants for the usage of the file system.
      * This means all directories should be declared here.
      */

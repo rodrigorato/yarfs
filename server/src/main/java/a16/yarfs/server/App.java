@@ -1,7 +1,6 @@
 package a16.yarfs.server;
 
 import org.apache.log4j.Logger;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -36,8 +35,7 @@ public class App {
 
             YarfsServer yarfs;
             if(ssl_on) {
-                throw new NotImplementedException();
-                //yarfs = new SSLYarfsServer(socketAddress);
+                yarfs = new SSLYarfsServer(socketAddress);
             } else {
                 yarfs = new YarfsServer(socketAddress);
             }
@@ -54,6 +52,12 @@ public class App {
                 ssl_on = true;
             } else if(arg.equals("--ssl-off")){
                 ssl_on = false;
+            } else if(arg.equals("--list-sec-providers")){
+                System.out.println("Available Security providers and protocols:");
+                for(String line : SSLYarfsServer.getSecurityPoviders()) {
+                    System.out.println(line);
+                }
+                System.exit(0);
             } else if(arg.startsWith("--listen=")) {
                 listenAddress = arg.replaceFirst("--listen=", "");
             } else if(isInteger(arg)) {

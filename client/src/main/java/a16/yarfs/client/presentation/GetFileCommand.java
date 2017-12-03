@@ -84,8 +84,9 @@ public class GetFileCommand extends Command {
                 }*/
 
                 //LocalFileManager.getManager().putFileContents(localFilename, file.getContents());
-                LocalFileManager.getManager().putFile(new FileDto(file.getId(), file.getName(),
-                        file.getOwner(), file.getContents(), file.getSignature(), file.getKey()));
+                SecureLocalFileManager.getManager().putFile(new FileDto(file.getId(), file.getName(),
+                        file.getOwner(), file.getContents(), file.getSignature(), KeyManager.
+                        getManager().decipher(file.getKey())));
                 shell.println("written to '" + localFilename + "'");
             } catch ( FileAlreadyExistsException e) {
                 shell.println(localFilename + ": File exists");

@@ -33,6 +33,9 @@ public class App
             if(arg.equals("--help")){
                 System.out.print(getUsage());
                 System.exit(0);
+            } else if(arg.startsWith("http")) {
+                logger.info("Using base URL " + arg);
+                ClientConstants.baseUrl = arg;
             } else {
                 logger.error("unknown argument: " + arg);
                 return false;
@@ -45,6 +48,8 @@ public class App
         String EOL = System.lineSeparator();
         String TAB = "\t";
         return "Usage: " + App.class.getSimpleName() + " [OPTIONS] [BASEURL]" + EOL +
+                EOL +
+                TAB + "BASEURL     " + TAB + "base URL for the yarfs server (default: " + ClientConstants.baseUrl + ")" + EOL +
                 EOL +
                 "OPTIONS:" + EOL +
                 TAB + "--help      " + TAB + "print usage information and exit" + EOL +

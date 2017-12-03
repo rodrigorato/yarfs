@@ -3,6 +3,8 @@
  */
 package a16.yarfs.client;
 
+import java.io.File;
+
 /**
  * Class ClientConstants
  * stores constants to be used globally by the client application
@@ -62,5 +64,37 @@ public class ClientConstants {
         public final static String FILE_METADATA_SUFFIX = ".metadata";
         // Prefix for all metadata files
         public final static String FILE_METADATA_PREFIX = "";
+    }
+
+
+    public static final class KeyStandards {
+
+        // Size of asymmetric keys
+        public final static int ASSYMETRIC_SIZE = 2048;
+
+        // Algorithm to be used by asymmetric keys
+        public final static String ASSYMETRIC_ALGORITHM = "RSA";
+
+        // Symmetric algorithm to be used by symmetric keys
+        public final static String SYMETRIC_ALGORITHM = "AES";
+
+        // Block mode used.
+        public final static String BLOCK_MODE = "ECB";
+
+        // Padding mode used.
+        public final static String PADDING = "PKCS5Padding";
+
+        // Standard used by symmetric keys. Includes algorithm, block mode and padding mode.
+        public final static String SYMETRIC_STANDARD = SYMETRIC_ALGORITHM + "/" + BLOCK_MODE + "/" + PADDING;
+
+        // Size of the Symmetric keys.
+        public final static int SYMMETRIC_KEY_SIZE = 32; // This gives a key of 32 byte * 8 = 256 bit
+
+        // Suffix used in the files of private keys
+        public final static String ASYMETRIC_PRIVATE_SUFFIX = ".priv";
+
+        // Suffix using in the files of public keys
+        public final static String ASYMETRIC_PUBLIC_SUFFIX = ".pub";
+
     }
 }

@@ -5,6 +5,7 @@ package a16.yarfs.client.presentation;
 
 
 import a16.yarfs.client.ClientConstants;
+import a16.yarfs.client.KeyManager;
 import a16.yarfs.client.service.exception.AlreadyExecutedException;
 import a16.yarfs.client.service.exception.NotExecutedException;
 import a16.yarfs.client.service.exception.ServiceResultException;
@@ -12,6 +13,7 @@ import a16.yarfs.client.service.user.LoginService;
 
 import java.io.*;
 import java.net.MalformedURLException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  *  Class LoginCommand
@@ -56,6 +58,7 @@ public class LoginCommand extends Command {
             shell.getLogger().info("logged in using token " + sessionid);
             shell.println("Logged in successful!");
             shell.println("Loading keys for user " + username);
+            KeyManager.getManager().loadKeys(username);
             shell.println("Loading complete.\n Welcome!");
             shell.setActiveSessionid(sessionid);
             shell.setActiveUser(username);
@@ -69,6 +72,9 @@ public class LoginCommand extends Command {
             e.printStackTrace();
         } catch (AlreadyExecutedException e) {
             e.printStackTrace(); // should never happen, the service was just instantiated
+        } catch (NoSuchAlgorithmException e) {
+            shell.println("Error generating keys. Try again.");
+            getLogger().error("Error generating keys.", e);
         }
     }
 

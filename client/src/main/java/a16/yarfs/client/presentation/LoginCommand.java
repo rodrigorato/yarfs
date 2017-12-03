@@ -54,6 +54,9 @@ public class LoginCommand extends Command {
             // try to get the result
             String sessionid = service.getSessionId();
             shell.getLogger().info("logged in using token " + sessionid);
+            shell.println("Logged in successful!");
+            shell.println("Loading keys for user " + username);
+            shell.println("Loading complete.\n Welcome!");
             shell.setActiveSessionid(sessionid);
             shell.setActiveUser(username);
         }catch (ServiceResultException e) {

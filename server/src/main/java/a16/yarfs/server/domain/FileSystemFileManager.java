@@ -63,6 +63,7 @@ public class FileSystemFileManager implements FileManager {
 
 
         try {
+            logger.debug("Writing file with keys");
             return new ConcreteFile(readFileContents(String.valueOf(fileId)), readFileMetadata(String.valueOf(fileId)));
 
 

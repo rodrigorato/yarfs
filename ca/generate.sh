@@ -95,6 +95,8 @@ fi
 
 if test $1 = root; then
 	gen_root
+elif test $1 = "root-to-der"; then
+	openssl x509 -in yarfs-root.pem -inform pem -out yarfs-root.der -outform der
 elif test $1 = ca; then
 	gen_ca
 elif test $1 = server; then

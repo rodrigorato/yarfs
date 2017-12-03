@@ -67,7 +67,7 @@ public class GetFileService extends FileService {
 
             byte [] contents  = Base64.decodeBase64(res.getString("contents"));
             byte [] signature = Base64.decodeBase64(res.getString("signature"));
-            byte [] key       = new byte[0];//Base64.decodeBase64(res.getString("key")); FIXME
+            byte [] key       = Base64.decodeBase64(res.getString("key"));
 
             return new FileDto(id, filename, owner, contents, signature, key);
         } catch (JSONException e) {

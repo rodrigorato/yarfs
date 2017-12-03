@@ -38,9 +38,9 @@ public class GetFileHandler extends AbstractHttpHandler {
             ConcreteFileDto dto = Manager.getInstance().getFile(sessid, fileId);
             JSONObject response = new JSONObject();
             response.put("contents", Base64.encodeBase64String(dto.getContent()));
-            logger.debug("Sending contents "+Base64.encodeBase64String(dto.getContent()));
+            //logger.debug("Sending contents "+Base64.encodeBase64String(dto.getContent()));
             response.put("signature", Base64.encodeBase64String(dto.getSignature()));
-//            response.put("key", Base64.encodeBase64String(dto.getUserKey().getCipheredKey()));  FIXME, this should be temporary
+            response.put("key", Base64.encodeBase64String(dto.getUserKey().getCipheredKey()));
             response.put("filename", dto.getName());
             response.put("owner", dto.getOwnerId());
             response.put("fileid", dto.getId());

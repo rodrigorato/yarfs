@@ -38,11 +38,11 @@ public final class ServerConstants {
 
     /** alias that identifies the certificate of the server in the keystore
      */
-    public static final String SERVER_CERT_ALIAS = "yarfs";
+    public static final String SERVER_CERT_ALIAS = "server";
 
     /** keystore file where the server certificate and keys are stored
      */
-    public static final String SERVER_KEYSTORE = "yarfs.keystore";
+    public static final String SERVER_KEYSTORE = "yarfs-server.jks";
 
     /** password for the keystore file
      */

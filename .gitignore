@@ -183,3 +183,9 @@ $RECYCLE.BIN/
 
 # mvn compile results
 */target/*
+
+# java keystores (contain secrets!)
+*.jks
+
+# certificates and keys
+*.pem

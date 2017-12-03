@@ -134,7 +134,9 @@ public class Manager {
         User owner = sessions.get(Session.stringToToken(sessid)).getUser();
         long fileId = Manager.getNextId();
         ConcreteFile cf = new ConcreteFile(fileId, owner.getUsername(), filename, fileContent, new Date(), signature);
+        logger.debug("Adding key for " + owner.getUsername() + "\nKey is "+ Arrays.toString(cipheredKey));
         cf.addKey(owner.getUsername(), new SnapshotKey(cipheredKey));
+        cf.getKey(owner.getUsername());
         userFiles.get(owner).add(fileId);
         logger.info("Successfully added");
         logger.debug("User " + owner.getUsername() + " now has " + userFiles.get(owner).size() + " files.");
@@ -161,6 +163,7 @@ public class Manager {
         }
         logger.info("Access granted to user "+usersession.getUser().getUsername()+" on "+fileId);
         ConcreteFile file = (ConcreteFile) fileManager.readFile(Long.parseLong(fileId));
+        logger.debug("User key is " + file.getKey(usersession.getUser().getUsername()));
         return new ConcreteFileDto(file.getId(), file.getName(), file.getContent(), file.getCreationDate(),
                 file.getSignature(), file.getOwnerId(), file.getKey(usersession.getUser().getUsername()));
     }

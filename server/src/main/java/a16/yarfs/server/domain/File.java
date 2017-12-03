@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -121,5 +123,14 @@ public abstract class File implements Serializable {
     public void setSignature(byte[] signature){
         fileMetadata.setSignature(signature);
     }
+
+    public void addKey(String username, SnapshotKey key){
+        fileMetadata.addKey(username, key);
+    }
+
+    public SnapshotKey getKey(String username){
+        return fileMetadata.getKey(username);
+    }
+
 }
 

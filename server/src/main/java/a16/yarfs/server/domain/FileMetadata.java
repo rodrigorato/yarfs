@@ -5,6 +5,8 @@ package a16.yarfs.server.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class used to have a division between file contents and attributes.
@@ -17,6 +19,7 @@ public class FileMetadata implements Serializable{
     private Date creationDate;
     private byte[] signature;
     private String ownerId;
+    private HashMap<String,SnapshotKey> userKeys;
 
     public FileMetadata(long id, String name, Date creationDate, byte[] signature, String ownerId){
         this.id = id;
@@ -24,6 +27,7 @@ public class FileMetadata implements Serializable{
         this.creationDate = creationDate;
         this.signature = signature;
         this.ownerId = ownerId;
+        userKeys = new HashMap<>();
 
     }
 
@@ -67,5 +71,26 @@ public class FileMetadata implements Serializable{
         this.signature = signature;
     }
 
+    /**
+     * Getter for the key
+     * @param username Username which key is to retrieve.
+     * @return The snapshot key of the user.
+     */
+    public SnapshotKey getKey(String username){
+        System.out.println("\n\n\nExisting keys are \n\n\n\n");
+        for(Map.Entry<String,SnapshotKey> keys : userKeys.entrySet()){
+            System.out.println("Key of "+ keys.getKey());
+        }
+        return userKeys.get(username);
+    }
+
+    /**
+     * Adds a key to the given username.
+     * @param username The username which the key will be added.
+     * @param key The key to be added.
+     */
+    public void addKey(String username, SnapshotKey key){
+        userKeys.put(username,key);
+    }
 
 }

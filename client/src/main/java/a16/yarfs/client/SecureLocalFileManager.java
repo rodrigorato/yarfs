@@ -10,9 +10,7 @@ import org.apache.log4j.Logger;
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
-import java.nio.file.*;
 import java.security.InvalidKeyException;
-import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 

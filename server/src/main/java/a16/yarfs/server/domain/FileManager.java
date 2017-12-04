@@ -72,5 +72,12 @@ public interface FileManager {
      * @throws IOException whenever there is an invalid IO operation.
      */
     byte[] readFileContents(String filename) throws IOException;
+
+    /**
+     * Checks if a file exists
+     * @param filename filename of the file to check existence.
+     * @return true if file exists, false otherwise.
+     */
+    boolean fileExists(String filename);
 }
 

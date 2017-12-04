@@ -153,4 +153,9 @@ public class FileSystemFileManager implements FileManager {
         return Files.readAllBytes(path);
     }
 
+    public boolean fileExists(String filename){
+        Path path = Paths.get(ServerConstants.FileSystem.buildFileStoragePath(filename));
+        return Files.exists(path, LinkOption.NOFOLLOW_LINKS);
+    }
+
 }

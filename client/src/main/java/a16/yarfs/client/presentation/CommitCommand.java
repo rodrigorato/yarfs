@@ -4,6 +4,8 @@
 package a16.yarfs.client.presentation;
 
 import a16.yarfs.client.ClientConstants;
+import a16.yarfs.client.KeyManager;
+import a16.yarfs.client.LocalFileManager;
 import a16.yarfs.client.SecureLocalFileManager;
 import a16.yarfs.client.service.dto.FileMetadata;
 import a16.yarfs.client.service.exception.AlreadyExecutedException;
@@ -12,6 +14,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  *  Class CommitCommand
@@ -46,12 +49,13 @@ public class CommitCommand extends Command{
             byte[] contents;
 
             try{
-                contents = SecureLocalFileManager.getManager().getFileContents(fileName);
+                contents =  SecureLocalFileManager.getManager().getFileContents(fileName);
             }catch (FileNotFoundException e){
                 contents = new byte[0];
             }
 
-            byte[] newSignature = DigestUtils.sha256(contents);
+            byte[] newSignature = KeyManager.getManager().sign(DigestUtils.sha256(LocalFileManager.getManager().getFileContents(fileName)));
+            getLogger().debug("Sending content " + Arrays.toString(contents));
             CommitFileService commitFileService =  new CommitFileService(ClientConstants.baseUrl,
                     shell.getActiveSessionid(), fileName, contents, newSignature, String.valueOf(metadata.getId()));
             commitFileService.execute();

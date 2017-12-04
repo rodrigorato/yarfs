@@ -86,10 +86,10 @@ public class GetFileCommand extends Command {
                 }*/
 
                 //LocalFileManager.getManager().putFileContents(localFilename, file.getContents());
-                byte[] key = KeyManager.getManager().decipher(file.getFileMetadata().getKey());
-                byte[] plainContents = KeyManager.decipher(file.getContents(), key);
-                byte[] myDigest = DigestUtils.sha256(plainContents);
-                byte[] theirDigest = KeyManager.getManager().unsign(file.getSignature());
+                byte[] key = KeyManager.getManager().decipher(file.getFileMetadata().getKey()); // {Ks}Kpub --Kpriv--> Ks
+                byte[] plainContents = KeyManager.decipher(file.getContents(), key); // {Data}Ks ---Ks---> Data
+                byte[] myDigest = DigestUtils.sha256(plainContents); // Data ---Sha256---> Hash2
+                byte[] theirDigest = KeyManager.getManager().unsign(file.getSignature()); // {Hash}Kpriv ---Kpub---> Hash
 
                 if( !Arrays.equals(theirDigest, myDigest)){
                     shell.println("Digest is not the same. Tampering with data detected. Aborting.");

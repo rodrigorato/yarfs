@@ -90,7 +90,7 @@ public class AddFileCommand extends Command {
 
         // FIXME deal with encryption, keys, signature, etc
 
-        byte[] signature = DigestUtils.sha256Hex(content).getBytes(); // FIXME change this to an HMAC
+        byte[] signature = KeyManager.getManager().sign(DigestUtils.sha256(content));
 
         // send the file to the server
         try {

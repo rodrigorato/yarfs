@@ -20,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.FileAlreadyExistsException;
+import java.util.Arrays;
 
 /**
  *  Class AddFileCommand
@@ -85,6 +86,16 @@ public class GetFileCommand extends Command {
                 }*/
 
                 //LocalFileManager.getManager().putFileContents(localFilename, file.getContents());
+                byte[] key = KeyManager.getManager().decipher(file.getFileMetadata().getKey());
+                byte[] plainContents = KeyManager.decipher(file.getContents(), key);
+                byte[] myDigest = DigestUtils.sha256(plainContents);
+                byte[] theirDigest = KeyManager.getManager().unsign(file.getSignature());
+
+                if( !Arrays.equals(theirDigest, myDigest)){
+                    shell.println("Digest is not the same. Tampering with data detected. Aborting.");
+                    return;
+                }
+
                 SecureLocalFileManager.getManager().putFile(new FileDto(file.getId(), file.getName(),
                         file.getOwner(), file.getContents(), file.getSignature(), KeyManager.
                         getManager().decipher(file.getKey())));

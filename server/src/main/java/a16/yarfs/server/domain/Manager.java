@@ -106,6 +106,18 @@ public class Manager {
         }
     }
 
+    /***
+     * Checks if a given session id is valid and belongs to a certain user.
+     *
+     * @param sessionId the session id to check against the user
+     * @param username said username
+     * @return true or false, depending on the validity of the sessionId and username.
+     */
+    public boolean authenticateSession(long sessionId, String username) {
+        return sessions.containsKey(sessionId) &&
+               sessions.get(sessionId).getUser().getUsername().equals(username);
+    }
+
     public List<String> listUsers() { // FIXME:  Should this require a sessid?
         List<String> usernameList = new ArrayList<String>();
         usernameList.addAll(users.keySet());

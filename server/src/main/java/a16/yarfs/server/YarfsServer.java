@@ -38,6 +38,7 @@ public class YarfsServer {
         server.createContext(ServerConstants.Endpoints.GET_FILE, new GetFileHandler("POST"));
         server.createContext(ServerConstants.Endpoints.REFRESH, new RefreshHandler("POST"));
         server.createContext(ServerConstants.Endpoints.ECHO, new EchoHandler("GET", "POST"));
+        server.createContext(ServerConstants.Endpoints.AUTHENTICATE, new AuthenticateHandler("POST"));
     }
 
     protected HttpServer createHttpServer(InetSocketAddress address, int backlog) throws IOException {

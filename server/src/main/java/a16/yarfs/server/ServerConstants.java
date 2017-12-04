@@ -110,6 +110,9 @@ public final class ServerConstants {
 
         // Endpoint for refresh which is supposed to refresh the client metadata of files
         public static final String REFRESH = "/refresh";
+
+        // Endpoing to authenticate a user with a given session token
+        public static final String AUTHENTICATE = "/authenticate";
     }
 
     /**

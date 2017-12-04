@@ -6,10 +6,7 @@ import a16.yarfs.server.exception.AbstractYarfsRuntimeException;
 import org.apache.log4j.Logger;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 
 /**
  * This is a possible FileManager implementation that
@@ -115,7 +112,8 @@ public class FileSystemFileManager implements FileManager {
         logger.debug("File path is " + pathToStoreFile);
         java.io.File outputFile = new java.io.File(pathToStoreFile);
         outputFile.getParentFile().mkdirs();  // FIXME take care of return
-        Files.write(Paths.get(pathToStoreFile), contents, StandardOpenOption.CREATE);
+        Files.deleteIfExists(Paths.get(pathToStoreFile));
+        Files.write(Paths.get(pathToStoreFile), contents, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
 
         logger.info("File '" + filename + "' has been stored under '" + pathToStoreFile + "'.");
 

@@ -3,6 +3,7 @@
  */
 package a16.yarfs.client;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -16,7 +17,11 @@ import java.security.spec.X509EncodedKeySpec;
 
 /**
  *  Class KeyManager
- *  jorge is an IDIOT because it hasn't made documentation for this class.
+ *  KeyManager is responsible for all keys in the system.
+ *  One can even say KeyManager is the baws.
+ *  @see a16.yarfs.client.ClientConstants.KeyStandards
+ *  @see PublicKey
+ *  @see PrivateKey
  */
 public class KeyManager {
 
@@ -24,6 +29,7 @@ public class KeyManager {
     private static Logger logger = Logger.getLogger(KeyManager.class);
     private PublicKey publicKey;
     private PrivateKey privateKey;
+    private byte[] password;
 
     //FIXME this should be used in a further implementation
 /*    public KeyManager(String passphrase){
@@ -81,7 +87,7 @@ public class KeyManager {
         BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(
                 ClientConstants.StorageStandards.KEY_FOLDER + username +
                         ClientConstants.KeyStandards.ASYMETRIC_PRIVATE_SUFFIX));
-        bos.write(privateKey.getEncoded());
+        bos.write(KeyManager.cipher(privateKey.getEncoded(), password));
         logger.trace("Successfully wrote public key. Can be found at "+
                 ClientConstants.StorageStandards.KEY_FOLDER+username +
                 ClientConstants.KeyStandards.ASYMETRIC_PRIVATE_SUFFIX);
@@ -125,7 +131,7 @@ public class KeyManager {
     public PrivateKey readPrivKey(String username) throws FileNotFoundException, IOException {
         File privKeyFile = new File(ClientConstants.StorageStandards.KEY_FOLDER
                 + username + ClientConstants.KeyStandards.ASYMETRIC_PRIVATE_SUFFIX);
-        byte[] key = FileUtils.readFileToByteArray(privKeyFile);
+        byte[] key = KeyManager.decipher(FileUtils.readFileToByteArray(privKeyFile), password);
         try {
             return KeyFactory.getInstance(ClientConstants.KeyStandards.ASSYMETRIC_ALGORITHM).
                     generatePrivate(new PKCS8EncodedKeySpec(key));
@@ -189,6 +195,25 @@ public class KeyManager {
     }
 
     /**
+     * Ciphers a content with a symmetric key.
+     * @param plain play text to cipher.
+     * @param key key to use for ciphering.
+     * @return Ciphered content.
+     */
+    public static byte[] cipher(byte[] plain, byte[] key){
+        try {
+            SecretKeySpec keyspec = new SecretKeySpec(key, ClientConstants.KeyStandards.SYMETRIC_ALGORITHM);
+            Cipher cipher = Cipher.getInstance(ClientConstants.KeyStandards.SYMETRIC_STANDARD);
+            cipher.init(Cipher.ENCRYPT_MODE, keyspec);
+            return cipher.doFinal(plain);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
+                | IllegalBlockSizeException | BadPaddingException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * Signs a hash with the user's private key.
      * @param hash hash to be signed.
      * @return signed hash.
@@ -248,11 +273,13 @@ public class KeyManager {
     /**
      * Loads the asymmetric keys of a user.
      * @param username username of the user to load the asymmetric keys.
+     * @param password password to cipher the keys.
      * @throws IOException whenever NSA is watching us.
      * @throws NoSuchAlgorithmException whenever the algorithm doesn't exist. Shouldn't happen, only if implementation
      * changes.
      */
-    public void loadKeys(String username) throws IOException, NoSuchAlgorithmException {
+    public void loadKeys(String username, byte[] password) throws IOException, NoSuchAlgorithmException {
+        this.password = DigestUtils.sha256(password);
         try {
             publicKey = readPubKey(username);
             privateKey = readPrivKey(username);

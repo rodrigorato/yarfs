@@ -58,7 +58,7 @@ public class LoginCommand extends Command {
             shell.getLogger().info("logged in using token " + sessionid);
             shell.println("Logged in successful!");
             shell.println("Loading keys for user " + username);
-            KeyManager.getManager().loadKeys(username);
+            KeyManager.getManager().loadKeys(username, password.getBytes());
             shell.println("Loading complete.\n Welcome!");
             shell.setActiveSessionid(sessionid);
             shell.setActiveUser(username);

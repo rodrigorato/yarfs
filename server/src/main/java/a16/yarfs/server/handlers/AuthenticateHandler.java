@@ -28,7 +28,7 @@ public final class AuthenticateHandler extends AbstractHttpHandler {
 
             // Use those parameters to authenticate (or not) the session with the Manager
             boolean isAuthenticated = Manager.getInstance()
-                    .authenticateSession(request.getLong("sessionid"),
+                    .authenticateSession(request.getString("sessionid"),
                                          request.getString("username"));
 
             // Create the response

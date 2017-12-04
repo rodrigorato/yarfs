@@ -3,7 +3,6 @@
  */
 package a16.yarfs.client;
 
-import java.io.File;
 
 /**
  * Class ClientConstants
@@ -11,7 +10,7 @@ import java.io.File;
  */
 public class ClientConstants {
 
-    // FIXME: put this somewhere else, e.g. config file or app argument
+    /** default base URL of the yarfs server. Can be overridden by App args */
     public static String baseUrl = "http://127.0.0.1:31000";
     public static int connectTimeout = 5000; // ms
 
@@ -69,32 +68,32 @@ public class ClientConstants {
 
     public static final class KeyStandards {
 
-        // Size of asymmetric keys
-        public final static int ASSYMETRIC_SIZE = 2048;
+        // Size of asymmetric keys, in bits
+        public final static int ASYMMETRIC_KEY_SIZE = 2048;
 
         // Algorithm to be used by asymmetric keys
-        public final static String ASSYMETRIC_ALGORITHM = "RSA";
+        public final static String ASYMMETRIC_ALGORITHM = "RSA";
 
         // Symmetric algorithm to be used by symmetric keys
-        public final static String SYMETRIC_ALGORITHM = "AES";
+        public final static String SYMMETRIC_ALGORITHM = "AES";
 
         // Block mode used.
         public final static String BLOCK_MODE = "ECB";
 
         // Padding mode used.
-        public final static String PADDING = "PKCS5Padding";
+        public final static String PADDING_SCHEME = "PKCS5Padding";
 
         // Standard used by symmetric keys. Includes algorithm, block mode and padding mode.
-        public final static String SYMETRIC_STANDARD = SYMETRIC_ALGORITHM + "/" + BLOCK_MODE + "/" + PADDING;
+        public final static String SYMMETRIC_STANDARD = SYMMETRIC_ALGORITHM + "/" + BLOCK_MODE + "/" + PADDING_SCHEME;
 
-        // Size of the Symmetric keys.
+        // Size of the Symmetric keys, in bytes
         public final static int SYMMETRIC_KEY_SIZE = 32; // This gives a key of 32 byte * 8 = 256 bit
 
         // Suffix used in the files of private keys
-        public final static String ASYMETRIC_PRIVATE_SUFFIX = ".priv";
+        public final static String ASYMMETRIC_PRIVATE_SUFFIX = ".priv";
 
         // Suffix using in the files of public keys
-        public final static String ASYMETRIC_PUBLIC_SUFFIX = ".pub";
+        public final static String ASYMMETRIC_PUBLIC_SUFFIX = ".pub";
 
     }
 }

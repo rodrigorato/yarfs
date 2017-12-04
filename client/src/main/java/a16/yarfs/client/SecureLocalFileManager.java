@@ -31,9 +31,9 @@ public class SecureLocalFileManager extends LocalFileManager{
         logger.debug("Deciphering...");
         byte[] key = getFileMetadata(fileName).getKey();
         logger.debug("Deciphered key is "+ Arrays.toString(key));
-        SecretKeySpec keyspec = new SecretKeySpec(key, ClientConstants.KeyStandards.SYMETRIC_ALGORITHM);
+        SecretKeySpec keyspec = new SecretKeySpec(key, ClientConstants.KeyStandards.SYMMETRIC_ALGORITHM);
         try {
-            Cipher c = Cipher.getInstance(ClientConstants.KeyStandards.SYMETRIC_ALGORITHM);
+            Cipher c = Cipher.getInstance(ClientConstants.KeyStandards.SYMMETRIC_ALGORITHM);
             c.init(Cipher.DECRYPT_MODE, keyspec);
             byte[] plainContents = c.doFinal(content);
             super.putFileContents(fileName, plainContents);
@@ -66,9 +66,9 @@ public class SecureLocalFileManager extends LocalFileManager{
     public byte[] getFileContents(String fileName) throws IOException {
         byte[] ciphered = super.getFileContents(fileName);
         byte[] key = keyManager.decipher(super.getFileMetadata(fileName).getKey());
-        SecretKeySpec keyspec = new SecretKeySpec(key, ClientConstants.KeyStandards.SYMETRIC_ALGORITHM);
+        SecretKeySpec keyspec = new SecretKeySpec(key, ClientConstants.KeyStandards.SYMMETRIC_ALGORITHM);
         try {
-            Cipher c = Cipher.getInstance(ClientConstants.KeyStandards.SYMETRIC_STANDARD);
+            Cipher c = Cipher.getInstance(ClientConstants.KeyStandards.SYMMETRIC_STANDARD);
             c.init(Cipher.ENCRYPT_MODE, keyspec);
             return c.doFinal(ciphered);
         } catch (NoSuchAlgorithmException e) {

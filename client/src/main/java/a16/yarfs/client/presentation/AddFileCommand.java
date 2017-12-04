@@ -6,7 +6,6 @@ package a16.yarfs.client.presentation;
 import a16.yarfs.client.ClientConstants;
 import a16.yarfs.client.KeyManager;
 import a16.yarfs.client.LocalFileManager;
-import a16.yarfs.client.SecureLocalFileManager;
 import a16.yarfs.client.service.dto.FileDto;
 import a16.yarfs.client.service.exception.AlreadyExecutedException;
 import a16.yarfs.client.service.exception.NotExecutedException;
@@ -71,8 +70,8 @@ public class AddFileCommand extends Command {
         try {
             content = LocalFileManager.getManager().getFileContents(localFilename);
             try {
-                Cipher cipher = Cipher.getInstance(ClientConstants.KeyStandards.SYMETRIC_STANDARD);
-                cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(secret, ClientConstants.KeyStandards.SYMETRIC_ALGORITHM));
+                Cipher cipher = Cipher.getInstance(ClientConstants.KeyStandards.SYMMETRIC_STANDARD);
+                cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(secret, ClientConstants.KeyStandards.SYMMETRIC_ALGORITHM));
                 ciphered_content = cipher.doFinal(content);
             } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException |
                     IllegalBlockSizeException e) {

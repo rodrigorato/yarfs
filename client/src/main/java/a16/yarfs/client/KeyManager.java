@@ -39,8 +39,8 @@ public class KeyManager {
 /*    public KeyManager(){
         try {
             loadKeys();
-            KeyPairGenerator generator = KeyPairGenerator.getInstance(ClientConstants.KeyStandards.ASSYMETRIC_ALGORITHM);
-            generator.initialize(ClientConstants.KeyStandards.ASSYMETRIC_SIZE);
+            KeyPairGenerator generator = KeyPairGenerator.getInstance(ClientConstants.KeyStandards.ASYMMETRIC_ALGORITHM);
+            generator.initialize(ClientConstants.KeyStandards.ASYMMETRIC_KEY_SIZE);
             KeyPair keyPair = generator.generateKeyPair();
             this.publicKey = keyPair.getPublic();
             this.privateKey = keyPair.getPrivate();
@@ -48,7 +48,7 @@ public class KeyManager {
             writePubKey();
             writePrivKey();
         } catch (NoSuchAlgorithmException e) {
-            logger.error("Invalid algorithm " + ClientConstants.KeyStandards.ASSYMETRIC_ALGORITHM, e);
+            logger.error("Invalid algorithm " + ClientConstants.KeyStandards.ASYMMETRIC_ALGORITHM, e);
         } catch (FileNotFoundException e){
             logger.error("File not found." + e.getMessage());
 
@@ -61,36 +61,38 @@ public class KeyManager {
     /**
      * Writes a public key to persistent storage. This key will stored in <i>username</i>.pub
      * @param username username of the user loading the keys.
-     * @throws FileNotFoundException whenever the file with the keys doesn't exist for some reason.
+     * @throws FileNotFoundException if the file exists but is a directory rather than a regular file,
+     *         does not exist but cannot be created, or cannot be opened for any other reason
      * @throws IOException I....I dunno man...this can happen in a plethora of situations.
      */
     private void writePubKey(String username) throws FileNotFoundException, IOException {
         logger.trace("Writing public key to storage.");
         BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(
                 ClientConstants.StorageStandards.KEY_FOLDER + username +
-                        ClientConstants.KeyStandards.ASYMETRIC_PUBLIC_SUFFIX));
+                        ClientConstants.KeyStandards.ASYMMETRIC_PUBLIC_SUFFIX));
         bos.write(publicKey.getEncoded());
         logger.trace("Successfully wrote public key. Can be found at "+
                 ClientConstants.StorageStandards.KEY_FOLDER+username+
-                ClientConstants.KeyStandards.ASYMETRIC_PUBLIC_SUFFIX);
+                ClientConstants.KeyStandards.ASYMMETRIC_PUBLIC_SUFFIX);
         bos.close();
     }
 
     /**
      * Writes a private key to persistent storage. The name of the file will be <i>username</i>.priv.
      * @param username username of the user writing the key.
-     * @throws FileNotFoundException whenever the file with the key doesn't exist.
+     * @throws FileNotFoundException if the file exists but is a directory rather than a regular file,
+     *         does not exist but cannot be created, or cannot be opened for any other reason
      * @throws IOException whenever IO error happens...
      */
     private void writePrivKey(String username) throws FileNotFoundException, IOException {
         logger.trace("Writing private key to storage");
         BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(
                 ClientConstants.StorageStandards.KEY_FOLDER + username +
-                        ClientConstants.KeyStandards.ASYMETRIC_PRIVATE_SUFFIX));
+                        ClientConstants.KeyStandards.ASYMMETRIC_PRIVATE_SUFFIX));
         bos.write(KeyManager.cipher(privateKey.getEncoded(), password));
         logger.trace("Successfully wrote public key. Can be found at "+
                 ClientConstants.StorageStandards.KEY_FOLDER+username +
-                ClientConstants.KeyStandards.ASYMETRIC_PRIVATE_SUFFIX);
+                ClientConstants.KeyStandards.ASYMMETRIC_PRIVATE_SUFFIX);
         bos.close();
     }
 
@@ -104,16 +106,16 @@ public class KeyManager {
     public PublicKey readPubKey(String username) throws FileNotFoundException, IOException {
         logger.trace("Reading public key");
         File pubkeyFile = new File(ClientConstants.StorageStandards.KEY_FOLDER + username
-                + ClientConstants.KeyStandards.ASYMETRIC_PUBLIC_SUFFIX);
+                + ClientConstants.KeyStandards.ASYMMETRIC_PUBLIC_SUFFIX);
         byte[] key = FileUtils.readFileToByteArray(pubkeyFile);
         try {
-            return KeyFactory.getInstance(ClientConstants.KeyStandards.ASSYMETRIC_ALGORITHM).
+            return KeyFactory.getInstance(ClientConstants.KeyStandards.ASYMMETRIC_ALGORITHM).
                     generatePublic(new X509EncodedKeySpec(key));
         } catch (InvalidKeySpecException e) {
             logger.warn("The key that was read was invalid. Maybe format error?");
             //e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
-            logger.error("No such algorithm " + ClientConstants.KeyStandards.ASSYMETRIC_ALGORITHM, e);
+            logger.error("No such algorithm " + ClientConstants.KeyStandards.ASYMMETRIC_ALGORITHM, e);
             //e.printStackTrace();
         }
         return null;
@@ -130,15 +132,15 @@ public class KeyManager {
     // PUBLIC access? o.O
     public PrivateKey readPrivKey(String username) throws FileNotFoundException, IOException {
         File privKeyFile = new File(ClientConstants.StorageStandards.KEY_FOLDER
-                + username + ClientConstants.KeyStandards.ASYMETRIC_PRIVATE_SUFFIX);
+                + username + ClientConstants.KeyStandards.ASYMMETRIC_PRIVATE_SUFFIX);
         byte[] key = KeyManager.decipher(FileUtils.readFileToByteArray(privKeyFile), password);
         try {
-            return KeyFactory.getInstance(ClientConstants.KeyStandards.ASSYMETRIC_ALGORITHM).
+            return KeyFactory.getInstance(ClientConstants.KeyStandards.ASYMMETRIC_ALGORITHM).
                     generatePrivate(new PKCS8EncodedKeySpec(key));
         } catch (InvalidKeySpecException e) {
             logger.warn("The key that was read was invalid. Maybe format error?");
         } catch (NoSuchAlgorithmException e) {
-            logger.error("No such algorithm " + ClientConstants.KeyStandards.ASSYMETRIC_ALGORITHM, e);
+            logger.error("No such algorithm " + ClientConstants.KeyStandards.ASYMMETRIC_ALGORITHM, e);
         }
         return null;
     }
@@ -151,11 +153,11 @@ public class KeyManager {
     @SuppressWarnings("Duplicates")
     public byte[] cipher(byte[] content){
         try {
-            Cipher cipher = Cipher.getInstance(ClientConstants.KeyStandards.ASSYMETRIC_ALGORITHM);
+            Cipher cipher = Cipher.getInstance(ClientConstants.KeyStandards.ASYMMETRIC_ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             return cipher.doFinal(content);
         } catch (NoSuchAlgorithmException e) {
-            logger.error("No such algorithm " + ClientConstants.KeyStandards.ASSYMETRIC_ALGORITHM, e);
+            logger.error("No such algorithm " + ClientConstants.KeyStandards.ASYMMETRIC_ALGORITHM, e);
         } catch (NoSuchPaddingException e) {
             e.printStackTrace();
         } catch (InvalidKeyException e) {
@@ -177,11 +179,11 @@ public class KeyManager {
     @SuppressWarnings("Duplicates")
     public byte[] decipher(byte[] ciphered){
         try {
-            Cipher cipher = Cipher.getInstance(ClientConstants.KeyStandards.ASSYMETRIC_ALGORITHM);
+            Cipher cipher = Cipher.getInstance(ClientConstants.KeyStandards.ASYMMETRIC_ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
             return cipher.doFinal(ciphered);
         } catch (NoSuchAlgorithmException e) {
-            logger.error("No such algorithm " + ClientConstants.KeyStandards.ASSYMETRIC_ALGORITHM, e);
+            logger.error("No such algorithm " + ClientConstants.KeyStandards.ASYMMETRIC_ALGORITHM, e);
         } catch (NoSuchPaddingException e) {
             e.printStackTrace();
         } catch (InvalidKeyException e) {
@@ -202,8 +204,8 @@ public class KeyManager {
      */
     public static byte[] cipher(byte[] plain, byte[] key){
         try {
-            SecretKeySpec keyspec = new SecretKeySpec(key, ClientConstants.KeyStandards.SYMETRIC_ALGORITHM);
-            Cipher cipher = Cipher.getInstance(ClientConstants.KeyStandards.SYMETRIC_STANDARD);
+            SecretKeySpec keyspec = new SecretKeySpec(key, ClientConstants.KeyStandards.SYMMETRIC_ALGORITHM);
+            Cipher cipher = Cipher.getInstance(ClientConstants.KeyStandards.SYMMETRIC_STANDARD);
             cipher.init(Cipher.ENCRYPT_MODE, keyspec);
             return cipher.doFinal(plain);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
@@ -221,11 +223,11 @@ public class KeyManager {
     @SuppressWarnings("Duplicates")
     public byte[] sign(byte[] hash){
         try {
-            Cipher cipher = Cipher.getInstance(ClientConstants.KeyStandards.ASSYMETRIC_ALGORITHM);
+            Cipher cipher = Cipher.getInstance(ClientConstants.KeyStandards.ASYMMETRIC_ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, privateKey);
             return cipher.doFinal(hash);
         } catch (NoSuchAlgorithmException e) {
-            logger.error("No such algorithm " + ClientConstants.KeyStandards.ASSYMETRIC_ALGORITHM, e);
+            logger.error("No such algorithm " + ClientConstants.KeyStandards.ASYMMETRIC_ALGORITHM, e);
         } catch (NoSuchPaddingException e) {
             e.printStackTrace();
         } catch (InvalidKeyException e) {
@@ -241,11 +243,11 @@ public class KeyManager {
     @SuppressWarnings("Duplicates")
     public byte[] unsign(byte[] hash){
         try {
-            Cipher cipher = Cipher.getInstance(ClientConstants.KeyStandards.ASSYMETRIC_ALGORITHM);
+            Cipher cipher = Cipher.getInstance(ClientConstants.KeyStandards.ASYMMETRIC_ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, publicKey);
             return cipher.doFinal(hash);
         } catch (NoSuchAlgorithmException e) {
-            logger.error("No such algorithm " + ClientConstants.KeyStandards.ASSYMETRIC_ALGORITHM, e);
+            logger.error("No such algorithm " + ClientConstants.KeyStandards.ASYMMETRIC_ALGORITHM, e);
         } catch (NoSuchPaddingException e) {
             e.printStackTrace();
         } catch (InvalidKeyException e) {
@@ -285,8 +287,8 @@ public class KeyManager {
             privateKey = readPrivKey(username);
         } catch(FileNotFoundException e){
             logger.info("No keys were found. Proceeding to generate.");
-            KeyPairGenerator generator = KeyPairGenerator.getInstance(ClientConstants.KeyStandards.ASSYMETRIC_ALGORITHM);
-            generator.initialize(ClientConstants.KeyStandards.ASSYMETRIC_SIZE);
+            KeyPairGenerator generator = KeyPairGenerator.getInstance(ClientConstants.KeyStandards.ASYMMETRIC_ALGORITHM);
+            generator.initialize(ClientConstants.KeyStandards.ASYMMETRIC_KEY_SIZE);
             KeyPair keyPair = generator.generateKeyPair();
             this.publicKey = keyPair.getPublic();
             this.privateKey = keyPair.getPrivate();
@@ -317,8 +319,8 @@ public class KeyManager {
      */
     public static byte[] decipher(byte[] ciphered, byte[] key){
         try {
-            SecretKeySpec keyspec = new SecretKeySpec(key, ClientConstants.KeyStandards.SYMETRIC_ALGORITHM);
-            Cipher cipher = Cipher.getInstance(ClientConstants.KeyStandards.SYMETRIC_STANDARD);
+            SecretKeySpec keyspec = new SecretKeySpec(key, ClientConstants.KeyStandards.SYMMETRIC_ALGORITHM);
+            Cipher cipher = Cipher.getInstance(ClientConstants.KeyStandards.SYMMETRIC_STANDARD);
             cipher.init(Cipher.DECRYPT_MODE, keyspec);
             return cipher.doFinal(ciphered);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException

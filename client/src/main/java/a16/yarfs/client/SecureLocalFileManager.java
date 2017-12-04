@@ -21,7 +21,6 @@ import java.util.Arrays;
  *          Class which does the same as LocalFileManager but in a secure fashion according to the implementation
  *          standards.
  *          @see LocalFileManager
- *          @see a16.yarfs.client.ClientConstants.KeyStandards
  */
 public class SecureLocalFileManager extends LocalFileManager{
 
@@ -67,7 +66,7 @@ public class SecureLocalFileManager extends LocalFileManager{
     @Override
     public byte[] getFileContents(String fileName) throws IOException {
         byte[] ciphered = super.getFileContents(fileName);
-        byte[] key = keyManager.decipher(getFileMetadata(fileName).getKey());
+        byte[] key = keyManager.decipher(super.getFileMetadata(fileName).getKey());
         SecretKeySpec keyspec = new SecretKeySpec(key, ClientConstants.KeyStandards.SYMETRIC_ALGORITHM);
         try {
             Cipher c = Cipher.getInstance(ClientConstants.KeyStandards.SYMETRIC_STANDARD);

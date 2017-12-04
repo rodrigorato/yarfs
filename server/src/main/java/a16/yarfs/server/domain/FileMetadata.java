@@ -6,7 +6,6 @@ package a16.yarfs.server.domain;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Class used to have a division between file contents and attributes.
@@ -77,10 +76,6 @@ public class FileMetadata implements Serializable{
      * @return The snapshot key of the user.
      */
     public SnapshotKey getKey(String username){
-        System.out.println("\n\n\nExisting keys are \n\n\n\n");
-        for(Map.Entry<String,SnapshotKey> keys : userKeys.entrySet()){
-            System.out.println("Key of "+ keys.getKey());
-        }
         return userKeys.get(username);
     }
 

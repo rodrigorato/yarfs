@@ -37,7 +37,8 @@ public class SecureLocalFileManager extends LocalFileManager{
         try {
             Cipher c = Cipher.getInstance(ClientConstants.KeyStandards.SYMETRIC_ALGORITHM);
             c.init(Cipher.DECRYPT_MODE, keyspec);
-            super.putFileContents(fileName, c.doFinal(content));
+            byte[] plainContents = c.doFinal(content);
+            super.putFileContents(fileName, plainContents);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (NoSuchPaddingException e) {

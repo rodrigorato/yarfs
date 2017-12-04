@@ -274,4 +274,30 @@ public class Manager {
         return fileMetadataList;
     }
 
+    /**
+     * Modifies a content of a file.
+     * @param fileId id of the file to be modified.
+     * @param sessid session id of the user trying to access.
+     * @param contents new contents of the file
+     * @param filename file
+     * @param signature
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public void modifyFile(long fileId, String sessid, byte[] contents, String filename, byte[] signature)
+            throws IOException, ClassNotFoundException {
+        if (hasSession(sessid) && userFiles.get(getSession(Session.stringToToken(sessid)).getUser()).contains(fileId)){
+            logger.debug("Access granted to user "+sessid+" on "+filename);
+            logger.debug("Modifying file "+filename);
+            fileManager.writeFileContents(String.valueOf(fileId), contents);
+            SnapshotKey key = fileManager.readFileMetadata(String.valueOf(fileId)).
+                    getKey(getSession(Session.stringToToken(sessid)).getUser().getUsername());
+            FileMetadata fileMetadata = new FileMetadata(fileId, filename, fileManager.readFileMetadata(String.valueOf(fileId)).getCreationDate(),
+                    signature,
+                    fileManager.readFileMetadata(String.valueOf(fileId)).getOwnerId());
+            fileMetadata.addKey(getSession(Session.stringToToken(sessid)).getUser().getUsername(), key);
+            fileManager.writeFileMetadata(String.valueOf(fileId), fileMetadata);
+        }
+    }
+
 }

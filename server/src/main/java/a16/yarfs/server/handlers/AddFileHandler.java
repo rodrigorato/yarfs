@@ -5,6 +5,7 @@ package a16.yarfs.server.handlers;
 
 import a16.yarfs.server.ServerConstants;
 import a16.yarfs.server.domain.Manager;
+import a16.yarfs.server.domain.dto.FileMetadataDto;
 import a16.yarfs.server.domain.exceptions.InvalidSessionException;
 import com.sun.net.httpserver.HttpExchange;
 import org.apache.commons.codec.binary.Base64;
@@ -37,14 +38,26 @@ public final class AddFileHandler extends AbstractHttpHandler {
 
             byte[] fileContent = Base64.decodeBase64(request.getString("file"));
             byte[] signature = Base64.decodeBase64(request.getString("signature"));
-            byte[] cipheredKey = Base64.decodeBase64(request.getString("key"));
+            long fileId;
+            JSONObject response = new JSONObject();
+
+            // Lets check if it is a commit request or an add
+            try {
+                // It is a commit request
+                fileId = Long.parseLong(request.getString("file_id"));
+                Manager.getInstance().modifyFile(fileId, sessid, fileContent, filename,signature);
+
+            // It is an add request
+            } catch (JSONException e){
+                logger.info("File id not in request");
+                byte[] cipheredKey = Base64.decodeBase64(request.getString("key"));
+                fileId = Manager.getInstance().addFile(filename, sessid, fileContent, signature, cipheredKey);
+            }
 
             AbstractHttpHandler.logger.debug("Received " + request);
+            response.put("id", fileId);
 
             // Add the file and retrieve id to return to the user.
-            long fileId = Manager.getInstance().addFile(filename, sessid, fileContent, signature, cipheredKey);
-            JSONObject response = new JSONObject();
-            response.put("id", fileId);
             super.sendResponse(ServerConstants.ResponseCodes.SUCCESS_CODE, response.toString(), httpExchange);
         } catch (InvalidSessionException e) {
             super.sendResponse(ServerConstants.ResponseCodes.INVALID_SESSION_ID_CODE, ServerConstants.ResponseCodes.INVALID_SESSION_MESSAGE_MESSAGE, httpExchange);

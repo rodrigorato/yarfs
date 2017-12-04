@@ -167,6 +167,8 @@ public class KeyManager {
      * @param ciphered the ciphered content.
      * @return deciphered content.
      */
+    @Deprecated
+    @SuppressWarnings("Duplicates")
     public byte[] decipher(byte[] ciphered){
         try {
             Cipher cipher = Cipher.getInstance(ClientConstants.KeyStandards.ASSYMETRIC_ALGORITHM);
@@ -210,6 +212,27 @@ public class KeyManager {
         }
         return null;
     }
+
+    @SuppressWarnings("Duplicates")
+    public byte[] unsign(byte[] hash){
+        try {
+            Cipher cipher = Cipher.getInstance(ClientConstants.KeyStandards.ASSYMETRIC_ALGORITHM);
+            cipher.init(Cipher.DECRYPT_MODE, publicKey);
+            return cipher.doFinal(hash);
+        } catch (NoSuchAlgorithmException e) {
+            logger.error("No such algorithm " + ClientConstants.KeyStandards.ASSYMETRIC_ALGORITHM, e);
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            logger.warn("The key that was read was invalid. Maybe format error?");
+        } catch (BadPaddingException e) {
+            logger.warn("Padding error?", e);
+        } catch (IllegalBlockSizeException e) {
+            logger.warn("Block size error?", e);
+        }
+        return null;
+    }
+
 
     /**
      * Generates a symmetric key randomly (supposedly).
@@ -256,6 +279,26 @@ public class KeyManager {
             manager =  new KeyManager();
         }
         return manager;
+    }
+
+    /**
+     * Symmetric deciphering.
+     * @param ciphered ciphered content.
+     * @param key key to decipher content.
+     * @return deciphered content.
+     * @see a16.yarfs.client.ClientConstants.KeyStandards
+     */
+    public static byte[] decipher(byte[] ciphered, byte[] key){
+        try {
+            SecretKeySpec keyspec = new SecretKeySpec(key, ClientConstants.KeyStandards.SYMETRIC_ALGORITHM);
+            Cipher cipher = Cipher.getInstance(ClientConstants.KeyStandards.SYMETRIC_STANDARD);
+            cipher.init(Cipher.DECRYPT_MODE, keyspec);
+            return cipher.doFinal(ciphered);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
+                | IllegalBlockSizeException | BadPaddingException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
 

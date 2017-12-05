@@ -20,11 +20,30 @@ public class App
             return;
         }
         System.out.println( "Starting yarfs client..." );
+
+        checkHTTPS();
+
         YarfsShell shell = new YarfsShell(System.in, System.out, true);
         try {
             shell.run();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void checkHTTPS() {
+        if(!ClientConstants.baseUrl.startsWith("https://")) {
+            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            System.out.println("   Warning: your connection to "+ ClientConstants.baseUrl + " is not secure.");
+            System.out.println("   You should not send sensible data to it because it could be stolen by attackers.");
+            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            System.out.println();
+            System.out.println("Abort the program now (recommended) or press enter key to continue.");
+            try {
+                System.in.read();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import javax.net.ssl.*;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.security.*;
@@ -53,10 +54,13 @@ public class SSLYarfsServer extends YarfsServer {
             // setup the HTTPS context
             SecureRandom random = new SecureRandom();
             sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), random);
-        } catch (KeyStoreException | KeyManagementException | UnrecoverableKeyException | CertificateException e) {
+        } catch (NoSuchAlgorithmException | KeyManagementException | UnrecoverableKeyException | CertificateException e) {
             e.printStackTrace();
             System.exit(1);
-        } catch (NoSuchAlgorithmException | IOException e) {
+        } catch (FileNotFoundException|KeyStoreException e) {
+            System.out.println("Could not open server keystore: " + e.getMessage());
+            System.exit(1);
+        } catch( IOException e) {
             e.printStackTrace();
             System.exit(1);
         }

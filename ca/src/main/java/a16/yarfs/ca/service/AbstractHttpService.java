@@ -1,13 +1,16 @@
 package a16.yarfs.ca.service;
 
+
 import a16.yarfs.ca.CAConstants;
 import a16.yarfs.ca.service.exception.AlreadyExecutedException;
 import a16.yarfs.ca.service.exception.NotExecutedException;
+import a16.yarfs.ca.service.exception.ServiceExecutionException;
 import a16.yarfs.ca.service.exception.ServiceResultException;
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.net.ssl.SSLHandshakeException;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -40,27 +43,36 @@ public abstract class AbstractHttpService {
      *
      * @throws IOException
      */
-    public void execute() throws IOException, AlreadyExecutedException {
-        if (conn == null)
-            conn = (HttpURLConnection) this.url.openConnection();
-        conn.setConnectTimeout(CAConstants.connectTimeout);
-        conn.connect();
-        connected = true;
-        _executed = true;
-    }
-
-
-    private OutputStream getOutputStream() throws IOException, AlreadyExecutedException {
-        if (connected) {
-            throw new AlreadyExecutedException("Already connected. Can only get output stream before connecting");
+    public void execute() throws IOException, AlreadyExecutedException, ServiceExecutionException {
+        try {
+            if (conn == null)
+                conn = (HttpURLConnection) this.url.openConnection();
+            conn.setConnectTimeout(CAConstants.connectTimeout);
+            conn.connect();
+            connected = true;
+            _executed = true;
+        } catch(SSLHandshakeException e) {
+            throw new ServiceExecutionException("SSL handshake failed: " + e.getMessage());
         }
-        if (conn == null)
-            conn = (HttpURLConnection) this.url.openConnection();
-        conn.setDoOutput(true);
-        return conn.getOutputStream();
     }
 
-    protected void setRequestParameters(JSONObject parameters) throws IOException, AlreadyExecutedException {
+
+    private OutputStream getOutputStream() throws IOException, AlreadyExecutedException, ServiceExecutionException {
+        try {
+            if (connected) {
+                throw new AlreadyExecutedException("Already connected. Can only get output stream before connecting");
+            }
+            if (conn == null)
+                conn = (HttpURLConnection) this.url.openConnection();
+            conn.setDoOutput(true);
+            return conn.getOutputStream();
+        } catch(SSLHandshakeException e) {
+            throw new ServiceExecutionException("SSL handshake failed: " + e.getMessage());
+        }
+    }
+
+
+    protected void setRequestParameters(JSONObject parameters) throws IOException, AlreadyExecutedException, ServiceExecutionException {
         OutputStream request = getOutputStream();
         OutputStreamWriter requestWriter;
         try {

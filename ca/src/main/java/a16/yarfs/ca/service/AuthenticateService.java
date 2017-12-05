@@ -6,6 +6,7 @@ package a16.yarfs.ca.service;
 import a16.yarfs.ca.CAConstants;
 import a16.yarfs.ca.service.exception.AlreadyExecutedException;
 import a16.yarfs.ca.service.exception.NotExecutedException;
+import a16.yarfs.ca.service.exception.ServiceExecutionException;
 import a16.yarfs.ca.service.exception.ServiceResultException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +28,7 @@ public class AuthenticateService extends AbstractHttpService {
     }
 
     @Override
-    public void execute() throws IOException, AlreadyExecutedException {
+    public void execute() throws IOException, AlreadyExecutedException, ServiceExecutionException {
         JSONObject js = new JSONObject();
         try {
             js.put("sessionid", sessionid);

@@ -1,4 +1,4 @@
-package a16.yarfs.ca.service;
+package a16.yarfs.ca;
 
 
 /**

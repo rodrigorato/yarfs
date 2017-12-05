@@ -1,10 +1,6 @@
 package a16.yarfs.ca;
 
-import a16.yarfs.ca.service.AuthenticateService;
-import a16.yarfs.ca.service.CAConstants;
 import org.apache.log4j.Logger;
-
-import java.io.IOException;
 
 
 /**

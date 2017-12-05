@@ -3,6 +3,7 @@
  **/
 package a16.yarfs.ca.service;
 
+import a16.yarfs.ca.CAConstants;
 import a16.yarfs.ca.service.exception.AlreadyExecutedException;
 import a16.yarfs.ca.service.exception.NotExecutedException;
 import a16.yarfs.ca.service.exception.ServiceResultException;

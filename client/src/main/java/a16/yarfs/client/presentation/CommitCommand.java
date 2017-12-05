@@ -9,6 +9,7 @@ import a16.yarfs.client.LocalFileManager;
 import a16.yarfs.client.SecureLocalFileManager;
 import a16.yarfs.client.service.dto.FileMetadata;
 import a16.yarfs.client.service.exception.AlreadyExecutedException;
+import a16.yarfs.client.service.exception.ServiceExecutionException;
 import a16.yarfs.client.service.file.CommitFileService;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -65,6 +66,8 @@ public class CommitCommand extends Command{
             return;
         } catch (AlreadyExecutedException e) {
             e.printStackTrace();
+        } catch (ServiceExecutionException e) {
+            shell.println("error: " + e.getMessage());
         }
 
     }

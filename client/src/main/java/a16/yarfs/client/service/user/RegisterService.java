@@ -4,10 +4,7 @@
 package a16.yarfs.client.service.user;
 
 import a16.yarfs.client.ClientConstants;
-import a16.yarfs.client.service.exception.AlreadyExecutedException;
-import a16.yarfs.client.service.exception.NotExecutedException;
-import a16.yarfs.client.service.exception.RegisterServiceException;
-import a16.yarfs.client.service.exception.ServiceResultException;
+import a16.yarfs.client.service.exception.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,7 +31,7 @@ public class RegisterService extends AbstractUserService {
      *                                  should be caught later and eventually presented to the user
      */
     @Override
-    public void execute() throws RegisterServiceException, AlreadyExecutedException {
+    public void execute() throws RegisterServiceException, AlreadyExecutedException, ServiceExecutionException {
         JSONObject js = new JSONObject();
 
         try {

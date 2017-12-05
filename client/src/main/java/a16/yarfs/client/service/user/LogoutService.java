@@ -5,10 +5,7 @@
 package a16.yarfs.client.service.user;
 
 import a16.yarfs.client.ClientConstants;
-import a16.yarfs.client.service.exception.AlreadyExecutedException;
-import a16.yarfs.client.service.exception.LogoutServiceException;
-import a16.yarfs.client.service.exception.NotExecutedException;
-import a16.yarfs.client.service.exception.ServiceResultException;
+import a16.yarfs.client.service.exception.*;
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,7 +28,7 @@ public class LogoutService extends AbstractUserService{
     }
 
     @Override
-    public void execute(){
+    public void execute() throws ServiceExecutionException {
         JSONObject requestBody = new JSONObject();
         try {
             requestBody.put("sessid", this.sessid);

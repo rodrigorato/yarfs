@@ -2,6 +2,7 @@ package a16.yarfs.client.presentation;
 
 import a16.yarfs.client.ClientConstants;
 import a16.yarfs.client.service.exception.AlreadyExecutedException;
+import a16.yarfs.client.service.exception.ServiceExecutionException;
 import a16.yarfs.client.service.file.RefreshService;
 
 import java.io.IOException;
@@ -41,6 +42,8 @@ public class RefreshCommand extends Command{
             e.printStackTrace();
         } catch (AlreadyExecutedException e) {
             e.printStackTrace();
+        } catch (ServiceExecutionException e) {
+            shell.println("error: " + e.getMessage());
         }
 
     }

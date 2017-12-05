@@ -8,6 +8,7 @@ import a16.yarfs.client.ClientConstants;
 import a16.yarfs.client.KeyManager;
 import a16.yarfs.client.service.exception.AlreadyExecutedException;
 import a16.yarfs.client.service.exception.NotExecutedException;
+import a16.yarfs.client.service.exception.ServiceExecutionException;
 import a16.yarfs.client.service.exception.ServiceResultException;
 import a16.yarfs.client.service.user.LoginService;
 
@@ -75,6 +76,8 @@ public class LoginCommand extends Command {
         } catch (NoSuchAlgorithmException e) {
             shell.println("Error generating keys. Try again.");
             getLogger().error("Error generating keys.", e);
+        } catch (ServiceExecutionException e) {
+            shell.println("error: " + e.getMessage());
         }
     }
 

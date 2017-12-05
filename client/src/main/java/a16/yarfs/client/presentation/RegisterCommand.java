@@ -7,6 +7,7 @@ package a16.yarfs.client.presentation;
 import a16.yarfs.client.ClientConstants;
 import a16.yarfs.client.service.exception.AlreadyExecutedException;
 import a16.yarfs.client.service.exception.RegisterServiceException;
+import a16.yarfs.client.service.exception.ServiceExecutionException;
 import a16.yarfs.client.service.user.RegisterService;
 
 import java.net.MalformedURLException;
@@ -59,6 +60,8 @@ public class RegisterCommand extends Command {
             getLogger().error("Malformed URL on the RegisterCommand", e);
         } catch (AlreadyExecutedException e) {
             e.printStackTrace(); // should never happen, the service was just instantiated
+        } catch (ServiceExecutionException e) {
+            shell.println("error: " + e.getMessage());
         }
     }
 

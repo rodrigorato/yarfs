@@ -10,6 +10,7 @@ import a16.yarfs.client.SecureLocalFileManager;
 import a16.yarfs.client.service.dto.FileDto;
 import a16.yarfs.client.service.exception.AlreadyExecutedException;
 import a16.yarfs.client.service.exception.NotExecutedException;
+import a16.yarfs.client.service.exception.ServiceExecutionException;
 import a16.yarfs.client.service.exception.ServiceResultException;
 import a16.yarfs.client.service.file.AddFileService;
 import a16.yarfs.client.service.file.GetFileService;
@@ -119,6 +120,8 @@ public class GetFileCommand extends Command {
             e.printStackTrace();
         } catch (NotExecutedException e) {
             e.printStackTrace();
+        } catch (ServiceExecutionException e) {
+            shell.println("error: " + e.getMessage());
         }
     }
 

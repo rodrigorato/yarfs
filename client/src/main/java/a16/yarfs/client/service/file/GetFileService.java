@@ -8,6 +8,7 @@ import a16.yarfs.client.LocalFileManager;
 import a16.yarfs.client.service.dto.FileDto;
 import a16.yarfs.client.service.exception.AlreadyExecutedException;
 import a16.yarfs.client.service.exception.NotExecutedException;
+import a16.yarfs.client.service.exception.ServiceExecutionException;
 import a16.yarfs.client.service.exception.ServiceResultException;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONException;
@@ -31,7 +32,7 @@ public class GetFileService extends FileService {
     }
 
     @Override
-    public void execute() throws IOException, AlreadyExecutedException {
+    public void execute() throws IOException, AlreadyExecutedException, ServiceExecutionException {
         JSONObject req = new JSONObject();
         try {
 

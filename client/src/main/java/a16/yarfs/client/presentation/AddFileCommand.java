@@ -9,6 +9,7 @@ import a16.yarfs.client.LocalFileManager;
 import a16.yarfs.client.service.dto.FileDto;
 import a16.yarfs.client.service.exception.AlreadyExecutedException;
 import a16.yarfs.client.service.exception.NotExecutedException;
+import a16.yarfs.client.service.exception.ServiceExecutionException;
 import a16.yarfs.client.service.exception.ServiceResultException;
 import a16.yarfs.client.service.file.AddFileService;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -116,6 +117,8 @@ public class AddFileCommand extends Command {
             e.printStackTrace();
         } catch (NotExecutedException e) {
             e.printStackTrace();
+        } catch (ServiceExecutionException e) {
+            shell.println("error: " + e.getMessage());
         }
     }
 

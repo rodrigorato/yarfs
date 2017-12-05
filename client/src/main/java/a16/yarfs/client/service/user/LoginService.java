@@ -6,6 +6,7 @@ package a16.yarfs.client.service.user;
 import a16.yarfs.client.ClientConstants;
 import a16.yarfs.client.service.exception.AlreadyExecutedException;
 import a16.yarfs.client.service.exception.NotExecutedException;
+import a16.yarfs.client.service.exception.ServiceExecutionException;
 import a16.yarfs.client.service.exception.ServiceResultException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +28,7 @@ public class LoginService extends AbstractUserService {
     }
 
     @Override
-    public void execute() throws IOException, AlreadyExecutedException {
+    public void execute() throws IOException, AlreadyExecutedException, ServiceExecutionException {
         JSONObject js = new JSONObject();
         try {
             js.put("username", username);

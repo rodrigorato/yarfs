@@ -6,6 +6,7 @@ package a16.yarfs.client.service.file;
 import a16.yarfs.client.ClientConstants;
 import a16.yarfs.client.service.exception.AlreadyExecutedException;
 import a16.yarfs.client.service.exception.NotExecutedException;
+import a16.yarfs.client.service.exception.ServiceExecutionException;
 import a16.yarfs.client.service.exception.ServiceResultException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +37,7 @@ public class AddFileService extends FileService {
     }
 
     @Override
-    public void execute() throws IOException, AlreadyExecutedException {
+    public void execute() throws IOException, AlreadyExecutedException, ServiceExecutionException {
         JSONObject req = new JSONObject();
         try {
             req.put("sessid", sessId);

@@ -3,6 +3,7 @@ package a16.yarfs.client.presentation;
 import a16.yarfs.client.ClientConstants;
 import a16.yarfs.client.service.exception.LogoutServiceException;
 import a16.yarfs.client.service.exception.NotExecutedException;
+import a16.yarfs.client.service.exception.ServiceExecutionException;
 import a16.yarfs.client.service.exception.ServiceResultException;
 import a16.yarfs.client.service.user.LoginService;
 import a16.yarfs.client.service.user.LogoutService;
@@ -39,6 +40,8 @@ public class LogoutCommand extends Command{
             e.printStackTrace();
         }catch (LogoutServiceException e) {
             shell.println("Error logging out! KERNEL PANIC!");
+        } catch (ServiceExecutionException e) {
+            shell.println("error: " + e.getMessage());
         }
     }
 

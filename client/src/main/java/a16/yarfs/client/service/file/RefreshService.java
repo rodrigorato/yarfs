@@ -5,6 +5,7 @@ import a16.yarfs.client.LocalFileManager;
 import a16.yarfs.client.service.dto.FileMetadata;
 import a16.yarfs.client.service.exception.AlreadyExecutedException;
 import a16.yarfs.client.service.exception.NotExecutedException;
+import a16.yarfs.client.service.exception.ServiceExecutionException;
 import a16.yarfs.client.service.exception.ServiceResultException;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONArray;
@@ -27,7 +28,7 @@ public class RefreshService extends FileService {
     }
 
     @Override
-    public void execute() throws IOException, AlreadyExecutedException {
+    public void execute() throws IOException, AlreadyExecutedException, ServiceExecutionException {
         JSONObject request = new JSONObject();
         try {
             request.put("sessid", sessid);

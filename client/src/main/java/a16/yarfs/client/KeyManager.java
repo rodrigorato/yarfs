@@ -10,10 +10,14 @@ import org.apache.log4j.Logger;
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Set;
 
 /**
  *  Class KeyManager
@@ -86,14 +90,19 @@ public class KeyManager {
      */
     private void writePrivKey(String username) throws FileNotFoundException, IOException {
         logger.trace("Writing private key to storage");
-        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(
-                ClientConstants.StorageStandards.KEY_FOLDER + username +
-                        ClientConstants.KeyStandards.ASYMMETRIC_PRIVATE_SUFFIX));
+        File f = new File(ClientConstants.StorageStandards.KEY_FOLDER + username +
+                        ClientConstants.KeyStandards.ASYMMETRIC_PRIVATE_SUFFIX);
+        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(f));
         bos.write(KeyManager.cipher(privateKey.getEncoded(), password));
         logger.trace("Successfully wrote public key. Can be found at "+
                 ClientConstants.StorageStandards.KEY_FOLDER+username +
                 ClientConstants.KeyStandards.ASYMMETRIC_PRIVATE_SUFFIX);
+
         bos.close();
+
+        // make sure the private key is not world-readable
+        Set<PosixFilePermission> perms = PosixFilePermissions.fromString("rw-------");
+        Files.setPosixFilePermissions(f.toPath(), perms);
     }
 
     /**

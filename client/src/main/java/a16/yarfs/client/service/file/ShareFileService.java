@@ -53,7 +53,7 @@ public class ShareFileService extends FileService{
 
         byte[] targetKey = KeyManager.getTargetKey(targetUser);
         try {
-//            (new RefreshService(ClientConstants.baseUrl, sessid)).execute();
+//            (new RefreshService(ClientConstants.baseServerUrl, sessid)).execute();
             FileMetadata metadata = SecureLocalFileManager.getManager().getFileMetadata(this.filename);
             getLogger().debug("Acquired metadata for "+this.filename);
             byte[] cipheredKey =  KeyManager.AsymCipher(metadata.getKey(), targetKey); // ciphered with the public key of the target user

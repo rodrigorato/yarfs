@@ -32,9 +32,9 @@ public class App
     }
 
     private static void checkHTTPS() {
-        if(!ClientConstants.baseUrl.startsWith("https://")) {
+        if(!ClientConstants.baseServerUrl.startsWith("https://")) {
             System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-            System.out.println("   Warning: your connection to "+ ClientConstants.baseUrl + " is not secure.");
+            System.out.println("   Warning: your connection to "+ ClientConstants.baseServerUrl + " is not secure.");
             System.out.println("   You should not send sensible data to it because it could be stolen by attackers.");
             System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             System.out.println();
@@ -52,9 +52,14 @@ public class App
             if(arg.equals("--help")){
                 System.out.print(getUsage());
                 System.exit(0);
+            } else if(arg.startsWith("--ca-addr=")) {
+                ClientConstants.CA.address = arg.replaceFirst("--ca-addr=", "");
+            } else if(arg.startsWith("--ca-port=")) {
+                int port = Integer.parseInt(arg.replaceFirst("--ca-port=", ""));
+                ClientConstants.CA.setBasePort(port);
             } else if(arg.startsWith("http")) {
                 logger.info("Using base URL " + arg);
-                ClientConstants.baseUrl = arg;
+                ClientConstants.baseServerUrl = arg;
             } else {
                 logger.error("unknown argument: " + arg);
                 return false;
@@ -68,10 +73,12 @@ public class App
         String TAB = "\t";
         return "Usage: " + App.class.getSimpleName() + " [OPTIONS] [BASEURL]" + EOL +
                 EOL +
-                TAB + "BASEURL     " + TAB + "base URL for the yarfs server (default: " + ClientConstants.baseUrl + ")" + EOL +
+                TAB + "BASEURL     " + TAB + "base URL for the yarfs server (default: " + ClientConstants.baseServerUrl + ")" + EOL +
                 EOL +
                 "OPTIONS:" + EOL +
-                TAB + "--help      " + TAB + "print usage information and exit" + EOL +
+                TAB + "--ca-addr=<ADDR>" + TAB + "base ADDRess for the CA (default: " + ClientConstants.CA.address + ")" + EOL +
+                TAB + "--ca-port=<PORT>" + TAB + "base PORT for the CA (default: "    + ClientConstants.CA.getBasePort() + ")" + EOL +
+                TAB + "--help          " + TAB + "print usage information and exit" + EOL +
                 TAB + EOL;
     }
 

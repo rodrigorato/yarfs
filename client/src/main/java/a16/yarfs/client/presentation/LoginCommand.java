@@ -51,7 +51,7 @@ public class LoginCommand extends Command {
 
         try {
             // contact the server
-            LoginService service = new LoginService(ClientConstants.baseUrl, username, password);
+            LoginService service = new LoginService(ClientConstants.baseServerUrl, username, password);
             service.execute();
 
             // try to get the result

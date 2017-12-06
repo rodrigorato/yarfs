@@ -9,7 +9,6 @@ import a16.yarfs.client.service.exception.NotExecutedException;
 import a16.yarfs.client.service.exception.ServiceResultException;
 import a16.yarfs.client.service.file.UnshareFileService;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -46,7 +45,7 @@ public class Unsharecommand extends Command{
         String filename = args[1];
 
         try {
-            UnshareFileService unshareFileService =  new UnshareFileService(ClientConstants.baseUrl,
+            UnshareFileService unshareFileService =  new UnshareFileService(ClientConstants.baseServerUrl,
                     shell.getActiveSessionid(), filename, targetUser);
             unshareFileService.execute();
             if(unshareFileService.getSuccess()){

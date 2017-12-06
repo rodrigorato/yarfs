@@ -94,7 +94,7 @@ public class AddFileCommand extends Command {
 
         // send the file to the server
         try {
-            AddFileService service = new AddFileService(ClientConstants.baseUrl,
+            AddFileService service = new AddFileService(ClientConstants.baseServerUrl,
                     shell.getActiveSessionid(), remoteFilename, ciphered_content, signature, ciphered_key);
 
             service.execute();

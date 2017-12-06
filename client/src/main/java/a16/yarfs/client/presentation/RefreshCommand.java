@@ -25,7 +25,7 @@ public class RefreshCommand extends Command{
         }
 
         try {
-            RefreshService service = new RefreshService(ClientConstants.baseUrl, shell.getActiveSessionid());
+            RefreshService service = new RefreshService(ClientConstants.baseServerUrl, shell.getActiveSessionid());
             service.execute();
             List<String> newFiles = service.getNewFiles();
             if( newFiles.size() == 0 ){

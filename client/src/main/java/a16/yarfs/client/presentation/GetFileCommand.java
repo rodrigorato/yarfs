@@ -5,19 +5,16 @@ package a16.yarfs.client.presentation;
 
 import a16.yarfs.client.ClientConstants;
 import a16.yarfs.client.KeyManager;
-import a16.yarfs.client.LocalFileManager;
 import a16.yarfs.client.SecureLocalFileManager;
 import a16.yarfs.client.service.dto.FileDto;
 import a16.yarfs.client.service.exception.AlreadyExecutedException;
 import a16.yarfs.client.service.exception.NotExecutedException;
 import a16.yarfs.client.service.exception.ServiceExecutionException;
 import a16.yarfs.client.service.exception.ServiceResultException;
-import a16.yarfs.client.service.file.AddFileService;
 import a16.yarfs.client.service.file.GetFileService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.FileAlreadyExistsException;
@@ -61,7 +58,7 @@ public class GetFileCommand extends Command {
         // get the file from the server
         try {
             // FIXME remoteFilename is being converted to file id; don't forget to update getUsage()
-            GetFileService service = new GetFileService(ClientConstants.baseUrl,
+            GetFileService service = new GetFileService(ClientConstants.baseServerUrl,
                     shell.getActiveSessionid(), remoteFilename);
 
             service.execute();

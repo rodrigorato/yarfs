@@ -57,7 +57,7 @@ public class CommitCommand extends Command{
 
             byte[] newSignature = KeyManager.getManager().sign(DigestUtils.sha256(LocalFileManager.getManager().getFileContents(fileName)));
             getLogger().debug("Sending content " + Arrays.toString(contents));
-            CommitFileService commitFileService =  new CommitFileService(ClientConstants.baseUrl,
+            CommitFileService commitFileService =  new CommitFileService(ClientConstants.baseServerUrl,
                     shell.getActiveSessionid(), fileName, contents, newSignature, String.valueOf(metadata.getId()),
                     shell.getActiveUser());
             commitFileService.execute();

@@ -2,13 +2,9 @@ package a16.yarfs.client.presentation;
 
 import a16.yarfs.client.ClientConstants;
 import a16.yarfs.client.service.exception.LogoutServiceException;
-import a16.yarfs.client.service.exception.NotExecutedException;
 import a16.yarfs.client.service.exception.ServiceExecutionException;
-import a16.yarfs.client.service.exception.ServiceResultException;
-import a16.yarfs.client.service.user.LoginService;
 import a16.yarfs.client.service.user.LogoutService;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 
 public class LogoutCommand extends Command{
@@ -29,7 +25,7 @@ public class LogoutCommand extends Command{
         String sessid = shell.getActiveSessionid();
 
         try {
-            LogoutService service = new LogoutService(ClientConstants.baseUrl, sessid);
+            LogoutService service = new LogoutService(ClientConstants.baseServerUrl, sessid);
             service.execute();
             shell.setActiveSessionid(null);
             shell.setActiveUser("");

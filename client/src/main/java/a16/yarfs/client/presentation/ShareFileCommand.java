@@ -3,7 +3,6 @@ package a16.yarfs.client.presentation;
 import a16.yarfs.client.ClientConstants;
 import a16.yarfs.client.service.exception.AlreadyExecutedException;
 import a16.yarfs.client.service.file.ShareFileService;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -35,7 +34,7 @@ public class ShareFileCommand extends Command{
 
         try {
             shell.println("Sharing file "+filename+" with "+user);
-            ShareFileService service = new ShareFileService(ClientConstants.baseUrl, filename, user, shell.getActiveSessionid());
+            ShareFileService service = new ShareFileService(ClientConstants.baseServerUrl, filename, user, shell.getActiveSessionid());
             service.execute();
             if(service.successful()){
                 shell.println("Successfully shared with "+user);

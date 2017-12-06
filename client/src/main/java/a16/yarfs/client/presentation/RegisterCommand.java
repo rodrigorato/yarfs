@@ -49,7 +49,7 @@ public class RegisterCommand extends Command {
         try {
 
             // contact the server via the RegisterService
-            RegisterService service = new RegisterService(ClientConstants.baseUrl, username, password);
+            RegisterService service = new RegisterService(ClientConstants.baseServerUrl, username, password);
             service.execute();
 
 

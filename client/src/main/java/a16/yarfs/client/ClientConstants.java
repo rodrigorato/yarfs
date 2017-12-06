@@ -11,8 +11,30 @@ package a16.yarfs.client;
 public class ClientConstants {
 
     /** default base URL of the yarfs server. Can be overridden by App args */
-    public static String baseUrl = "http://127.0.0.1:31000";
+    public static String baseServerUrl = "http://127.0.0.1:31000";
     public static int connectTimeout = 5000; // ms
+
+
+    /** constants concerning the use of the CA by the client */
+    public static final class CA {
+        public static String address = "127.0.0.1";
+
+        private static int basePort       = 30001;
+
+        public static void setBasePort(int port) {
+            basePort = port;
+        }
+
+        public static int getBasePort() {
+            return basePort;
+        }
+        public static int getPublishPort() {
+            return basePort;
+        }
+        public static int getRequestPort() {
+            return basePort + 1;
+        }
+    }
 
     public static final class Endpoints {
         /// register (username, password) : OK | NOK

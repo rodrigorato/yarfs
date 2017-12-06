@@ -21,9 +21,10 @@ public class ConcreteFileDto {
     private byte[] signature;
     private String ownerId;
     private SnapshotKey userKey;
+    private String lastModifiedBy;
 
     public ConcreteFileDto(long id, String name, byte[] content, Date creationDate, byte[] signature,
-                           String ownerId, SnapshotKey userKey){
+                           String ownerId, SnapshotKey userKey, String lastModifiedBy){
         this.id = id;
         this.name = name;
         this.content = content;
@@ -31,6 +32,7 @@ public class ConcreteFileDto {
         this.signature = signature;
         this.ownerId = ownerId;
         this.userKey = userKey;
+        this.lastModifiedBy = lastModifiedBy;
     }
 
     public long getId() {
@@ -59,5 +61,9 @@ public class ConcreteFileDto {
 
     public SnapshotKey getUserKey() {
         return userKey;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
     }
 }

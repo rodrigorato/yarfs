@@ -15,9 +15,10 @@ public class FileDto {
     private FileMetadata fileMetadata;
 
 
-    public FileDto(long id, String name, String owner, byte[] contents, byte[] signature, byte[] key) {
+    public FileDto(long id, String name, String owner, byte[] contents, byte[] signature, byte[] key,
+                   String lastModifiedBy) {
         this.contents = contents;
-        this.fileMetadata = new FileMetadata(id, name, owner, signature, key);
+        this.fileMetadata = new FileMetadata(id, name, owner, signature, key, lastModifiedBy);
     }
 
     public FileDto(byte[] contents, FileMetadata fileMetadata){

@@ -4,6 +4,8 @@
 
 package a16.yarfs.server.domain.dto;
 
+import a16.yarfs.server.domain.SnapshotKey;
+
 import java.util.Date;
 
 /***
@@ -16,13 +18,18 @@ public class FileMetadataDto {
     private Date creationDate;
     private byte[] signature;
     private String ownerId;
+    private String lastModifiedBy;
+    private byte[] userKey;
 
-    public FileMetadataDto(long id, String name, Date creationDate, byte[] signature, String ownerId){
+    public FileMetadataDto(long id, String name, Date creationDate, byte[] signature, String ownerId,
+                           String lastModifiedBy, byte[] userKey){
         this.id = id;
         this.name = name;
         this.creationDate = creationDate;
         this.signature = signature;
         this.ownerId = ownerId;
+        this.lastModifiedBy = lastModifiedBy;
+        this.userKey =  userKey;
 
     }
 
@@ -57,4 +64,11 @@ public class FileMetadataDto {
         return ownerId;
     }
 
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public byte[] getUserKey() {
+        return userKey;
+    }
 }

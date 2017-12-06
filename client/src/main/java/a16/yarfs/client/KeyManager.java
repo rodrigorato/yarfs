@@ -15,6 +15,7 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Set;
@@ -338,6 +339,53 @@ public class KeyManager {
             throw new RuntimeException(e);
         }
     }
+
+
+    public static byte[] AsymCipher(byte[] content, byte[] key)  {
+        try {
+            PublicKey pubKey = KeyFactory.getInstance(ClientConstants.KeyStandards.ASYMMETRIC_ALGORITHM).
+                    generatePublic(new X509EncodedKeySpec(key));
+            Cipher cipher = Cipher.getInstance(ClientConstants.KeyStandards.ASYMMETRIC_ALGORITHM);
+            cipher.init(Cipher.ENCRYPT_MODE, pubKey);
+            return cipher.doFinal(content);
+        } catch (NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException | InvalidKeyException
+                | InvalidKeySpecException | NoSuchPaddingException e) {
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
+
+    }
+
+    public static byte[] getTargetKey(String targetUser) throws IOException {
+        return KeyManager.getManager().readPubKey(targetUser).getEncoded();
+
+    }
+
+
+    public static byte[] unsign(byte[] ciphered_hash, byte[] key){
+        try {
+            PublicKey publicKey = KeyFactory.getInstance(ClientConstants.KeyStandards.ASYMMETRIC_ALGORITHM).
+                        generatePublic(new X509EncodedKeySpec(key));
+            Cipher cipher = Cipher.getInstance(ClientConstants.KeyStandards.ASYMMETRIC_ALGORITHM);
+            cipher.init(Cipher.DECRYPT_MODE, publicKey);
+            return cipher.doFinal(ciphered_hash);
+        } catch (NoSuchAlgorithmException e) {
+            logger.error("No such algorithm " + ClientConstants.KeyStandards.ASYMMETRIC_ALGORITHM, e);
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            logger.warn("The key that was read was invalid. Maybe format error?");
+        } catch (BadPaddingException e) {
+            logger.warn("Padding error?", e);
+        } catch (IllegalBlockSizeException e) {
+            logger.warn("Block size error?", e);
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
 
 
 }

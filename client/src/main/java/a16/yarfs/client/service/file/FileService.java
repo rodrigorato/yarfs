@@ -13,9 +13,6 @@ import java.security.PrivateKey;
 
  **/
 public abstract class FileService extends AbstractHttpService {
-    private String filename;
-    private String password;
-    private PrivateKey key;
 
     protected FileService(String baseUrl, String endpoint) throws MalformedURLException {
         super(baseUrl, endpoint);

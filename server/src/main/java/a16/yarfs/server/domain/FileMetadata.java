@@ -4,8 +4,7 @@
 package a16.yarfs.server.domain;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Class used to have a division between file contents and attributes.
@@ -19,6 +18,7 @@ public class FileMetadata implements Serializable{
     private byte[] signature;
     private String ownerId;
     private HashMap<String,SnapshotKey> userKeys;
+    private String lastModifiedBy;
 
     public FileMetadata(long id, String name, Date creationDate, byte[] signature, String ownerId){
         this.id = id;
@@ -27,6 +27,7 @@ public class FileMetadata implements Serializable{
         this.signature = signature;
         this.ownerId = ownerId;
         userKeys = new HashMap<>();
+        lastModifiedBy = ownerId;
 
     }
 
@@ -76,6 +77,13 @@ public class FileMetadata implements Serializable{
      * @return The snapshot key of the user.
      */
     public SnapshotKey getKey(String username){
+        System.out.println("Requesting key for "+username);
+        System.out.println("The keys are:\n");
+        for(String user : userKeys.keySet()){
+            System.out.println(user+"\n");
+        }
+
+
         return userKeys.get(username);
     }
 
@@ -88,4 +96,15 @@ public class FileMetadata implements Serializable{
         userKeys.put(username,key);
     }
 
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Set<Map.Entry<String, SnapshotKey>> getKeys(){
+        return userKeys.entrySet();
+    }
 }

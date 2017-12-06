@@ -5,10 +5,8 @@ package a16.yarfs.server.domain;
 
 import a16.yarfs.server.domain.dto.ConcreteFileDto;
 import a16.yarfs.server.domain.dto.FileMetadataDto;
-import a16.yarfs.server.domain.exceptions.AccessDeniedException;
-import a16.yarfs.server.domain.exceptions.DuplicatedUsernameException;
-import a16.yarfs.server.domain.exceptions.InvalidSessionException;
-import a16.yarfs.server.domain.exceptions.WrongLoginException;
+import a16.yarfs.server.domain.exceptions.*;
+import a16.yarfs.server.exception.AbstractYarfsRuntimeException;
 import a16.yarfs.server.exception.http.InternalServerErrorException;
 import org.apache.log4j.Logger;
 
@@ -166,10 +164,12 @@ public class Manager {
      * @throws InvalidSessionException happens if the session id is invalid or expired.
      * @throws AccessDeniedException happens if the user doesn't have access to the requested file.
      */
-    public ConcreteFileDto getFile(String sessid, String fileId) throws InvalidSessionException, AccessDeniedException {
+    public ConcreteFileDto getFile(String sessid, String fileId) throws InvalidSessionException, AccessDeniedException, IOException, ClassNotFoundException {
         Session usersession = getSession(Session.stringToToken(sessid));
         logger.info("User "+usersession.getUser().getUsername()+" asking access to "+fileId);
-        if( ! userFiles.get(usersession.getUser()).contains(Long.parseLong(fileId))){
+        String username = usersession.getUser().getUsername();
+        if( ! userFiles.get(usersession.getUser()).contains(Long.parseLong(fileId)) &&
+                fileManager.readFileMetadata(fileId).getKey(username) == null){
             logger.info("Access denied of user "+usersession.getUser().getUsername()+" to file "+fileId);
             throw new AccessDeniedException();
         }
@@ -177,7 +177,8 @@ public class Manager {
         ConcreteFile file = (ConcreteFile) fileManager.readFile(Long.parseLong(fileId));
         logger.debug("User key is " + file.getKey(usersession.getUser().getUsername()));
         return new ConcreteFileDto(file.getId(), file.getName(), file.getContent(), file.getCreationDate(),
-                file.getSignature(), file.getOwnerId(), file.getKey(usersession.getUser().getUsername()));
+                file.getSignature(), file.getOwnerId(), file.getKey(usersession.getUser().getUsername()),
+                file.getFileMetadata().getLastModifiedBy());
     }
 
     /**
@@ -253,7 +254,8 @@ public class Manager {
             if (userFiles.containsKey(requester)) {
                 FileMetadata fm = fileManager.readFileMetadata(String.valueOf(fileId)); //read the file metadata
                 return new FileMetadataDto(fm.getId(), fm.getName(), fm.getCreationDate(),
-                        fm.getSignature(), fm.getOwnerId());
+                        fm.getSignature(), fm.getOwnerId(), fm.getLastModifiedBy(),
+                        fm.getKey(requester.getUsername()).getCipheredKey());
             }
             else{
                 throw new AccessDeniedException();
@@ -307,9 +309,42 @@ public class Manager {
             FileMetadata fileMetadata = new FileMetadata(fileId, filename, fileManager.readFileMetadata(String.valueOf(fileId)).getCreationDate(),
                     signature,
                     fileManager.readFileMetadata(String.valueOf(fileId)).getOwnerId());
-            fileMetadata.addKey(getSession(Session.stringToToken(sessid)).getUser().getUsername(), key);
+            for(Map.Entry<String,SnapshotKey> keys : fileManager.readFileMetadata(String.valueOf(fileId)).getKeys()){
+                fileMetadata.addKey(keys.getKey(), keys.getValue());
+            }
+//            fileMetadata.addKey(getSession(Session.stringToToken(sessid)).getUser().getUsername(), key);
+            fileMetadata.setLastModifiedBy(getSession(Session.stringToToken(sessid)).getUser().getUsername());
             fileManager.writeFileMetadata(String.valueOf(fileId), fileMetadata);
         }
     }
+
+
+    public void shareFile(String sessid, long fileId, byte[] userKey, String targetUser) throws IOException, ClassNotFoundException {
+        if( hasSession(sessid) && userFiles.get(getSession(Session.stringToToken(sessid)).getUser()).contains(fileId)){
+            logger.debug("Access granted to user "+sessid+" on "+fileId);
+            if (users.get(targetUser) == null) {
+                logger.info("User "+targetUser+" does not exist. Aborting share.");
+                throw new ShareException();
+            }
+            FileMetadata metadata = fileManager.readFileMetadata(String.valueOf(fileId));
+            metadata.addKey(targetUser,new SnapshotKey(userKey));
+            userFiles.get(getUser(targetUser)).add(fileId);
+            fileManager.writeFileMetadata(String.valueOf(fileId), metadata);
+
+        }
+    }
+
+
+    private User getUser(String username){
+        for(User user : userFiles.keySet()){
+            if(user.getUsername().equals(username)){
+                return user;
+            }
+        }
+        throw new AbstractYarfsRuntimeException(){
+
+        };
+    }
+
 
 }

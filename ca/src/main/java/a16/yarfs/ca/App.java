@@ -41,6 +41,8 @@ public class App
             } else if(arg.startsWith("--port=")) {
                 int port = Integer.parseInt(arg.replaceFirst("--port=", ""));
                 CAConstants.setBasePort(port);
+            } else if(arg.startsWith("--listen=")) {
+                CAConstants.listenAddr = arg.replaceFirst("--listen=", "");
             } else {
                 logger.error("unknown argument: " + arg);
                 return false;
@@ -57,6 +59,7 @@ public class App
                 TAB + "BASEURL     " + TAB + "base URL for the yarfs server (default: " + CAConstants.baseServerUrl + ")" + EOL +
                 EOL +
                 "OPTIONS:" + EOL +
+                TAB + "--listen=<ADDR>" + TAB + "accept connections only on ADDR (default: " + CAConstants.listenAddr + ")" + EOL +
                 TAB + "--port=<PORT>" + TAB + "base PORT for the CA (default: "    + CAConstants.getBasePort() + ")" + EOL +
                 TAB + "--help      " + TAB + "print usage information and exit" + EOL +
                 TAB + EOL;

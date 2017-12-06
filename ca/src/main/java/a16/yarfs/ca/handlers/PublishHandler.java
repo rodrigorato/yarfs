@@ -4,8 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
@@ -51,7 +50,8 @@ public class PublishHandler extends AbstractTcpHandler {
         ServerSocket serverSocket = null;
         try {
             // Start listening...
-            serverSocket = new ServerSocket(CAConstants.PublishService.getPort());
+            InetAddress addr = InetAddress.getByName(CAConstants.listenAddr);
+            serverSocket = new ServerSocket(CAConstants.PublishService.getPort(), 50, addr);
 
             // TODO make this threaded (?)
             while(true) {

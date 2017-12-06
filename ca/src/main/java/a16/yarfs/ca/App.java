@@ -36,8 +36,11 @@ public class App
                 System.out.print(getUsage());
                 System.exit(0);
             } else if(arg.startsWith("http")) {
-                logger.info("Using base URL " + arg);
-                CAConstants.baseUrl = arg;
+                logger.info("Using base server URL " + arg);
+                CAConstants.baseServerUrl = arg;
+            } else if(arg.startsWith("--port=")) {
+                int port = Integer.parseInt(arg.replaceFirst("--port=", ""));
+                CAConstants.setBasePort(port);
             } else {
                 logger.error("unknown argument: " + arg);
                 return false;
@@ -51,9 +54,10 @@ public class App
         String TAB = "\t";
         return "Usage: " + App.class.getSimpleName() + " [OPTIONS] [BASEURL]" + EOL +
                 EOL +
-                TAB + "BASEURL     " + TAB + "base URL for the yarfs server (default: " + CAConstants.baseUrl + ")" + EOL +
+                TAB + "BASEURL     " + TAB + "base URL for the yarfs server (default: " + CAConstants.baseServerUrl + ")" + EOL +
                 EOL +
                 "OPTIONS:" + EOL +
+                TAB + "--port=<PORT>" + TAB + "base PORT for the CA (default: "    + CAConstants.getBasePort() + ")" + EOL +
                 TAB + "--help      " + TAB + "print usage information and exit" + EOL +
                 TAB + EOL;
     }

@@ -8,7 +8,7 @@ package a16.yarfs.ca;
 public class CAConstants {
 
     /** default base URL of the yarfs server. Can be overridden by App args */
-    public static String baseUrl = "http://127.0.0.1:31000";
+    public static String baseServerUrl = "http://127.0.0.1:31000";
     public static int connectTimeout = 5000; // ms
 
     public static final class Endpoints {
@@ -16,10 +16,27 @@ public class CAConstants {
         public static final String AUTHENTICATE = "/authenticate";
     }
 
+    private static int basePort = 31001;
+    public static void setBasePort(int port) {
+        basePort = port;
+    }
+
+    public static int getBasePort() {
+        return basePort;
+    }
+
     public static final class PublishService {
-        public static final int PORT = 30001;
+        public static int getPort() {
+            return basePort;
+        }
         public static final String SYMMETRIC_CIPHER_ALGORITHM = "AES";
         public static final int CHALLENGE_SIZE = 128;
+    }
+
+    public static final class RequestService {
+        public static int getPort() {
+            return basePort + 1;
+        }
     }
 
     public static final class Keys {

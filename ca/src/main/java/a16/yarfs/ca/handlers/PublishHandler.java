@@ -51,7 +51,7 @@ public class PublishHandler extends AbstractTcpHandler {
         ServerSocket serverSocket = null;
         try {
             // Start listening...
-            serverSocket = new ServerSocket(CAConstants.PublishService.PORT);
+            serverSocket = new ServerSocket(CAConstants.PublishService.getPort());
 
             // TODO make this threaded (?)
             while(true) {
@@ -121,7 +121,7 @@ public class PublishHandler extends AbstractTcpHandler {
                         if(compareHashes(messageHash, generatedHash)) {
                             // Hashes are the same
                             AuthenticateService a =
-                                    new AuthenticateService(CAConstants.baseUrl + CAConstants.Endpoints.AUTHENTICATE,
+                                    new AuthenticateService(CAConstants.baseServerUrl + CAConstants.Endpoints.AUTHENTICATE,
                                     challengeResponse.getSessionId(), challengeResponse.getUsername());
 
                             boolean isAuthenticated = false;

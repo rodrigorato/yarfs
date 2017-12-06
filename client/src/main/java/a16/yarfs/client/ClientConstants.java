@@ -19,7 +19,7 @@ public class ClientConstants {
     public static final class CA {
         public static String address = "127.0.0.1";
 
-        private static int basePort       = 30001;
+        private static int basePort       = 31001;
 
         public static void setBasePort(int port) {
             basePort = port;

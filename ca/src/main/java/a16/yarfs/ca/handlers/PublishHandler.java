@@ -55,6 +55,8 @@ public class PublishHandler extends AbstractTcpHandler {
 
             // TODO make this threaded (?)
             while(true) {
+
+
                 try {
                     // Accept a connection and begin the publish process!
                     Socket clientSocket = serverSocket.accept();
@@ -132,16 +134,22 @@ public class PublishHandler extends AbstractTcpHandler {
                                 isAuthenticated = false;
                             }
 
+                            FinalMessage fin = null;
                             if(isAuthenticated &&
                                     km.setPublicKey(challengeResponse.getUsername(), pkn.getClientPublicKey())) {
                                 // Send message back saying OK
                                 // AND PUBLISH KEY
 
-                                FinalMessage fin = new FinalMessage("OK".getBytes());
+                                fin = new FinalMessage("OK".getBytes());
 
                             } else {
                                 // Send NOK
-                                FinalMessage fin = new FinalMessage("NOK".getBytes());
+                                fin = new FinalMessage("NOK".getBytes());
+                            }
+
+                            // Send Final message
+                            try { outputStream.writeObject(fin); } catch (IOException e) {
+                                logger.error("Coudln't send FianlMessage to the client! " + e.getMessage());
                             }
 
 

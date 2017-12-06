@@ -29,9 +29,8 @@ public class CAServer {
             throw e;
         }
 
-        new Thread(() -> new PublishHandler(kp, KeyManager.getInstance()).handle()).run();
-
-        new Thread(() -> new RequestHandler(kp, KeyManager.getInstance()).handle()).run();
+        new Thread(() -> new PublishHandler(kp, KeyManager.getInstance()).handle()).start();
+        new Thread(() -> new RequestHandler(kp, KeyManager.getInstance()).handle()).start();
 
     }
 

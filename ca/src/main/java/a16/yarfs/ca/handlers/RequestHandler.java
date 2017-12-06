@@ -21,5 +21,7 @@ public class RequestHandler extends AbstractTcpHandler {
     public void handle() {
         logger.debug("RequestHandler loaded with PubKey: " + AbstractTcpHandler.getSha256InBase64(kp.getPublic().getEncoded()) +
                 " and PrivateKey: " + AbstractTcpHandler.getSha256InBase64(kp.getPrivate().getEncoded()) + ".");
+
+
     }
 }

@@ -43,7 +43,9 @@ public class RefreshService extends FileService {
                 files.add(new FileMetadata(Long.parseLong(innerObject.getString("file_id")),
                         innerObject.getString("file_name"),
                         innerObject.getString("owner_id"),
-                        Base64.decodeBase64(innerObject.getString("signature")), new byte[0])); // FIXME user key not being sent. Should it?
+                        Base64.decodeBase64(innerObject.getString("signature")),
+                        Base64.decodeBase64(innerObject.getString("key")),
+                        innerObject.getString("last_modified_by"))); // FIXME user key not being sent. Should it?
             }
             for (FileMetadata fileMetadata : files) {
                 try{

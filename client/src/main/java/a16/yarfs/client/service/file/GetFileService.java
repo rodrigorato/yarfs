@@ -69,8 +69,9 @@ public class GetFileService extends FileService {
             byte [] contents  = Base64.decodeBase64(res.getString("contents"));
             byte [] signature = Base64.decodeBase64(res.getString("signature"));
             byte [] key       = Base64.decodeBase64(res.getString("key"));
+            String lastModifiedBy = res.getString("last_modified_by");
 
-            return new FileDto(id, filename, owner, contents, signature, key);
+            return new FileDto(id, filename, owner, contents, signature, key, lastModifiedBy);
         } catch (JSONException e) {
             throw new ServiceResultException("response error: " + e.getMessage());
         }

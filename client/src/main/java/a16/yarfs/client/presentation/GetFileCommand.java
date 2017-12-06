@@ -90,7 +90,9 @@ public class GetFileCommand extends Command {
                 byte[] key = KeyManager.getManager().decipher(file.getFileMetadata().getKey()); // {Ks}Kpub --Kpriv--> Ks
                 byte[] plainContents = KeyManager.decipher(file.getContents(), key); // {Data}Ks ---Ks---> Data
                 byte[] myDigest = DigestUtils.sha256(plainContents); // Data ---Sha256---> Hash2
-                byte[] theirDigest = KeyManager.getManager().unsign(file.getSignature()); // {Hash}Kpriv ---Kpub---> Hash
+                byte[] theirDigest = KeyManager.unsign(file.getSignature(), KeyManager.
+                        getTargetKey(file.getFileMetadata().getLastModifiedBy()));
+//                byte[] theirDigest = KeyManager.getManager().unsign(file.getSignature()); // {Hash}Kpriv ---Kpub---> Hash
 
                 if( !Arrays.equals(theirDigest, myDigest)){
                     shell.println("Digest is not the same. Tampering with data detected. Aborting.");
@@ -99,7 +101,7 @@ public class GetFileCommand extends Command {
 
                 SecureLocalFileManager.getManager().putFile(new FileDto(file.getId(), file.getName(),
                         file.getOwner(), file.getContents(), file.getSignature(), KeyManager.
-                        getManager().decipher(file.getKey())));
+                        getManager().decipher(file.getKey()), file.getFileMetadata().getLastModifiedBy()));
                 shell.println("written to '" + localFilename + "'");
             } catch ( FileAlreadyExistsException e) {
                 shell.println(localFilename + ": File exists");

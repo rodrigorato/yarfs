@@ -57,6 +57,8 @@ public class RefreshHandler extends AbstractHttpHandler{
                 fileAttrs.put("creation_date", fileMetadata.getCreationDate());
                 fileAttrs.put("owner_id", fileMetadata.getOwnerId());
                 fileAttrs.put("signature", Base64.encodeBase64(fileMetadata.getSignature()));
+                fileAttrs.put("last_modified_by", fileMetadata.getLastModifiedBy());
+                fileAttrs.put("key", Base64.encodeBase64String(fileMetadata.getUserKey()));
                 fileList.put(fileAttrs);
             }
 

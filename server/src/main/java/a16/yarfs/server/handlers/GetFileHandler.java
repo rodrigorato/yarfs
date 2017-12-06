@@ -44,6 +44,7 @@ public class GetFileHandler extends AbstractHttpHandler {
             response.put("filename", dto.getName());
             response.put("owner", dto.getOwnerId());
             response.put("fileid", dto.getId());
+            response.put("last_modified_by", dto.getLastModifiedBy());
             super.sendResponse(ServerConstants.ResponseCodes.SUCCESS_CODE,
                     response.toString(), httpExchange);
             //Response:

@@ -28,6 +28,7 @@ public class YarfsShell extends Shell {
         new GetFileCommand(this, "get");
         new RefreshCommand(this, "refresh");
         new CommitCommand(this, "commit");
+        new ShareFileCommand(this, "share");
         // TODO add more commands
     }
 

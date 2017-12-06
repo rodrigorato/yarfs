@@ -17,7 +17,7 @@ public class PublishHandler extends AbstractTcpHandler {
     }
 
     public void handle() {
-        logger.debug("PublishHandler loaded with PubKey: " + kp.getPublic().hashCode() +
-                     " and PrivateKey: " + kp.getPrivate().hashCode() + ".");
+        logger.debug("PublishHandler loaded with PubKey: " + AbstractTcpHandler.getSha256InBase64(kp.getPublic().getEncoded()) +
+                     " and PrivateKey: " + AbstractTcpHandler.getSha256InBase64(kp.getPrivate().getEncoded()) + ".");
     }
 }

@@ -56,8 +56,12 @@ public abstract class AbstractTcpHandler {
         return Base64.encodeBase64String(data);
     }
 
-    public static byte[] sha256Digest(String message) {
+    public static byte[] sha256Digest(byte[] message) {
         return DigestUtils.sha256(message);
+    }
+
+    public static String getSha256InBase64(byte[] data){
+        return getBase64StringFromByteArray(sha256Digest(data));
     }
 
 }

@@ -101,7 +101,7 @@ public class PublishHandler extends AbstractTcpHandler {
                                 AbstractTcpHandler.cipherWithKey(challengeHash, kp.getPrivate()));
 
                         // Send Challenge FIXME ignore any errors on sending?
-                        try { outputStream.writeObject(r); } catch (IOException e) {
+                        try { outputStream.writeObject(r.toString()); } catch (IOException e) {
                             logger.error("Coudln't send RequestChallengeMessage to the client! " + e.getMessage());
                         }
 
@@ -148,7 +148,7 @@ public class PublishHandler extends AbstractTcpHandler {
                             }
 
                             // Send Final message
-                            try { outputStream.writeObject(fin); } catch (IOException e) {
+                            try { outputStream.writeObject(fin.toString()); } catch (IOException e) {
                                 logger.error("Coudln't send FianlMessage to the client! " + e.getMessage());
                             }
 

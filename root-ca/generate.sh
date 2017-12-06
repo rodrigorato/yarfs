@@ -93,6 +93,15 @@ fingerprint() {
 	echo "=== $1 ==="
 	openssl x509 -noout -fingerprint -sha256 -inform pem -in $1
 }
+
+# args: file.pem
+# will create file.pub
+export_pub() {
+	out=$(basename $1).pub
+	echo "=== $1 -> $out ==="
+	openssl x509 -in $1 -noout -pubkey > $out
+}
+
 if test -z "$1"; then
 	echo "tell me what key/certs to generate: root, ca or server"
 	exit 1
@@ -109,6 +118,13 @@ elif test $1 = server; then
 elif test $1 = fingerprints || test $1 = fp; then
 	for f in *.pem; do
 		fingerprint $f
+		echo
+	done
+elif test $1 = "export-pub" || test $1 = ep; then
+	for f in *.pem; do
+		export_pub $f
+		echo -n "base64(sha256(pub)) = 	"
+		cat $(basename $f).pub | openssl dgst -sha256 -binary | openssl enc -base64
 		echo
 	done
 else

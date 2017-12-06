@@ -8,10 +8,7 @@ import a16.yarfs.client.KeyManager;
 import a16.yarfs.client.LocalFileManager;
 import a16.yarfs.client.SecureLocalFileManager;
 import a16.yarfs.client.service.dto.FileMetadata;
-import a16.yarfs.client.service.exception.AlreadyExecutedException;
-import a16.yarfs.client.service.exception.NotExecutedException;
-import a16.yarfs.client.service.exception.ServiceException;
-import a16.yarfs.client.service.exception.ServiceResultException;
+import a16.yarfs.client.service.exception.*;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,10 +64,14 @@ public class ShareFileService extends FileService{
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        super.setRequestParameters(req);
+        try {
+            super.setRequestParameters(req);
+            super.execute();
+        } catch (ServiceExecutionException e) {
+            e.printStackTrace();
+        }
 
 
-        super.execute();
     }
 
 

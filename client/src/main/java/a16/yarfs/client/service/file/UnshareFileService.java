@@ -9,6 +9,7 @@ import a16.yarfs.client.SecureLocalFileManager;
 import a16.yarfs.client.service.AbstractHttpService;
 import a16.yarfs.client.service.exception.AlreadyExecutedException;
 import a16.yarfs.client.service.exception.NotExecutedException;
+import a16.yarfs.client.service.exception.ServiceExecutionException;
 import a16.yarfs.client.service.exception.ServiceResultException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,6 +51,8 @@ public class UnshareFileService extends AbstractHttpService{
         } catch (JSONException e) {
             e.printStackTrace();
             return;
+        } catch (ServiceExecutionException e) {
+            e.printStackTrace();
         }
     }
 

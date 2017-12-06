@@ -16,6 +16,12 @@ public class CAConstants {
         public static final String AUTHENTICATE = "/authenticate";
     }
 
+    public static final class PublishService {
+        public static final int PORT = 30001;
+        public static final String SYMMETRIC_CIPHER_ALGORITHM = "AES";
+        public static final int CHALLENGE_SIZE = 128;
+    }
+
     public static final class Keys {
         public static final String KEYSTORE_FILE = "yarfs-ca.jks";
         public static final String KEYSTORE_PASSWORD = "password";

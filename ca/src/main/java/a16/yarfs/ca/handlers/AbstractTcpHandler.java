@@ -4,6 +4,7 @@ import a16.yarfs.ca.CAConstants;
 
 import javax.crypto.Cipher;
 import java.security.GeneralSecurityException;
+import java.security.Key;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
@@ -35,7 +36,7 @@ public abstract class AbstractTcpHandler {
         }
     }
 
-    public static byte[] cipherWithPublicKey(byte[] data, PublicKey key) throws CipherException {
+    public static byte[] cipherWithKey(byte[] data, Key key) throws CipherException {
         Cipher cipher = null;
         try {
             cipher = Cipher.getInstance(CAConstants.Keys.CA_KEYSTORE_CIPHER);
@@ -43,8 +44,8 @@ public abstract class AbstractTcpHandler {
             return cipher.doFinal(data);
 
         } catch (GeneralSecurityException e) {
-            logger.error("Error Ciphering data with PublicKey: " + key.hashCode() + "; " + e.getMessage());
-            throw new CipherException("Error Ciphering data with PublicKey: " + key.hashCode() + "; " + e.getMessage());
+            logger.error("Error Ciphering data with Key: " + key.hashCode() + "; " + e.getMessage());
+            throw new CipherException("Error Ciphering data with Key: " + key.hashCode() + "; " + e.getMessage());
         }
     }
 

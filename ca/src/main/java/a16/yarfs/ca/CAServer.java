@@ -29,8 +29,10 @@ public class CAServer {
             throw e;
         }
 
-        new PublishHandler(kp).handle();
-        new RequestHandler(kp).handle();
+        new Thread(() -> new PublishHandler(kp, KeyManager.getInstance()).handle()).run();
+
+        new Thread(() -> new RequestHandler(kp, KeyManager.getInstance()).handle()).run();
+
     }
 
     private KeyStore importCAKeystore(String keystoreFilePath, char[] password) throws KeyStoreException {

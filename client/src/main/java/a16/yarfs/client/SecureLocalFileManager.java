@@ -58,8 +58,9 @@ public class SecureLocalFileManager extends LocalFileManager{
     @Override
     public FileMetadata getFileMetadata(String fileName) throws IOException {
         FileMetadata metadata = super.getFileMetadata(fileName);
+        logger.debug("Deciphering file "+fileName);
         return new FileMetadata(metadata.getId(), metadata.getName(), metadata.getOwner(), metadata.getSignature(),
-                keyManager.decipher(metadata.getKey()));
+                keyManager.decipher(metadata.getKey()), metadata.getLastModifiedBy());
     }
 
     @Override
@@ -88,7 +89,8 @@ public class SecureLocalFileManager extends LocalFileManager{
     @Override
     public void putFileMetaData(String filename, FileMetadata fileMetadata) throws IOException {
         FileMetadata secureMetadata = new FileMetadata(fileMetadata.getId(), fileMetadata.getName(),
-                fileMetadata.getOwner(), fileMetadata.getSignature(), keyManager.cipher(fileMetadata.getKey()));
+                fileMetadata.getOwner(), fileMetadata.getSignature(), keyManager.cipher(fileMetadata.getKey()),
+                fileMetadata.getLastModifiedBy());
         super.putFileMetaData(filename, secureMetadata);
 
     }

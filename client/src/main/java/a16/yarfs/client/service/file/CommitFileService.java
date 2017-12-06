@@ -27,15 +27,17 @@ public class CommitFileService extends FileService{
     private byte[] fileContents;
     private byte[] fileSignature;
     private String fileId;
+    private String user;
 
     public CommitFileService(String baseUrl, String sessId, String filename, byte[] contents,
-                                byte[] signature, String fileId) throws MalformedURLException {
+                                byte[] signature, String fileId, String user) throws MalformedURLException {
         super(baseUrl, ClientConstants.Endpoints.ADD_FILE);
         this.sessId = sessId;
         this.fileName = filename;
         this.fileContents = contents;
         this.fileSignature = signature;
         this.fileId = fileId;
+        this.user = user;
     }
 
     @Override
@@ -48,6 +50,7 @@ public class CommitFileService extends FileService{
             req.put("signature", Base64.encodeBase64String(fileSignature));
             req.put("file", Base64.encodeBase64String(fileContents));
             req.put("file_id", fileId);
+            req.put("committer", user);
 
             setRequestParameters(req);
 

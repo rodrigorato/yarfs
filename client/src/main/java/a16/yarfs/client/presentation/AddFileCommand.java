@@ -104,7 +104,7 @@ public class AddFileCommand extends Command {
 
             // create a file with all the info we have so we can write properly to disk
             FileDto fileDto = new FileDto(fileId, localFilename, shell.getActiveUser(), content, signature,
-                    ciphered_key);
+                    ciphered_key, shell.getActiveUser());
             shell.println("added file '"+remoteFilename+"' with id " + fileId);
             LocalFileManager.getManager().putFileMetaData(fileDto.getName(), fileDto.getFileMetadata());
         } catch (MalformedURLException e) {

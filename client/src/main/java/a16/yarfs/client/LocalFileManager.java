@@ -76,7 +76,7 @@ public class LocalFileManager {
     public FileDto getFile(String fileName) throws IOException{
         FileMetadata fm = getFileMetadata(fileName);
         return new FileDto(fm.getId(), fm.getName(), fm.getOwner(), getFileContents(fileName), fm.getSignature(),
-                fm.getKey());
+                fm.getKey(), fm.getLastModifiedBy());
     }
 
     /**

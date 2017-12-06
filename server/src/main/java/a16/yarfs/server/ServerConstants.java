@@ -139,6 +139,9 @@ public final class ServerConstants {
 
         public final static int ACCESS_DENIED_CODE = 604;
         public final static String ACCESS_DENIED_MESSAGE = "Access denied";
+
+        public final static int SHARE_ERROR_CODE = 605;
+        public final static String SHARE_ERROR_MESSAGE = "Share error";
     }
 
     /**

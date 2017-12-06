@@ -9,4 +9,7 @@ package a16.yarfs.server.domain.exceptions;
  *
  **/
 public class ShareException extends AbstractYarfsDomainException{
+    public ShareException(String s) {
+        super(s);
+    }
 }

@@ -324,7 +324,7 @@ public class Manager {
             logger.debug("Access granted to user "+sessid+" on "+fileId);
             if (users.get(targetUser) == null) {
                 logger.info("User "+targetUser+" does not exist. Aborting share.");
-                throw new ShareException();
+                throw new ShareException("No such user.");
             }
             FileMetadata metadata = fileManager.readFileMetadata(String.valueOf(fileId));
             metadata.addKey(targetUser,new SnapshotKey(userKey));
@@ -344,6 +344,24 @@ public class Manager {
         throw new AbstractYarfsRuntimeException(){
 
         };
+    }
+
+    public void unshareFile(String sessid, String filename, String targetUser) throws IOException, ClassNotFoundException {
+        logger.debug("Unsharing file.");
+        FileMetadata metadata = fileManager.readFileMetadata(filename);
+        if( hasSession(sessid) && Objects.equals(metadata.getOwnerId(),
+                getSession(Session.stringToToken(sessid)).getUser().getUsername())){
+            logger.debug("User has permissions");
+            if( ! userFiles.get(getUser(targetUser)).contains(Long.parseLong(filename))){
+                logger.debug("User not in shared list.");
+                throw new ShareException("User can't already access file");
+            }
+            userFiles.get(getUser(targetUser)).remove(Long.parseLong(filename));
+        }
+        else{
+            throw new AccessDeniedException();
+        }
+        logger.debug("Done sharing");
     }
 
 

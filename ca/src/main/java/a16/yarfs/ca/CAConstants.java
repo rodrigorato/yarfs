@@ -15,4 +15,15 @@ public class CAConstants {
         // Endpoing to authenticate a user with a given session token
         public static final String AUTHENTICATE = "/authenticate";
     }
+
+    public static final class Keys {
+        public static final String KEYSTORE_FILE = "yarfs-ca.jks";
+        public static final String KEYSTORE_PASSWORD = "password";
+        public static final String CERTIFICATE_ALIAS = "ca";
+        public static final String PRIVATE_KEY_ALIAS = "ca";
+        public static final String PRIVATE_KEY_PASSWORD = "password";
+
+
+        public static final String CA_KEYSTORE_CIPHER = "RSA";
+    }
 }

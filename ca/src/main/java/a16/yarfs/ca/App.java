@@ -1,5 +1,6 @@
 package a16.yarfs.ca;
 
+import a16.yarfs.ca.handlers.exceptions.KeyStoreException;
 import org.apache.log4j.Logger;
 
 
@@ -18,7 +19,15 @@ public class App
             return;
         }
         System.out.println( "Starting yarfs CA..." );
-        
+
+        try {
+            new CAServer();
+
+        } catch (KeyStoreException e) {
+            logger.error(e.getMessage());
+
+        }
+
     }
 
     private static boolean parseArgs(String[] args) {

@@ -1,34 +1,82 @@
 package a16.yarfs.ca;
 
-import com.sun.net.httpserver.HttpServer;
+import a16.yarfs.ca.handlers.PublishHandler;
+import a16.yarfs.ca.handlers.RequestHandler;
+import a16.yarfs.ca.handlers.exceptions.KeyStoreException;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.security.*;
+
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-
+/**
+ * Created by Rodrigo Rato on 12/6/17.
+ */
 public class CAServer {
-
     private static final Logger logger = Logger.getLogger(CAServer.class);
 
-    public CAServer(InetSocketAddress address) throws IOException {
-        HttpServer server;
+    private KeyStore ks = null;
+    private KeyPair kp = null;
 
-        server = createHttpServer(address, 0);
+    public CAServer() throws KeyStoreException {
 
-        configure(server);
-        server.start();
+        try {
+            ks = importCAKeystore(CAConstants.Keys.KEYSTORE_FILE, CAConstants.Keys.KEYSTORE_PASSWORD.toCharArray());
+            kp = buildCAKeyPair();
 
-        address = server.getAddress();
-        logger.info("listening on " + address.toString());
+        } catch (KeyStoreException e) {
+            logger.error("Error building CA's KeyPair! " + e.getMessage());
+            throw e;
+        }
+
+        new PublishHandler(kp).handle();
+        new RequestHandler(kp).handle();
     }
 
+    private KeyStore importCAKeystore(String keystoreFilePath, char[] password) throws KeyStoreException {
+        KeyStore ks = null;
+        try {
+            ks = KeyStore.getInstance("JKS");
+            ks.load(new FileInputStream(keystoreFilePath), password);
 
-    private void configure(HttpServer server) {
+        } catch (GeneralSecurityException | IOException e) {
+            logger.error("Error importing CA's KeyStore! " + e.getMessage());
+            throw new KeyStoreException("Error importing CA's KeyStore! " + e.getMessage());
+        }
+
+        return ks;
     }
 
-    protected HttpServer createHttpServer(InetSocketAddress address, int backlog) throws IOException {
-        logger.debug("Using HttpServer from " + this.getClass().getCanonicalName());
-        return HttpServer.create(address, backlog);
+    private KeyPair buildCAKeyPair() throws KeyStoreException {
+        return new KeyPair(getPublicKey(), getPrivateKey());
     }
 
+    private PublicKey getPublicKey() throws KeyStoreException {
+        if(ks == null) {
+            throw new KeyStoreException("KeyStore hasn't been loaded yet!");
+
+        } else {
+            try {
+                return ks.getCertificate(CAConstants.Keys.CERTIFICATE_ALIAS).getPublicKey();
+            } catch (java.security.KeyStoreException e) {
+                logger.error("Error retrieving CA's PublicKey from the KeyStore! " + e.getMessage());
+                throw new KeyStoreException("Error retrieving CA's PublicKey from the KeyStore! " + e.getMessage());
+            }
+        }
+    }
+
+    private PrivateKey getPrivateKey() throws KeyStoreException {
+        if(ks == null) {
+            throw new KeyStoreException("KeyStore hasn't been loaded yet!");
+
+        } else {
+            try {
+                return (PrivateKey) ks.getKey(CAConstants.Keys.PRIVATE_KEY_ALIAS,
+                        CAConstants.Keys.PRIVATE_KEY_PASSWORD.toCharArray());
+
+            } catch (NoSuchAlgorithmException | UnrecoverableKeyException | java.security.KeyStoreException e) {
+                throw new KeyStoreException("Couldn't retrieve PrivateKey from KeyStore!");
+            }
+        }
+    }
 }

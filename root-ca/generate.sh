@@ -88,6 +88,11 @@ gen_server() {
 #	cat yarfs-root.pem yarfs-ca.pem yarfs-server.pem |
 #		keytool $storetype -keystore yarfs-server.jks -importcert -alias server
 
+# args: file.pem
+fingerprint() {
+	echo "=== $1 ==="
+	openssl x509 -noout -fingerprint -sha256 -inform pem -in $1
+}
 if test -z "$1"; then
 	echo "tell me what key/certs to generate: root, ca or server"
 	exit 1
@@ -101,6 +106,11 @@ elif test $1 = ca; then
 	gen_ca
 elif test $1 = server; then
 	gen_server
+elif test $1 = fingerprints || test $1 = fp; then
+	for f in *.pem; do
+		fingerprint $f
+		echo
+	done
 else
 	echo unknown action
 fi

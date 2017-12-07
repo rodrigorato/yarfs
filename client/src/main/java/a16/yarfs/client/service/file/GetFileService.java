@@ -47,6 +47,7 @@ public class GetFileService extends FileService {
                 super.execute();
             } catch (IOException e) {
                 getLogger().warn("File not found. What now?");
+                throw new ServiceExecutionException("File not found. Use refresh first.");
             }
 
 

@@ -142,7 +142,7 @@ public abstract class AbstractHttpService {
      */
     protected void assertExecuted() {
         if (!_executed) {
-            throw new RuntimeException("Command was NOT executed!");
+            throw new RuntimeException("Service was NOT executed!");
         }
     }
 

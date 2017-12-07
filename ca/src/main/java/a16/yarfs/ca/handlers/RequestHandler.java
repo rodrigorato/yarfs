@@ -55,10 +55,10 @@ public class RequestHandler extends AbstractTcpHandler {
                     Socket clientSocket = serverSocket.accept();
 
                     ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream());
-                    ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
 
                     // Get the InitialKeyRequestMessage
                     InitialKeyRequestMessage i = new InitialKeyRequestMessage(inputStream.readObject().toString());
+
 
                     // And parse it, discovering all the data in it
                     SecretKey sessionKey = getSessionKeyFromInitialKeyRequestMessage(i);
@@ -66,8 +66,14 @@ public class RequestHandler extends AbstractTcpHandler {
                     byte[] messageHash = i.getHash();
                     byte[] generatedHash = generateKeyRequestHash(sessionKey, tun.getNonce(), tun.getTargetUserName());
 
+                    logger.debug("Received request for user "+tun.getTargetUserName());
                     // FIXME nonces
                     if(Arrays.equals(messageHash, generatedHash)) {
+                        if(km.getPublicKey(tun.getTargetUserName()) == null){
+                            inputStream.close();
+                            clientSocket.close();
+                            continue;
+                        }
                         // Hashes Check out
                         TargetUserAndPublicKey tup = new TargetUserAndPublicKey(tun.getNonce(),
                                 tun.getTargetUserName(), km.getPublicKey(tun.getTargetUserName()));
@@ -83,9 +89,16 @@ public class RequestHandler extends AbstractTcpHandler {
                                         cipheredBuiltHash);
 
                         // Send Final message
-                        try { outputStream.writeObject(tpkm.toString()); } catch (IOException e) {
+                        ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+                        try {
+                            outputStream.writeObject(tpkm.toString());
+                            outputStream.flush();
+                        } catch (IOException e) {
                             logger.error("Coudln't send TargetPubKeyMessage to the client! " + e.getMessage());
                         }
+                        outputStream.close();
+                        inputStream.close();
+                        clientSocket.close();
 
                     } else {
                         // Hashes are bad!
@@ -152,7 +165,7 @@ public class RequestHandler extends AbstractTcpHandler {
 
              */
 
-            return new SecretKeySpec(keyBytes, CAConstants.PublishService.SYMMETRIC_CIPHER_ALGORITHM);
+            return new SecretKeySpec(keyBytes, "AES");
 
 
         } catch (DecipherException | JSONException e) {

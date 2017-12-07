@@ -28,8 +28,9 @@ public class InitialKeyRequestMessage extends AbstractMessage {
 
 
     public TargetUserAndNonce getTargetUserAndNonce(Key sessionKey) throws JSONException, GeneralSecurityException {
-        return (TargetUserAndNonce) InitialKeyRequestMessage.getJSONObjectFromCipheredB64(this.getString("m4"), sessionKey);
-    }
+        return new TargetUserAndNonce(InitialKeyRequestMessage.getJSONObjectFromCipheredB64(this.getString("m4"),
+                sessionKey).toString());
+        }
 
     public byte[] getHash() throws JSONException {
         return Base64.decodeBase64(this.getString("hash"));

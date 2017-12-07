@@ -23,8 +23,8 @@ public class TargetPubKeyMessage extends AbstractMessage {
     }
 
     public TargetUserAndPublicKey getTargetUserAndPublicKey(Key sessionKey) throws JSONException, GeneralSecurityException {
-        return (TargetUserAndPublicKey) AbstractMessage
-                .getJSONObjectFromCipheredB64(this.getString("m5"), sessionKey);
+        return new TargetUserAndPublicKey(AbstractMessage
+                .getJSONObjectFromCipheredB64(this.getString("m5"), sessionKey).toString());
     }
 
     public byte[] getCipheredHash() throws JSONException {

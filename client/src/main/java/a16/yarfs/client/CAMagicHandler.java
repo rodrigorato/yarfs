@@ -35,22 +35,100 @@ public class CAMagicHandler {
     private static Logger logger = Logger.getLogger(CAMagicHandler.class);
 
 
-    public PublicKey getKey(String targetUser) throws IOException {
+    public PublicKey getKey(String targetUser) throws IOException, JSONException {
         logger.debug("Getting key for "+targetUser);
 
         Socket clientSocket = new Socket(ClientConstants.CA.address, ClientConstants.CA.getRequestPort());
+        PublicKey CApubKey = null;
+        try {
+            CApubKey = loadPublicX509(ClientConstants.CA.CERTIFICATE_FILEPATH).getPublicKey();
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        }
 
         ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
         logger.debug("Streams are open!");
 
-        InitialRequestMessage irm = new InitialRequestMessage();
+        SecretKey sk = new SecretKeySpec(KeyManager.generateKey(), ClientConstants.KeyStandards.SYMMETRIC_ALGORITHM);
 
-        InitialKeyRequestMessage ikrqm =
+        long nonce1 = new SecureRandom().nextLong();
+
+        TargetUserAndNonce tun = new TargetUserAndNonce(nonce1, targetUser);
+
+        // {Ks}KpubCA, {M4}Ks, Hash(Ks,M4)
+        // M4 = {nonce1, targetusername}
+
+
+        byte[] cipheredTun = null;
+        try {
+            cipheredTun = AbstractMessage.cipherJSONObjectWithSymKey(tun, sk);
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        }
+
+        InitialKeyRequestMessage ikrm = new InitialKeyRequestMessage(KeyManager.AsymCipher(sk.getEncoded(),
+                CApubKey.getEncoded()), cipheredTun, generateKeyRequestHash(sk, nonce1, targetUser));
 
 
 
-        // TODO
-        return null;
+
+
+        oos.writeObject(ikrm.toString());
+        oos.flush();
+
+        ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(clientSocket.getInputStream()));
+
+        // M5 = nonce1, targetUser, Kpubtarget    class TargetUserAndPublicKey
+        // tpm = {M5}Ks, {Hash(M5)}KprivCA        class TargetPubKeyMessage
+        TargetPubKeyMessage tpm = null;
+        try {
+            tpm = new TargetPubKeyMessage((String) ois.readObject());
+
+            // verify hash
+
+            TargetUserAndPublicKey tuapk = tpm.getTargetUserAndPublicKey(sk);
+
+            long theirnonce1 = tuapk.getNonce();
+
+            if(theirnonce1 != nonce1){
+                logger.debug("Nonces don't check out "+theirnonce1+" vs "+nonce1);
+                ois.close();
+                oos.close();
+                clientSocket.close();
+            }
+
+            String theirUsername = tuapk.getTargetUsername();
+            PublicKey targetUserPu = tuapk.getTargetUserPublicKey();
+
+
+            byte[] signed_hash = tpm.getCipheredHash();
+            byte[] hash = KeyManager.unsign(signed_hash, CApubKey.getEncoded());
+
+            if( Arrays.equals(hash, buildResponseHash(theirnonce1, theirUsername, targetUserPu))){
+                return targetUserPu;
+            }else{
+                logger.debug("Hashes don't check out. Aborting");
+
+            }
+
+
+
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        }
+
+
+        oos.close();
+        ois.close();
+        clientSocket.close();
+
+        throw new RuntimeException();
+
+
+
     }
 
 
@@ -231,6 +309,36 @@ public class CAMagicHandler {
 
         return AbstractTcpHandler.sha256Digest(byteStream.toByteArray());
 
+    }
+
+    @SuppressWarnings("Duplicates")
+    private byte[] generateKeyRequestHash(SecretKey sessionKey, long nonce1, String targetUsername) throws IOException {
+        /*
+            On the other end, the hash should be generated as we do here
+         */
+
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        byteStream.write(sessionKey.getEncoded());
+        byteStream.write(ByteBuffer.allocate(Long.SIZE / Byte.SIZE).putLong(nonce1).array());
+        byteStream.write(targetUsername.getBytes());
+
+        return AbstractTcpHandler.sha256Digest(byteStream.toByteArray());
+
+    }
+
+
+    @SuppressWarnings("Duplicates")
+    private byte[] buildResponseHash(long nonce1, String targetUsername, PublicKey targetPubKey) throws IOException {
+        /*
+            On the other end, the hash should be generated as we do here
+         */
+
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        byteStream.write(ByteBuffer.allocate(Long.SIZE / Byte.SIZE).putLong(nonce1).array());
+        byteStream.write(targetUsername.getBytes());
+        byteStream.write(targetPubKey.getEncoded());
+
+        return AbstractTcpHandler.sha256Digest(byteStream.toByteArray());
     }
 
 

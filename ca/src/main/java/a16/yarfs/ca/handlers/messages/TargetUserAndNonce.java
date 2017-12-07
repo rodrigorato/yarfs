@@ -23,7 +23,7 @@ public class TargetUserAndNonce extends AbstractMessage {
         return this.getLong("nonce");
     }
 
-    public String getClientPublicKey() throws JSONException {
+    public String getTargetUserName() throws JSONException {
         return this.getString("target_user");
     }
 }

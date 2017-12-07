@@ -149,7 +149,7 @@ public class PublishHandler extends AbstractTcpHandler {
 
                             // Send Final message
                             try { outputStream.writeObject(fin.toString()); } catch (IOException e) {
-                                logger.error("Coudln't send FianlMessage to the client! " + e.getMessage());
+                                logger.error("Coudln't send FinalMessage to the client! " + e.getMessage());
                             }
 
 
@@ -243,7 +243,7 @@ public class PublishHandler extends AbstractTcpHandler {
 
             /*
                 On the other end, this key should be generated with:
-                SecretKey key = KeyGenerator.getInstance(..."DES"...).generateKey();
+                SecretKey key = KeyGenerator.getInstance(..."A0ES"...).generateKey();
                 byte[] keyBytes = key.getEncoded();
 
              */

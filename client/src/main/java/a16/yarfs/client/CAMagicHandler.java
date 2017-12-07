@@ -84,14 +84,13 @@ public class CAMagicHandler {
         try {
             tpm = new TargetPubKeyMessage((String) ois.readObject());
 
-            // verify hash
 
             TargetUserAndPublicKey tuapk = tpm.getTargetUserAndPublicKey(sk);
 
             long theirnonce1 = tuapk.getNonce();
 
             if(theirnonce1 != nonce1){
-                logger.debug("Nonces don't check out "+theirnonce1+" vs "+nonce1);
+                logger.warn("Nonces don't check out "+theirnonce1+" vs "+nonce1+". Possible replay attack. Aborting...");
                 ois.close();
                 oos.close();
                 clientSocket.close();

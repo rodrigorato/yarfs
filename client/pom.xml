@@ -7,6 +7,13 @@
     <artifactId>yarfs</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
+
+  <repositories>
+    <repository>
+      <id>my</id>
+      <url>file://${basedir}/my-repo</url>
+    </repository>
+  </repositories>
   <groupId>a16</groupId>
   <artifactId>client</artifactId>
   <version>1.0-SNAPSHOT</version>
@@ -35,6 +42,7 @@
           <artifactId>ca</artifactId>
           <version>1.0-SNAPSHOT</version>
       </dependency>
+
 
   </dependencies>
   <build>

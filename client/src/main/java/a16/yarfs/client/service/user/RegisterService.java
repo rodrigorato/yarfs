@@ -3,13 +3,16 @@
  **/
 package a16.yarfs.client.service.user;
 
+import a16.yarfs.client.CAMagicHandler;
 import a16.yarfs.client.ClientConstants;
+import a16.yarfs.client.KeyManager;
 import a16.yarfs.client.service.exception.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Class RegisterService
@@ -44,6 +47,17 @@ public class RegisterService extends AbstractUserService {
 
             JSONObject response = getResponse();
 
+            getLogger().debug("Register is done!");
+
+            LoginService ls = new LoginService(ClientConstants.baseServerUrl, username, password);
+            ls.execute();
+            KeyManager.getManager().loadKeys(username, password.getBytes());
+            String sessid = ls.getSessionId();
+            getLogger().debug("Preparing session id "+sessid);
+            getLogger().debug("Login to get session is complete. Starting Magic protocol.");
+            new CAMagicHandler().publishKey(username, sessid);
+            new LogoutService(ClientConstants.baseServerUrl, sessid).execute();
+
             // TODO check if response is ok!
 
 
@@ -60,6 +74,11 @@ public class RegisterService extends AbstractUserService {
             // Worst Case Scenario
             getLogger().error("Something really bad happened: ", e);
         } catch (NotExecutedException e) {
+            e.printStackTrace();
+        } catch (MagicSecurityException e) {
+            getLogger().debug("Error publishing key");
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
 

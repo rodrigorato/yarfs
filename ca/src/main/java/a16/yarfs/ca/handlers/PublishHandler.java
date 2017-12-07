@@ -123,7 +123,12 @@ public class PublishHandler extends AbstractTcpHandler {
                         ChallengeResponse challengeResponse = challengeResponseMessage
                                 .getChallengeResponse(sessionKey);
 
-                        // FIXME check NONCES
+
+                        if(nonce2 != challengeResponse.getNonce2()){
+                            logger.warn("Error checking nonce 2. Possible replay attack. Aborting...");
+
+                        }
+
                         messageHash = challengeResponseMessage.getHash();
                         generatedHash = generateChallengeResponseHash(challengeResponse.getNonce2(),
                                 challengeResponse.getNonce3(), challengeResponse.getChallengeAnswer(),

@@ -88,6 +88,8 @@ public class ClientConstants {
         public final static String FILE_METADATA_SUFFIX = ".metadata";
         // Prefix for all metadata files
         public final static String FILE_METADATA_PREFIX = "";
+
+        public static String getHomeFolder(String username){return FILE_FOLDER + username + "/";}
     }
 
 

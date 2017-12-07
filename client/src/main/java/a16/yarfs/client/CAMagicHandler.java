@@ -107,7 +107,7 @@ public class CAMagicHandler {
             if( Arrays.equals(hash, buildResponseHash(theirnonce1, theirUsername, targetUserPu))){
                 return targetUserPu;
             }else{
-                logger.debug("Hashes don't check out. Aborting");
+                logger.warn("Hashes don't check out. Aborting");
 
             }
 

@@ -356,6 +356,7 @@ public class KeyManager {
 
     }
 
+
     public static byte[] getTargetKey(String targetUser) throws IOException {
         return KeyManager.getManager().readPubKey(targetUser).getEncoded();
 
@@ -387,5 +388,11 @@ public class KeyManager {
     }
 
 
+    public PrivateKey getPrivateKey() {
+        return privateKey;
+    }
 
+    public PublicKey getPublicKey() {
+        return publicKey;
+    }
 }

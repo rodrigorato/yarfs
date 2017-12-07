@@ -14,7 +14,7 @@ public class App {
     private static final int defaultPort = 31000;
 
     private static int port = defaultPort;
-    private static boolean ssl_on = false;
+    private static boolean ssl_on = true;
 
     private static String listenAddress = "";
 

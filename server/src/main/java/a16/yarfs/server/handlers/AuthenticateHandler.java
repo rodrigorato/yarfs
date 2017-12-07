@@ -27,6 +27,7 @@ public final class AuthenticateHandler extends AbstractHttpHandler {
             request = super.getBodyAsJson(httpExchange);
 
             // Use those parameters to authenticate (or not) the session with the Manager
+            logger.debug("Trying to authenticate " + request.getString("username"));
             boolean isAuthenticated = Manager.getInstance()
                     .authenticateSession(request.getString("sessionid"),
                                          request.getString("username"));

@@ -58,7 +58,7 @@ public class RequestHandler extends AbstractTcpHandler {
                     ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
 
                     // Get the InitialKeyRequestMessage
-                    InitialKeyRequestMessage i = (InitialKeyRequestMessage) inputStream.readObject();
+                    InitialKeyRequestMessage i = new InitialKeyRequestMessage(inputStream.readObject().toString());
 
                     // And parse it, discovering all the data in it
                     SecretKey sessionKey = getSessionKeyFromInitialKeyRequestMessage(i);

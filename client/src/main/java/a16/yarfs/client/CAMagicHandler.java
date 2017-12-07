@@ -35,7 +35,20 @@ public class CAMagicHandler {
     private static Logger logger = Logger.getLogger(CAMagicHandler.class);
 
 
-    public PublicKey getKey(String targetUser){
+    public PublicKey getKey(String targetUser) throws IOException {
+        logger.debug("Getting key for "+targetUser);
+
+        Socket clientSocket = new Socket(ClientConstants.CA.address, ClientConstants.CA.getRequestPort());
+
+        ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
+        logger.debug("Streams are open!");
+
+        InitialRequestMessage irm = new InitialRequestMessage();
+
+        InitialKeyRequestMessage ikrqm =
+
+
+
         // TODO
         return null;
     }

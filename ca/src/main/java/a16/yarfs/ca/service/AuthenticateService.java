@@ -46,10 +46,13 @@ public class AuthenticateService extends AbstractHttpService {
         try {
             JSONObject js = getResponse();
 
+            getLogger().debug("Trying to authenticate user "+username+" with session "+sessionid);
+
             String requestUsername = js.getString("username");
             String requestSessionId = js.getString("sessionid");
 
             boolean requestAuthenticated = js.getBoolean("authenticated");
+            getLogger().debug("Request authen is "+requestAuthenticated);
 
             return username.equals(requestUsername) &&
                    sessionid.equals(requestSessionId) &&

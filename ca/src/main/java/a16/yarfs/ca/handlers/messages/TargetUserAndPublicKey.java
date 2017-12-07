@@ -14,6 +14,10 @@ import java.security.spec.X509EncodedKeySpec;
  */
 public class TargetUserAndPublicKey extends AbstractMessage {
 
+    public TargetUserAndPublicKey(String json) throws JSONException {
+        super(json);
+    }
+
     public TargetUserAndPublicKey(long nonce, String targetUsername, PublicKey targetPk) throws JSONException {
         this.put("nonce", nonce);
         this.put("target_username", targetUsername);

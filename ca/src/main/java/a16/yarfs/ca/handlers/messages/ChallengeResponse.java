@@ -14,6 +14,10 @@ import java.security.spec.X509EncodedKeySpec;
  */
 public class ChallengeResponse extends AbstractMessage {
 
+    public ChallengeResponse(String json) throws JSONException {
+        super(json);
+    }
+
     public ChallengeResponse(long nonce2, long nonce3, byte[] challengeAnswer, String username, String sessionId) throws JSONException {
         this.put("nonce2", nonce2);
         this.put("nonce3", nonce3);

@@ -15,6 +15,10 @@ import java.security.spec.X509EncodedKeySpec;
  */
 public class ChallengeAndClientPub extends AbstractMessage {
 
+    public ChallengeAndClientPub(String json) throws JSONException {
+        super(json);
+    }
+
     public ChallengeAndClientPub(long nonce1, long nonce2, byte[] cipheredChallenge, PublicKey clientPubKey) throws JSONException {
         this.put("nonce1", nonce1);
         this.put("nonce2", nonce2);

@@ -11,9 +11,13 @@ import java.security.Key;
  */
 public class InitialKeyRequestMessage extends AbstractMessage {
 
+    public InitialKeyRequestMessage(String json) throws JSONException {
+        super(json);
+    }
+
 
     public InitialKeyRequestMessage(byte[] cipheredKs, byte[] cipheredTargetUserAndNonce, byte[] hash) throws JSONException {
-        this.put("k", Base64.encodeBase64(cipheredKs));
+        this.put("k", Base64.encodeBase64String(cipheredKs));
         this.put("m4", Base64.encodeBase64String(cipheredTargetUserAndNonce));
         this.put("hash", Base64.encodeBase64String(hash));
     }

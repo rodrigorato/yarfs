@@ -15,6 +15,10 @@ import java.security.PublicKey;
  */
 public class RequestChallengeMessage extends AbstractMessage {
 
+    public RequestChallengeMessage(String json) throws JSONException {
+        super(json);
+    }
+
 
     public RequestChallengeMessage(byte[] cipheredChallengeAndClientPub, byte[] cipheredHash) throws JSONException {
         this.put("m2", Base64.encodeBase64String(cipheredChallengeAndClientPub));
@@ -22,8 +26,8 @@ public class RequestChallengeMessage extends AbstractMessage {
     }
 
     public ChallengeAndClientPub getChallengeAndClientPub(Key sessionKey) throws JSONException, GeneralSecurityException {
-        return (ChallengeAndClientPub) AbstractMessage
-                .getJSONObjectFromCipheredB64(this.getString("m2"), sessionKey);
+        return new ChallengeAndClientPub(AbstractMessage
+                .getJSONObjectFromCipheredB64(this.getString("m2"), sessionKey).toString());
     }
 
     public byte[] getCipheredHash() throws JSONException {

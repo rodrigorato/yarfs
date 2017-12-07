@@ -1,9 +1,6 @@
 package a16.yarfs.ca.handlers;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
@@ -22,6 +19,7 @@ import a16.yarfs.ca.service.exception.AlreadyExecutedException;
 import a16.yarfs.ca.service.exception.NotExecutedException;
 import a16.yarfs.ca.service.exception.ServiceExecutionException;
 import a16.yarfs.ca.service.exception.ServiceResultException;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONException;
@@ -60,12 +58,19 @@ public class PublishHandler extends AbstractTcpHandler {
                 try {
                     // Accept a connection and begin the publish process!
                     Socket clientSocket = serverSocket.accept();
+                    logger.debug("Accepted client. Getting streams...");
 
                     ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream());
-                    ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+                    logger.debug("Got streams.");
 
                     // Get the InitialRequestMessage from the stream
-                    InitialRequestMessage i = (InitialRequestMessage) inputStream.readObject();
+                    Object o = inputStream.readObject();
+
+
+                    logger.debug("Received request "+ o.toString());
+
+                    InitialRequestMessage i = new InitialRequestMessage((String)o);
+
 
                     // And parse it, discovering all the data in it
                     SecretKey sessionKey = getSessionKeyFromInitialRequestMessage(i);
@@ -82,7 +87,7 @@ public class PublishHandler extends AbstractTcpHandler {
                         // Issue a challenge to test if the client owns that public key
                         byte[] challenge = new byte[CAConstants.PublishService.CHALLENGE_SIZE];
                         new SecureRandom().nextBytes(challenge);
-                        logger.debug("New challenge issued: " + challenge);
+                        logger.debug("New challenge issued: " + Arrays.toString(challenge));
                         byte[] cipheredChallenge = cipherWithKey(challenge, pkn.getClientPublicKey());
 
                         // Get a new nonce for this message
@@ -100,14 +105,20 @@ public class PublishHandler extends AbstractTcpHandler {
                                 AbstractMessage.cipherJSONObjectWithSymKey(chall, sessionKey),
                                 AbstractTcpHandler.cipherWithKey(challengeHash, kp.getPrivate()));
 
+                        ObjectOutputStream outputStream = new ObjectOutputStream(new DataOutputStream(clientSocket.getOutputStream()));
                         // Send Challenge FIXME ignore any errors on sending?
-                        try { outputStream.writeObject(r.toString()); } catch (IOException e) {
+                        try {
+                            logger.debug("Sending message challenge...");
+                            outputStream.writeObject(r.toString());
+                            logger.debug("Sent");
+                        } catch (IOException e) {
                             logger.error("Coudln't send RequestChallengeMessage to the client! " + e.getMessage());
                         }
 
                         // And receive the client's answer
-                        ChallengeResponseMessage challengeResponseMessage =
-                                (ChallengeResponseMessage) inputStream.readObject();
+                        Object o2 = inputStream.readObject();
+                        logger.debug("Received"+o2.toString());
+                        ChallengeResponseMessage challengeResponseMessage = new ChallengeResponseMessage(o2.toString());
 
                         ChallengeResponse challengeResponse = challengeResponseMessage
                                 .getChallengeResponse(sessionKey);
@@ -127,24 +138,31 @@ public class PublishHandler extends AbstractTcpHandler {
                             boolean isAuthenticated = false;
 
                             try {
+                                logger.debug("Checking authentication.");
                                 a.execute();
                                 isAuthenticated = a.isAuthenticated();
+                                logger.debug("Authentication is "+isAuthenticated);
                             } catch(AlreadyExecutedException | NotExecutedException | ServiceExecutionException | ServiceResultException e) {
                                 logger.warn("Couldn't authenticate the user with the server! " + e.getMessage());
                                 isAuthenticated = false;
                             }
 
-                            FinalMessage fin = null;
+                            String fin = null;
                             if(isAuthenticated &&
                                     km.setPublicKey(challengeResponse.getUsername(), pkn.getClientPublicKey())) {
+                                logger.debug("Published key: "+ Arrays.toString(pkn.getClientPublicKey().getEncoded())
+                                + " For user "+ challengeResponse.getUsername());
                                 // Send message back saying OK
                                 // AND PUBLISH KEY
 
-                                fin = new FinalMessage("OK".getBytes());
+                                fin = Base64.encodeBase64String(AbstractMessage.cipherDataWithSymKey("OK".getBytes(),
+                                        sessionKey));
 
                             } else {
+                                logger.warn("Error publishing");
                                 // Send NOK
-                                fin = new FinalMessage("NOK".getBytes());
+                                fin = Base64.encodeBase64String(AbstractMessage.cipherDataWithSymKey("NOK".getBytes(),
+                                        sessionKey));
                             }
 
                             // Send Final message
@@ -172,6 +190,7 @@ public class PublishHandler extends AbstractTcpHandler {
                     continue;
                 } catch (JSONException e) { // FIXME send NOK messages?
                     logger.error("Request had no session key! Skipping to next request." + e.getMessage());
+                    e.printStackTrace();
                     continue;
                 } catch (GeneralSecurityException e) { // FIXME send NOK messages?
                     logger.error("Message didn't check out! Skipping to next request." + e.getMessage());
@@ -183,7 +202,7 @@ public class PublishHandler extends AbstractTcpHandler {
             }
 
         } catch (IOException e) {
-            logger.error("Something really bad happened. Exiting. " + e.getMessage());
+            logger.error("Something really bad happened. Exiting. " + e.getMessage(), e);
         }
     }
 
@@ -248,7 +267,7 @@ public class PublishHandler extends AbstractTcpHandler {
 
              */
 
-            return new SecretKeySpec(keyBytes, CAConstants.PublishService.SYMMETRIC_CIPHER_ALGORITHM);
+            return new SecretKeySpec(keyBytes, "AES");
 
 
         } catch (DecipherException | JSONException e) {

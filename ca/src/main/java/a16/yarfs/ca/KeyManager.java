@@ -27,7 +27,7 @@ public class KeyManager {
     }
 
     public boolean setPublicKey(String username, PublicKey pk) {
-        if(usersPublicKeys.containsKey(username)) {
+        if( ! usersPublicKeys.containsKey(username)) {
             usersPublicKeys.put(username, pk);
             return true;
         } else return false;

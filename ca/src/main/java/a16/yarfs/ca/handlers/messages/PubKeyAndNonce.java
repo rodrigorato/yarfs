@@ -15,6 +15,10 @@ import java.security.spec.X509EncodedKeySpec;
  */
 public class PubKeyAndNonce extends AbstractMessage {
 
+    public PubKeyAndNonce(String json) throws JSONException {
+        super(json);
+    }
+
     public PubKeyAndNonce(long nonce, PublicKey pk) throws JSONException {
         this.put("nonce", nonce);
         this.put("client_public_key", Base64.encodeBase64String(pk.getEncoded()));

@@ -8,7 +8,7 @@ package a16.yarfs.ca;
 public class CAConstants {
 
     /** default base URL of the yarfs server. Can be overridden by App args */
-    public static String baseServerUrl = "http://127.0.0.1:31000";
+    public static String baseServerUrl = "https://server.yarfs:31000";
     public static int connectTimeout = 5000; // ms
     public static String listenAddr  = "0.0.0.0";
 
@@ -30,7 +30,7 @@ public class CAConstants {
         public static int getPort() {
             return basePort;
         }
-        public static final String SYMMETRIC_CIPHER_ALGORITHM = "AES";
+        public static final String SYMMETRIC_CIPHER_ALGORITHM = "AES/ECB/PKCS5Padding";
         public static final int CHALLENGE_SIZE = 128;
     }
 

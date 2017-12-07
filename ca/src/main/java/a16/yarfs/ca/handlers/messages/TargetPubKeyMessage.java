@@ -12,6 +12,10 @@ import java.security.PublicKey;
  */
 public class TargetPubKeyMessage extends AbstractMessage {
 
+    public TargetPubKeyMessage(String json) throws JSONException {
+        super(json);
+    }
+
 
     public TargetPubKeyMessage(byte[] cipheredTargetUserAndPublicKey, byte[] caCipheredHash) throws JSONException {
         this.put("m5", Base64.encodeBase64String(cipheredTargetUserAndPublicKey));

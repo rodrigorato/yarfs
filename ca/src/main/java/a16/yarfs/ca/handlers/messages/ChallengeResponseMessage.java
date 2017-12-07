@@ -11,14 +11,18 @@ import java.security.Key;
  */
 public class ChallengeResponseMessage extends AbstractMessage {
 
+    public ChallengeResponseMessage(String json) throws JSONException {
+        super(json);
+    }
+
     public ChallengeResponseMessage(byte[] cipheredChallengeAndAuthentication, byte[] hash) throws JSONException {
         this.put("m3", Base64.encodeBase64String(cipheredChallengeAndAuthentication));
         this.put("hash", Base64.encodeBase64String(hash));
     }
 
     public ChallengeResponse getChallengeResponse(Key sessionKey) throws JSONException, GeneralSecurityException {
-        return (ChallengeResponse) AbstractMessage
-                .getJSONObjectFromCipheredB64(this.getString("m3"), sessionKey);
+        return new ChallengeResponse(AbstractMessage
+                .getJSONObjectFromCipheredB64(this.getString("m3"), sessionKey).toString());
     }
 
     public byte[] getHash() throws JSONException {

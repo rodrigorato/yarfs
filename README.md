@@ -121,15 +121,3 @@ some commands in the client's shell.
 The "yarfs $" is the prompt text which appears when the client shell is ready to
 receive commands from the user:
 	`yarfs $ help`
-
-1. Run a client and then:
-	- register mm ThisIsPassword
-
-2. Run another client and then:
-	- register pa HackWall
-
-
-
-
-
-

@@ -64,10 +64,11 @@ public class RequestHandler extends AbstractTcpHandler {
                     SecretKey sessionKey = getSessionKeyFromInitialKeyRequestMessage(i);
                     TargetUserAndNonce tun = i.getTargetUserAndNonce(sessionKey);
                     byte[] messageHash = i.getHash();
-                    byte[] generatedHash = generateKeyRequestHash(sessionKey, tun.getNonce(), tun.getTargetUserName());
+                    byte[] generatedHash = generateKeyRequestHash(sessionKey, tun.getNonce(),
+                            tun.getTargetUserName());
 
                     logger.debug("Received request for user "+tun.getTargetUserName());
-                    // FIXME nonces
+
                     if(Arrays.equals(messageHash, generatedHash)) {
                         if(km.getPublicKey(tun.getTargetUserName()) == null){
                             inputStream.close();
@@ -77,6 +78,7 @@ public class RequestHandler extends AbstractTcpHandler {
                         // Hashes Check out
                         TargetUserAndPublicKey tup = new TargetUserAndPublicKey(tun.getNonce(),
                                 tun.getTargetUserName(), km.getPublicKey(tun.getTargetUserName()));
+
 
                         PublicKey targetPubKey = km.getPublicKey(tun.getTargetUserName());
 
@@ -101,8 +103,9 @@ public class RequestHandler extends AbstractTcpHandler {
                         clientSocket.close();
 
                     } else {
-                        // Hashes are bad!
-                        //FIXME
+                        logger.warn("Hash verification failed. Possible tampering attack.");
+                        inputStream.close();
+                        clientSocket.close();
                     }
 
                 } catch (ClassNotFoundException e) {

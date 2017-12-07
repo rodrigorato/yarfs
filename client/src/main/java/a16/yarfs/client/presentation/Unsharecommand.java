@@ -22,7 +22,7 @@ public class Unsharecommand extends Command{
 
 
     public Unsharecommand(Shell sh, String name) {
-        super(sh, name, "Unshare a file with a user.");
+        super(sh, name, "unshare a file with a user.");
     }
 
     @Override

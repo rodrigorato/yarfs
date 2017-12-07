@@ -12,7 +12,7 @@ import java.util.List;
 public class RefreshCommand extends Command{
 
     public RefreshCommand(Shell sh, String name) {
-        super(sh, name, "Unable to refresh metadata from server.");
+        super(sh, name, "refreshes metadata from server.");
     }
 
     @Override
@@ -29,7 +29,7 @@ public class RefreshCommand extends Command{
             service.execute();
             List<String> newFiles = service.getNewFiles();
             if( newFiles.size() == 0 ){
-                shell.println("No new files. All up to date!");
+                shell.println("No new files. ");
             }else{
                 shell.println("New files were found.");
                 for(String filename : newFiles){

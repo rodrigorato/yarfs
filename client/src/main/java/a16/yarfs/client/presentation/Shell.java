@@ -83,7 +83,7 @@ public abstract class Shell {
                     Collections.sort(availableCmds);
                     for(String cmdName : availableCmds) {
                         Command c = getShell().getCommand(cmdName);
-                        println("  " + whatIs(c));
+                        println("\t" + whatIs(c));
                     }
                 } else {
                     String cmdName = args[0];
@@ -106,7 +106,7 @@ public abstract class Shell {
     }
 
     protected String whatIs(Command cmd) {
-        return cmd.getName() + "\t\t" + cmd.getHelp();
+        return cmd.getName() + "\t\t\t" + cmd.getHelp();
     }
 
     public void println(String s) {

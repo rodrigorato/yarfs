@@ -23,7 +23,7 @@ import java.util.Arrays;
  */
 public class CommitCommand extends Command{
     public CommitCommand(Shell sh, String name) {
-        super(sh, name, "Commit a change of existing file.");
+        super(sh, name, "commit a change of an existing file.");
     }
 
     @Override

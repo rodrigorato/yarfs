@@ -51,8 +51,8 @@ public class ShareFileService extends FileService{
         JSONObject req = new JSONObject();
 
 
-        byte[] targetKey = KeyManager.getTargetKey(targetUser);
         try {
+            byte[] targetKey = KeyManager.getTargetKey(targetUser);
 //            (new RefreshService(ClientConstants.baseServerUrl, sessid)).execute();
             FileMetadata metadata = SecureLocalFileManager.getManager().getFileMetadata(this.filename);
             getLogger().debug("Acquired metadata for "+this.filename);

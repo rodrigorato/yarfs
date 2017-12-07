@@ -14,6 +14,7 @@ import a16.yarfs.client.service.exception.ServiceResultException;
 import a16.yarfs.client.service.file.GetFileService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -107,6 +108,8 @@ public class GetFileCommand extends Command {
                 getLogger().error("IO error", e);
                 shell.println(localFilename + ": IO error: " + e.getMessage());
                 return;
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
         } catch (MalformedURLException e) {

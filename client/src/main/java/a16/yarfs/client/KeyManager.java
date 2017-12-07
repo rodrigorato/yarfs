@@ -6,6 +6,7 @@ package a16.yarfs.client;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.json.JSONException;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
@@ -357,8 +358,8 @@ public class KeyManager {
     }
 
 
-    public static byte[] getTargetKey(String targetUser) throws IOException {
-        return KeyManager.getManager().readPubKey(targetUser).getEncoded();
+    public static byte[] getTargetKey(String targetUser) throws IOException, JSONException {
+        return new CAMagicHandler().getKey(targetUser).getEncoded();
 
     }
 

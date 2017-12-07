@@ -1,6 +1,8 @@
 package a16.yarfs.client.presentation;
 
 import a16.yarfs.client.ClientConstants;
+import a16.yarfs.client.LocalFileManager;
+import a16.yarfs.client.SecureLocalFileManager;
 import a16.yarfs.client.service.exception.LogoutServiceException;
 import a16.yarfs.client.service.exception.ServiceExecutionException;
 import a16.yarfs.client.service.user.LogoutService;
@@ -28,6 +30,8 @@ public class LogoutCommand extends Command{
             LogoutService service = new LogoutService(ClientConstants.baseServerUrl, sessid);
             service.execute();
             shell.setActiveSessionid(null);
+            LocalFileManager.getManager().selfDestruct();
+            SecureLocalFileManager.getManager().selfDestruct();
             shell.setActiveUser("");
             shell.println("Logout successful");
 
@@ -35,7 +39,7 @@ public class LogoutCommand extends Command{
         }catch (MalformedURLException e) {
             e.printStackTrace();
         }catch (LogoutServiceException e) {
-            shell.println("Error logging out! KERNEL PANIC!");
+            shell.println("Error logging out!");
         } catch (ServiceExecutionException e) {
             shell.println("error: " + e.getMessage());
         }

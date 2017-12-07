@@ -19,7 +19,7 @@ public class ClientConstants {
 
     /** constants concerning the use of the CA by the client */
     public static final class CA {
-        public static final String CERTIFICATE_FILEPATH = StorageStandards.BASE_FOLDER  + ".ca_certificate.pem";
+        public static final String CERTIFICATE_FILEPATH = "yarfs-ca.pem";
         public static String address = "127.0.0.1";
 
         private static int basePort       = 31001;

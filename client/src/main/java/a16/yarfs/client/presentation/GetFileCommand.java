@@ -112,16 +112,10 @@ public class GetFileCommand extends Command {
                 e.printStackTrace();
             }
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+        } catch (AlreadyExecutedException | NotExecutedException | IOException e) {
+            shell.println("Error executing command.");
         } catch (ServiceResultException e) {
             shell.println("could not get file: " + e.getMessage());
-        } catch (AlreadyExecutedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NotExecutedException e) {
-            e.printStackTrace();
         } catch (ServiceExecutionException e) {
             shell.println("error: " + e.getMessage());
         }

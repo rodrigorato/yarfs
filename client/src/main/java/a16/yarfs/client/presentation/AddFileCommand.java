@@ -107,16 +107,10 @@ public class AddFileCommand extends Command {
                     ciphered_key, shell.getActiveUser());
             shell.println("added file '"+remoteFilename+"' with id " + fileId);
             LocalFileManager.getManager().putFileMetaData(fileDto.getName(), fileDto.getFileMetadata());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+        } catch (AlreadyExecutedException | NotExecutedException | IOException e) {
+            shell.println("Error executing command.");
         } catch (ServiceResultException e) {
             shell.println("could not add file: " + e.getMessage());
-        } catch (AlreadyExecutedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NotExecutedException e) {
-            e.printStackTrace();
         } catch (ServiceExecutionException e) {
             shell.println("error: " + e.getMessage());
         }

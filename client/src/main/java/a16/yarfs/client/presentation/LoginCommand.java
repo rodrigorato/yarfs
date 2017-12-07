@@ -6,6 +6,8 @@ package a16.yarfs.client.presentation;
 
 import a16.yarfs.client.ClientConstants;
 import a16.yarfs.client.KeyManager;
+import a16.yarfs.client.LocalFileManager;
+import a16.yarfs.client.SecureLocalFileManager;
 import a16.yarfs.client.service.exception.AlreadyExecutedException;
 import a16.yarfs.client.service.exception.NotExecutedException;
 import a16.yarfs.client.service.exception.ServiceExecutionException;
@@ -58,24 +60,18 @@ public class LoginCommand extends Command {
             String sessionid = service.getSessionId();
             shell.getLogger().info("logged in using token " + sessionid);
             shell.println("Logged in successful!");
-            shell.println("Loading keys for user " + username);
+            shell.println("Preparing user desktop " + username);
             KeyManager.getManager().loadKeys(username, password.getBytes());
-            shell.println("Loading complete.\n Welcome!");
+            SecureLocalFileManager.getManager().createHomeFolder(username);
+            LocalFileManager.getManager().createHomeFolder(username);
+            shell.println("Ready.\n Welcome!");
             shell.setActiveSessionid(sessionid);
             shell.setActiveUser(username);
+
         }catch (ServiceResultException e) {
             shell.println("could not login: " + e.getMessage());
-        }catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NotExecutedException e) {
-            e.printStackTrace();
-        } catch (AlreadyExecutedException e) {
-            e.printStackTrace(); // should never happen, the service was just instantiated
-        } catch (NoSuchAlgorithmException e) {
-            shell.println("Error generating keys. Try again.");
-            getLogger().error("Error generating keys.", e);
+        } catch (IOException | NotExecutedException | NoSuchAlgorithmException | AlreadyExecutedException e) {
+            shell.println("Error executing command.");
         } catch (ServiceExecutionException e) {
             shell.println("error: " + e.getMessage());
         }

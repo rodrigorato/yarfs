@@ -105,7 +105,8 @@ public class PublishHandler extends AbstractTcpHandler {
                                 AbstractMessage.cipherJSONObjectWithSymKey(chall, sessionKey),
                                 AbstractTcpHandler.cipherWithKey(challengeHash, kp.getPrivate()));
 
-                        ObjectOutputStream outputStream = new ObjectOutputStream(new DataOutputStream(clientSocket.getOutputStream()));
+                        ObjectOutputStream outputStream = new ObjectOutputStream(
+                                new DataOutputStream(clientSocket.getOutputStream()));
                         // Send Challenge FIXME ignore any errors on sending?
                         try {
                             logger.debug("Sending message challenge...");
@@ -113,6 +114,9 @@ public class PublishHandler extends AbstractTcpHandler {
                             logger.debug("Sent");
                         } catch (IOException e) {
                             logger.error("Coudln't send RequestChallengeMessage to the client! " + e.getMessage());
+                            outputStream.close();
+                            inputStream.close();
+                            clientSocket.close();
                         }
 
                         // And receive the client's answer

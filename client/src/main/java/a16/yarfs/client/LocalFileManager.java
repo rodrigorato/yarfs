@@ -18,6 +18,7 @@ public class LocalFileManager {
 
     private static LocalFileManager localFileManager = null;
     private static Logger logger = Logger.getLogger(LocalFileManager.class);
+    private String username="";
 
     protected LocalFileManager(){
         //Create required folders
@@ -42,7 +43,7 @@ public class LocalFileManager {
      * @throws IOException
      */
     public byte[] getFileContents(String fileName) throws IOException {
-        Path path = Paths.get(ClientConstants.StorageStandards.FILE_FOLDER + fileName);
+        Path path = Paths.get(ClientConstants.StorageStandards.getHomeFolder(username) + fileName);
         return Files.readAllBytes(path);
     }
 
@@ -56,7 +57,8 @@ public class LocalFileManager {
         ObjectInputStream ois = null;
         FileMetadata fm = null;
         try {
-            ois = new ObjectInputStream(new FileInputStream(ClientConstants.StorageStandards.FILE_FOLDER +
+            ois = new ObjectInputStream(new FileInputStream(ClientConstants.StorageStandards.
+                    getHomeFolder(username) +
                     ClientConstants.StorageStandards.FILE_METADATA_PREFIX + fileName +
                     ClientConstants.StorageStandards.FILE_METADATA_SUFFIX));
             fm = (FileMetadata) ois.readObject();
@@ -87,7 +89,7 @@ public class LocalFileManager {
      */
     public void putFileContents(String fileName, byte[] content)
             throws FileAlreadyExistsException, IOException {
-        Path path = Paths.get(ClientConstants.StorageStandards.FILE_FOLDER + fileName);
+        Path path = Paths.get(ClientConstants.StorageStandards.getHomeFolder(username) + fileName);
         try {
             Files.write(path, content, StandardOpenOption.CREATE); // don't override existing files. It overrides now (remove?)
         } catch (FileAlreadyExistsException e) {
@@ -103,7 +105,8 @@ public class LocalFileManager {
      * @throws IOException whenever an IO error occurs.
      */
     public void putFileMetaData(String fileName, FileMetadata metadata) throws IOException {
-        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ClientConstants.StorageStandards.FILE_FOLDER +
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ClientConstants.StorageStandards.
+                getHomeFolder(username) +
                 ClientConstants.StorageStandards.FILE_METADATA_PREFIX + fileName +
                 ClientConstants.StorageStandards.FILE_METADATA_SUFFIX));
         oos.writeObject(metadata);
@@ -118,6 +121,19 @@ public class LocalFileManager {
     public void putFile(FileDto file) throws IOException {
         putFileContents(file.getName(), file.getContents());
         putFileMetaData(file.getName(), file.getFileMetadata());
+    }
+
+    public void createHomeFolder(String username) throws IOException {
+        try {
+            Files.createDirectory(Paths.get(ClientConstants.StorageStandards.getHomeFolder(username)));
+        }catch( FileAlreadyExistsException e) {
+            logger.debug("Home folder exists.");
+        }
+        this.username = username;
+    }
+
+    public void selfDestruct(){
+        localFileManager = null;
     }
 
 }

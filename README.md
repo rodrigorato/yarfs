@@ -1,5 +1,6 @@
 # yarfs
-Yet another remote file service. Project for the Network and Computer Security course at IST Alameda 17/18.
+Yet Another Remote File Service.
+Project for the [Network and Computer Security](https://fenix.tecnico.ulisboa.pt/disciplinas/SIRS1795/2017-2018/1-semestre/objectivos) course at [Instituto Superior Técnico (IST)](https://tecnico.ulisboa.pt/en/) Alameda 2017/2018.
 
 ## HTTPS
 

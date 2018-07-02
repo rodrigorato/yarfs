@@ -189,3 +189,7 @@ $RECYCLE.BIN/
 
 # certificates and keys
 *.pem
+# certificate requests and public keys
+*.req
+*.pub
+*.der

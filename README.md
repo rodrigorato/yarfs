@@ -3,7 +3,7 @@ Yet Another Remote File Service.
 Project for the [Network and Computer Security](https://fenix.tecnico.ulisboa.pt/disciplinas/SIRS1795/2017-2018/1-semestre/objectivos) course at [Instituto Superior Técnico (IST)](https://tecnico.ulisboa.pt/en/) Alameda 2017/2018.
 
   * [YARFS presentation slides](https://docs.google.com/presentation/d/1RZdHLD40OcGNThiTdklW-ZBWWC1ImV0wZV8_GYNYTsk/edit?usp=sharing)
-  * [Class diagram](https://drive.google.com/file/d/1c9LmjX7h3oKFkGlxqnT3f0CDbpJXWvBj/view?usp=sharing) (probably outdated)
+  * [Class diagram](https://drive.google.com/file/d/1c9LmjX7h3oKFkGlxqnT3f0CDbpJXWvBj/view?usp=sharing) (outdated)
 
 ## HTTPS
 
